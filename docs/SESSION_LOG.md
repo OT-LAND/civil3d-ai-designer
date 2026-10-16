@@ -3,7 +3,8 @@
 ## 2026-10-16 — Meeting 1
 - Decided: D1 (Civil 3D 2027), D2 (own API key to start), D4 (DWG survey), D8 (allow NuGet).
 - Unblocked: 0.3, 0.4, 1.2, 1.3, 2.1. New: 5.4 MCP connector (blocked:D9).
-- Still open: D6 first project type (not answered), D3, D4b, D5, D7, D9.
+- Also decided: D6 residential courtyard; 4.4 unblocked.
+- Still open: D3, D4b, D5, D7, D9.
 - PR #1 (0.1 skeleton) awaiting review; it adds D8 under Open, so drop that on merge (D8 now Decided on main).
 
 ## 2026-10-16 — Setup (refocused on landscape architects)

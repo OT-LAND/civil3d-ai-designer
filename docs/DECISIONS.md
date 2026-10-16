@@ -22,12 +22,6 @@ Is there an office plant list (species, size at planting, mature canopy, water n
 spacing)? Should the AI propose species or only planting zones the designer fills in?
 *Recommendation:* v1 proposes zones and tree positions; species from your office list.
 
-**D6 — First target project type**
-Pick the first project type to make work end-to-end: (a) residential courtyard /
-building surroundings, (b) urban plaza or pocket park, (c) neighbourhood park.
-*Recommendation:* (a) — clear boundaries, FFL tie-ins, accessibility rules; a strong
-first loop.
-
 **D7 — Let the agent test in your Civil 3D?**
 Your computer has a Civil 3D connection the agent can drive (run commands, query the
 drawing). If work sessions may use it, the agent can load each build and check results
@@ -62,6 +56,10 @@ is also usable as a tool for agentic work. Follow-up in D9.
 **D4 — Survey format** (2026-10-16)
 The survey usually arrives as a **DWG**. Build the survey import for DWG first. Trees
 and coordinates: follow-up in D4b.
+
+**D6 — First target project type** (2026-10-16)
+**(a) Residential courtyard / building surroundings.** First end-to-end loop: lot
+boundary, building FFL tie-ins, accessible route from the street.
 
 **D8 — Cloud sessions may download .NET packages** (2026-10-16)
 **(a)**: the owner allows `api.nuget.org`, `dot.net`, `builds.dotnet.microsoft.com` in

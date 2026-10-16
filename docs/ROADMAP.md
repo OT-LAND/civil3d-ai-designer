@@ -39,7 +39,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | 4.1 | Grading detail: tie-ins to FFLs and existing ground, berms, swales, cut/fill | todo |
 | 4.2 | Hardscape: steps, ramps with landings, retaining/seat walls with top/bottom levels, paving zones | todo |
 | 4.3 | Softscape: planting beds, lawn, tree placement by species/spacing, existing trees retained | blocked:D5 |
-| 4.4 | Drainage: flow arrows, inlets, simple storm pipes, infiltration areas | blocked:D6 |
+| 4.4 | Drainage: flow arrows, inlets, simple storm pipes, infiltration areas | todo |
 | 4.5 | Site elements: furniture, lighting, shade, play as attributed blocks | todo |
 | 4.6 | Documentation: level/slope labels, plant schedule, material and quantity take-offs | todo |
 
