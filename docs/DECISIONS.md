@@ -47,5 +47,17 @@ of your plan. Options: (a) cloud only, you test; (b) agent tests in Civil 3D on 
 sample drawing during the work session; (c) agent tests only when you ask in a meeting.
 *Recommendation:* (c) to start, move to (b) once the plugin loads reliably.
 
+**D8 — Let the cloud work sessions download .NET packages**
+The nightly sessions run in a cloud sandbox whose network blocks the .NET package
+server (api.nuget.org) and Microsoft's .NET download site (dot.net). Without them the
+agent can compile Core but cannot run the real test suite (`dotnet test` needs xUnit
+from NuGet); on 2026-10-16 it checked the tests with a stand-in runner instead.
+Options: (a) allow `api.nuget.org` (and `dot.net`, `builds.dotnet.microsoft.com`) in
+claude.ai → Settings → Capabilities → network access; (b) keep it blocked and rely on
+GitHub Actions (item 0.2) to run tests on each PR.
+*Recommendation:* (a) — it takes a minute and lets every session verify its own work.
+Note for D1: Core currently targets .NET 8 (Civil 3D 2025+); if you need 2024 or older,
+it moves to netstandard2.0, a one-line change.
+
 ## Decided
 _(none yet)_

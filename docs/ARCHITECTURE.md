@@ -23,3 +23,11 @@ Principles
 - Claude produces intent; deterministic code produces geometry.
 - Every generation step is previewable, reversible, and re-runnable.
 - `Core` has zero Autodesk references so it builds and tests in the cloud.
+
+Repository layout
+```
+CivilAI.sln
+src/Core/            CivilAI.Core         net8.0, no Autodesk refs (Geometry/, later Intent/, Rules/, Claude/)
+src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)
+tests/Core.Tests/    CivilAI.Core.Tests   xUnit tests for Core
+```

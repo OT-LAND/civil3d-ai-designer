@@ -5,7 +5,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 ## M0 — Foundations
 | # | Item | Status |
 |---|---|---|
-| 0.1 | Solution skeleton: `Core` (no Autodesk refs), `Civil3DPlugin`, `Tests`; Core builds and tests on Linux | todo |
+| 0.1 | Solution skeleton: `Core` (no Autodesk refs), `Civil3DPlugin`, `Tests`; Core builds and tests on Linux | review |
 | 0.2 | GitHub Actions: build + test on every PR | todo |
 | 0.3 | Plugin load (bundle/PackageContents.xml), ribbon tab, empty palette, `AIHELLO` command (owner tests) | blocked:D1 |
 | 0.4 | Claude API client in `Core` (key from settings, retries, image input, structured JSON output) | blocked:D2 |

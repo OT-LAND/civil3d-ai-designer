@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Civil 3D plugin shell. PLACEHOLDER until roadmap item 0.3:
+    - Target framework and Autodesk references (AcCoreMgd, AcDbMgd, AcMgd, AeccDbMgd,
+      AecBaseMgd, all with Private=false) depend on D1 (supported Civil 3D releases).
+    - EnableWindowsTargeting lets the empty shell build on Linux / CI; the real plugin
+      is built on Windows against the installed Civil 3D.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>CivilAI.Civil3DPlugin</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\CivilAI.Core.csproj" />
+  </ItemGroup>
+
+</Project>
