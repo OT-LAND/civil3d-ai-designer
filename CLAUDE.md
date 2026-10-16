@@ -89,7 +89,10 @@ The scheduled prompt tells you which one you are in.
 - Inputs are loose; output must be precise. When a sketch is ambiguous, the tool asks
   one clear question or proposes 2–3 options, rather than guessing silently.
 - Show results as the designer thinks: spaces, levels, slopes, materials, planting.
-  Civil 3D objects (feature lines, surfaces, grading groups) are the engine, not the UI.
+  Civil 3D objects are the engine, not the UI: surfaces, feature lines, grading groups
+  (criteria from the template), corridors with alignments/profiles/assemblies for linear
+  elements (paths, promenades, ramps, walls along a route), and pipe networks for
+  drainage. Pick the object a Civil 3D expert would choose for each element.
 - Constraints are visible: accessibility slopes, maximum lawn/bed slopes, tree
   protection zones, setbacks and drainage falls are checked and shown as a pass/fail
   report with zoom-to-problem.
