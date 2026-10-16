@@ -39,5 +39,13 @@ building surroundings, (b) urban plaza or pocket park, (c) neighbourhood park.
 *Recommendation:* (a) — clear boundaries, FFL tie-ins, accessibility rules; a strong
 first loop.
 
+**D7 — Let the agent test in your Civil 3D?**
+Your computer has a Civil 3D connection the agent can drive (run commands, query the
+drawing). If work sessions may use it, the agent can load each build and check results
+itself, but only when your PC is on with the Claude desktop app open, and it uses more
+of your plan. Options: (a) cloud only, you test; (b) agent tests in Civil 3D on a
+sample drawing during the work session; (c) agent tests only when you ask in a meeting.
+*Recommendation:* (c) to start, move to (b) once the plugin loads reliably.
+
 ## Decided
 _(none yet)_
