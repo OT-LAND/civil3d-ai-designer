@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/OT-LAND/civil3d-ai-designer/design-intent.v0.schema.json",
+  "title": "Design Intent v0",
+  "description": "A landscape design described as spaces, levels, edges and materials. Units: metres, drawing coordinates (X east, Y north, Z absolute level). Polygons are closed implicitly: do not repeat the first point.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "site", "spaces", "edges", "materials"],
+  "properties": {
+    "schemaVersion": { "const": "0" },
+    "site": { "$ref": "#/$defs/site" },
+    "spaces": { "type": "array", "items": { "$ref": "#/$defs/space" } },
+    "edges": { "type": "array", "items": { "$ref": "#/$defs/edge" } },
+    "materials": { "type": "array", "items": { "$ref": "#/$defs/material" } }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "polygon": {
+      "description": "Closed polygon; the first point is not repeated at the end.",
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/point" }
+    },
+    "polyline": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/point" }
+    },
+    "site": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["buildings"],
+      "properties": {
+        "name": { "type": "string" },
+        "lotBoundary": { "$ref": "#/$defs/polygon" },
+        "buildings": { "type": "array", "items": { "$ref": "#/$defs/building" } }
+      }
+    },
+    "building": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "footprint", "ffl", "entrances"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "footprint": { "$ref": "#/$defs/polygon" },
+        "ffl": { "type": "number", "description": "Finished floor level, absolute, metres." },
+        "entrances": { "type": "array", "items": { "$ref": "#/$defs/entrance" } }
+      }
+    },
+    "entrance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "location", "accessible"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "location": { "$ref": "#/$defs/point" },
+        "thresholdLevel": { "type": "number", "description": "Omit to use the building FFL." },
+        "accessible": { "type": "boolean", "description": "Must be reached by a step-free route." }
+      }
+    },
+    "space": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["plaza", "path", "lawn", "bed"] },
+        "name": { "type": "string" },
+        "outline": { "$ref": "#/$defs/polygon", "description": "Plaza, lawn and bed only." },
+        "centerline": { "$ref": "#/$defs/polyline", "description": "Path only, start to end." },
+        "width": { "type": "number", "exclusiveMinimum": 0, "description": "Path only, metres." },
+        "level": { "$ref": "#/$defs/level" },
+        "materialId": { "type": "string" }
+      }
+    },
+    "level": {
+      "description": "How the space sits in height. Omit parts the designer has not fixed.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spots"],
+      "properties": {
+        "elevation": { "type": "number", "description": "Nominal level, absolute, metres." },
+        "spots": { "type": "array", "items": { "$ref": "#/$defs/spotLevel" } },
+        "fall": { "$ref": "#/$defs/fall" }
+      }
+    },
+    "spotLevel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" },
+        "note": { "type": "string" }
+      }
+    },
+    "fall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["percent", "directionDegrees"],
+      "properties": {
+        "percent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "directionDegrees": { "type": "number", "description": "Direction the surface falls towards, degrees counter-clockwise from east." }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "line", "spaceIds"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["flush", "kerb", "steps", "wall"] },
+        "line": { "$ref": "#/$defs/polyline" },
+        "spaceIds": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string" } },
+        "height": { "type": "number", "minimum": 0, "description": "Kerb upstand, total step rise or wall retained height, metres. Required for steps and wall." }
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "category"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "category": { "enum": ["paving", "gravel", "lawn", "planting", "mulch", "other"] }
+      }
+    }
+  }
+}

@@ -1,5 +1,17 @@
 # Session log (newest first)
 
+## 2026-10-16 — Work: 1.1 Design Intent schema v0
+- Done: `Core/Intent`: model (site/buildings/entrances with FFL, spaces plaza/path/lawn/bed,
+  levels as elevation + spot levels + fall, edges flush/kerb/steps/wall, materials), JSON
+  read/write (camelCase, strict shape), content validator (unique ids, references, closed
+  outlines with area, path centerline + width, step/wall heights), JSON Schema v0 embedded
+  for Claude structured output, sample `samples/intent/courtyard.v0.json` (D6). 19 new test cases.
+  Branch `agent/design-intent-schema` is stacked on PR #2 (0.2), which is stacked on #1.
+- Blocked: NuGet still 403 in the cloud (D8b), so xUnit ran via an offline stand-in runner:
+  35/35 pass (Slope + Intent); Core builds clean with warnings-as-errors. CI proves the real run.
+- Next: merge #1, #2, then this; next item 0.4 Claude API client (or 1.2 prompt, which needs 0.4).
+- Questions: none new (D8b still open).
+
 ## 2026-10-16 — Work: 0.2 CI
 - Done: `.github/workflows/ci.yml` (ubuntu, .NET 8: restore, build Release, test, upload
   TRX) on every PR and on push to main. Branch `agent/ci` is stacked on PR #1 (0.1) with

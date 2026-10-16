@@ -14,4 +14,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- Design Intent JSON Schema; read with DesignIntentJson.ReadSchema(). -->
+    <EmbeddedResource Include="Intent\Schema\design-intent.v0.schema.json" LogicalName="CivilAI.Core.Intent.Schema.design-intent.v0.schema.json" />
+  </ItemGroup>
+
 </Project>
