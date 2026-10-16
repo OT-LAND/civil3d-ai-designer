@@ -10,40 +10,42 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | 0.3 | Plugin load (bundle/PackageContents.xml), ribbon tab, empty palette, `AIHELLO` command (owner tests) | blocked:D1 |
 | 0.4 | Claude API client in `Core` (key from settings, retries, image input, structured JSON output) | blocked:D2 |
 
-## M1 — Design Intent pipeline (text → simple site)
+## M1 — Design Intent pipeline (text → graded spaces)
 | # | Item | Status |
 |---|---|---|
-| 1.1 | Design Intent JSON schema v0: site, surfaces, parcels, road centrelines, pads, design rules | todo |
+| 1.1 | Design Intent JSON schema v0: site, spaces (plaza/path/lawn/bed), levels, edges, materials | todo |
 | 1.2 | Prompt + validator: free text → Design Intent | blocked:D2 |
-| 1.3 | Builders: existing surface from points/breaklines; parcels from lot lines | blocked:D1 |
+| 1.3 | Builders: existing surface from survey; feature lines + proposed surface for spaces | blocked:D1 |
 | 1.4 | Preview-and-confirm UI before writing to the drawing | todo |
 
 ## M2 — Background data & constraints
 | # | Item | Status |
 |---|---|---|
-| 2.1 | Import survey and lot borders (formats per D4) | blocked:D4 |
-| 2.2 | Constraint engine: setbacks, easements, max slopes, cover depths, flood/levels | blocked:D5 |
-| 2.3 | Constraint report palette (pass/fail per rule, zoom to violation) | todo |
+| 2.1 | Import survey, existing trees, lot borders, buildings/FFLs (formats per D4) | blocked:D4 |
+| 2.2 | Rule engine: accessible route slopes, ramp/step geometry, max lawn/bed slopes, drainage falls, tree protection zones, setbacks | blocked:D3 |
+| 2.3 | Constraint report palette (pass/fail per rule, zoom to problem) | todo |
 
 ## M3 — Visual inputs
 | # | Item | Status |
 |---|---|---|
-| 3.1 | Sketch/plan image → layout intent (roads, pads, lots) with georeference/scale calibration | todo |
-| 3.2 | Diagram/section sketch → typical cross-section → assembly | todo |
-| 3.3 | Multi-input fusion: text + sketches + background into one Design Intent | todo |
+| 3.1 | Hand sketch over site plan → spaces and edges, with scale/georeference calibration | todo |
+| 3.2 | Concept diagram → zoning, circulation and level intent | todo |
+| 3.3 | Render/reference image → material palette and planting character | todo |
+| 3.4 | Multi-input fusion: text + sketches + images + background into one Design Intent | todo |
 
-## M4 — Detailed design
+## M4 — Detailed landscape design
 | # | Item | Status |
 |---|---|---|
-| 4.1 | Alignments + profiles from intent, checked against design rules | todo |
-| 4.2 | Assemblies + corridors, corridor surface, tie-in to existing ground | todo |
-| 4.3 | Grading: feature lines, pads, grading groups; cut/fill volumes | todo |
-| 4.4 | Gravity pipe network (storm/sewer) and pressure network (water) | blocked:D6 |
-| 4.5 | Styles, label sets and parts lists from template | blocked:D3 |
+| 4.1 | Grading detail: tie-ins to FFLs and existing ground, berms, swales, cut/fill | todo |
+| 4.2 | Hardscape: steps, ramps with landings, retaining/seat walls with top/bottom levels, paving zones | todo |
+| 4.3 | Softscape: planting beds, lawn, tree placement by species/spacing, existing trees retained | blocked:D5 |
+| 4.4 | Drainage: flow arrows, inlets, simple storm pipes, infiltration areas | blocked:D6 |
+| 4.5 | Site elements: furniture, lighting, shade, play as attributed blocks | todo |
+| 4.6 | Documentation: level/slope labels, plant schedule, material and quantity take-offs | todo |
 
 ## M5 — Designer UX
 | # | Item | Status |
 |---|---|---|
-| 5.1 | Template manager: .dwt, styles, label sets, assemblies, design-rule sets | blocked:D3 |
-| 5.2 | Post-generation editing by instruction ("widen road A to 7 m") | todo |
+| 5.1 | Template manager: .dwt, layers, styles, label sets, material/plant/furniture libraries, rule sets | blocked:D3 |
+| 5.2 | Post-generation editing by instruction ("lower the plaza 15 cm, ramp at 1:15") | todo |
 | 5.3 | Generation history: compare versions, roll back | todo |

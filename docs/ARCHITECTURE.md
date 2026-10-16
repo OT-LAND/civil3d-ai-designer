@@ -6,14 +6,14 @@ Designer inputs (sketch, image, text)      Background (survey, lots, rules)
                v                                 v
         +---------------- Core (pure .NET, unit-tested) ----------------+
         |  Input readers -> Claude client -> Design Intent (JSON schema)  |
-        |  Constraint engine  (setbacks, slopes, cover, levels)           |
+        |  Rule engine (accessibility, slopes, tree zones, falls)         |
         |  Design rule sets    (loaded from template/standard files)      |
         +-------------------------------+--------------------------------+
                                         | validated Design Intent
                                         v
         +------------- Civil3DPlugin (AutoCAD + Civil 3D .NET API) ----------+
-        |  Builders: surfaces, parcels, alignments, profiles, assemblies,     |
-        |            corridors, grading, pipe networks, labels                |
+        |  Builders: surfaces, feature lines, grading, hardscape, walls,      |
+        |            planting, drainage, site elements, labels, schedules    |
         |  Palette UI: inputs, preview, constraint report, edit-by-instruction |
         |  Template manager, generation history (undo groups per step)        |
         +----------------------------------------------------------------------+
