@@ -1,5 +1,14 @@
 # Session log (newest first)
 
+## 2026-10-16 — Work: 0.2 CI
+- Done: `.github/workflows/ci.yml` (ubuntu, .NET 8: restore, build Release, test, upload
+  TRX) on every PR and on push to main. Branch `agent/ci` is stacked on PR #1 (0.1) with
+  main merged in; the docs conflicts from Meeting 1 are resolved there (stale open D8 removed).
+- Blocked: NuGet still refused in the cloud (proxy 403) despite D8; .NET SDK came from
+  Ubuntu apt. Core builds clean offline; xUnit tests and plugin shell are proven by CI only.
+- Next: merge #1 then this PR; then 1.1 Design Intent schema v0.
+- Questions: D8b (network access not active).
+
 ## 2026-10-16 — Meeting 1
 - Decided: D1 (Civil 3D 2027), D2 (own API key to start), D4 (DWG survey), D8 (allow NuGet).
 - Unblocked: 0.3, 0.4, 1.2, 1.3, 2.1. New: 5.4 MCP connector (blocked:D9).

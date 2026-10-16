@@ -28,6 +28,15 @@ of your plan. Options: (a) cloud only, you test; (b) agent tests in Civil 3D on 
 sample drawing during the work session; (c) agent tests only when you ask in a meeting.
 *Recommendation:* (c) to start, move to (b) once the plugin loads reliably.
 
+**D8b — Network access for cloud sessions is not active yet (follow-up to D8)**
+On 2026-10-16 the cloud session was still refused `api.nuget.org` and `dot.net` (proxy
+403). The .NET SDK was installed from Ubuntu packages instead, but NuGet restore fails,
+so the agent cannot run `dotnet test` itself; CI (0.2) runs it on GitHub instead.
+Options: (a) add `api.nuget.org` (and optionally `dot.net`, `builds.dotnet.microsoft.com`)
+under claude.ai → Settings → Capabilities → network access; (b) rely on CI only.
+*Recommendation:* (a); a 2-minute settings change, and the agent can then prove tests
+pass before pushing.
+
 ## Decided
 
 **D1 — Civil 3D version** (2026-10-16)

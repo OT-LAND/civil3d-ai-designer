@@ -30,4 +30,5 @@ CivilAI.sln
 src/Core/            CivilAI.Core         net8.0, no Autodesk refs (Geometry/, later Intent/, Rules/, Claude/)
 src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)
 tests/Core.Tests/    CivilAI.Core.Tests   xUnit tests for Core
+.github/workflows/ci.yml  CI: restore, build, test CivilAI.sln on ubuntu (every PR + main)
 ```
