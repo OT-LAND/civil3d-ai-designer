@@ -39,7 +39,7 @@ inputs into a detailed landscape model.
   review/approve, single-step undo, version history and comparison.
 
 ## Two session types
-1. **Work session** (Sun–Thu night): build things.
+1. **Work session** (every night, 7 days a week): build things.
 2. **Meeting session** (Sun–Fri 08:00 Israel time): ask the owner for decisions, record answers.
 
 The scheduled prompt tells you which one you are in.
