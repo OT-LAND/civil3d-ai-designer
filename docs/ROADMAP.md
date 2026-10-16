@@ -49,4 +49,4 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | 5.1 | Template manager: .dwt, layers, styles, label sets, material/plant/furniture libraries, rule sets | blocked:D3 |
 | 5.2 | Post-generation editing by instruction ("lower the plaza 15 cm, ramp at 1:15") | todo |
 | 5.3 | Generation history: compare versions, roll back | todo |
-| 5.4 | MCP connector: expose Core tools so Claude (on the designer's own account) can drive the design agentically | blocked:D9 |
+| 5.4 | MCP connector: expose Core tools so Claude (on the designer's own account) can drive the design agentically; user picks palette or connector mode (D9) | todo — after Core loop |

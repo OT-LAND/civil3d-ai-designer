@@ -2,8 +2,6 @@
 
 ## Open (for the next meeting)
 
-
-
 **D3 — Office template and design standards**
 Is there an existing office .dwt (layers, styles, labels)? Which rules apply: Israeli
 accessibility regulations (route and ramp slopes, landings, handrails), municipal
@@ -30,17 +28,6 @@ of your plan. Options: (a) cloud only, you test; (b) agent tests in Civil 3D on 
 sample drawing during the work session; (c) agent tests only when you ask in a meeting.
 *Recommendation:* (c) to start, move to (b) once the plugin loads reliably.
 
-**D9 — Business model: run on the designer's own Claude account (follow-up to D2)**
-Long-term goal: designers use their own Claude subscription, and the plugin is sold
-monthly/annually with no token billing, and it can also be driven by Claude for agentic
-work. A plugin calling Claude from inside Civil 3D needs an API key (pay per use);
-using the designer's own Claude plan means Claude drives Civil 3D through a connector
-(MCP server) from the Claude app instead. Options: (a) build both — the in-Civil 3D
-palette on an API key now, and an MCP connector exposing the same Core tools; (b) go
-connector-first and make the palette a thin front-end.
-*Recommendation:* (a) — Core stays the same for both; add the connector after the
-first end-to-end loop works.
-
 ## Decided
 
 **D1 — Civil 3D version** (2026-10-16)
@@ -60,6 +47,13 @@ and coordinates: follow-up in D4b.
 **D6 — First target project type** (2026-10-16)
 **(a) Residential courtyard / building surroundings.** First end-to-end loop: lot
 boundary, building FFL tie-ins, accessible route from the street.
+
+**D9 — Two ways to work, user's choice** (2026-10-16)
+**Build both, core first.** Order: shared Core (grading, rules, Design Intent,
+builders) first; then the user chooses per session how to work:
+(1) Civil 3D palette calling Claude with the user's own API key, or
+(2) a connector (MCP server) so Claude, on the user's own Claude account, drives the
+same Core tools, including agentic work. Neither mode may need logic the other lacks.
 
 **D8 — Cloud sessions may download .NET packages** (2026-10-16)
 **(a)**: the owner allows `api.nuget.org`, `dot.net`, `builds.dotnet.microsoft.com` in
