@@ -1,5 +1,16 @@
 # Session log (newest first)
 
+## 2026-10-17 — Work: 0.4 Claude API client
+- Done: `Core/Claude`: `ClaudeClient` (Messages API on plain HttpClient, no package), `ClaudeSettings`
+  (key/model from %APPDATA%\CivilAI\settings.json, env overrides; key never printed), text + image
+  content (type/size checks), structured JSON output via forced tool use (works with the Design
+  Intent schema), retries with retry-after/backoff, clear errors. 18 new test cases with a fake handler.
+  Branch `agent/claude-client` stacked on PR #3 (1.1) → #2 → #1.
+- Blocked: NuGet still 403 (D8b open), so xUnit ran via an offline stand-in runner: 53/53 pass;
+  Core builds clean with warnings-as-errors. CI proves the real run.
+- Next: 1.2 prompt + validator (free text → Design Intent) on top of this client.
+- Questions: none new. Default model `claude-sonnet-4-5` is a setting the owner can change.
+
 ## 2026-10-16 — Work: 1.1 Design Intent schema v0
 - Done: `Core/Intent`: model (site/buildings/entrances with FFL, spaces plaza/path/lawn/bed,
   levels as elevation + spot levels + fall, edges flush/kerb/steps/wall, materials), JSON
