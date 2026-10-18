@@ -1,5 +1,15 @@
 # Session log (newest first)
 
+## 2026-10-18 — Work: 1.2 Prompt + validator (free text → Design Intent)
+- Done: `Core/Intent/TextToIntent` + system prompt `text-to-intent.v0.md` (embedded). Forced tool output
+  `{assumptions, intent}`; shape + content validation; repair loop with the problem list (max 3 calls);
+  given site always kept unchanged; assumptions returned for the designer to review. 12 new tests.
+- NuGet works now (D8b): real `dotnet build` + `dotnet test` ran here: 65/65 pass, Release 0 warnings.
+- Blocked: nothing.
+- Next: 1.4 preview needs 0.3 (plugin load) first, so 0.3 next; or 1.3 builders (needs Civil 3D to verify).
+- Questions: none new. Not yet tried against the live API (no key in the cloud); the owner can try once
+  0.3/1.4 give it a button.
+
 ## 2026-10-18 — Meeting 2
 - Decided: D8b (network access active), D3 (no office template; user chooses template and
   rule set, default starter set ships), D4b (trees as DWG blocks or table; units/CRS vary,

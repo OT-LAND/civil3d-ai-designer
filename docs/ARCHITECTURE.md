@@ -38,6 +38,16 @@ Claude client (0.4, palette mode of D9)
 - Retries 408/409/429/5xx/529 and transport errors with server `retry-after` or 1-2-4 s backoff +
   jitter; 400/401/403/404 fail at once with the API's message (`ClaudeApiException`).
 
+Free text → Design Intent (1.2)
+- `Core/Intent/TextToIntent`: brief + optional surveyed `Site` → `TextToIntentResult` (intent, assumptions,
+  attempts, tokens). System prompt is the embedded `Intent/Prompts/text-to-intent.v0.md` (landscape language,
+  units, site rules, default falls/widths stated as assumptions).
+- Tool output = `{ assumptions: string[], intent: Design Intent v0 }` (intent schema's `$defs` lifted to the
+  root). Each answer goes through `TryParse` + `DesignIntentValidator`; problems are sent back in a repair
+  prompt (brief + previous JSON + problem list), up to `MaxAttempts` (3) calls, then `TextToIntentException`.
+- The given site always replaces Claude's site: the AI cannot move buildings or change FFLs.
+- Takes a send delegate, so the connector mode (D9) or tests can supply their own sender.
+
 Principles
 - Claude produces intent; deterministic code produces geometry.
 - Every generation step is previewable, reversible, and re-runnable.
@@ -50,6 +60,7 @@ src/Core/            CivilAI.Core         net8.0, no Autodesk refs (Geometry/, I
 src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator; Schema/ holds the
                      JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
 samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
+src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)
 tests/Core.Tests/    CivilAI.Core.Tests   xUnit tests for Core
