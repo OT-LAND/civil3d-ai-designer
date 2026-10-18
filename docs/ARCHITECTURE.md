@@ -19,7 +19,39 @@ Designer inputs (sketch, image, text)      Background (survey, lots, rules)
         +----------------------------------------------------------------------+
 ```
 
+Design Intent v0 (1.1)
+- Metres, drawing coordinates (CRS per D4b), absolute levels. Polygons implicitly closed.
+- site (lot border, buildings with FFL and entrances) · spaces (plaza/lawn/bed by outline,
+  path by centerline + width; level = nominal elevation, spot levels, fall) · edges (flush,
+  kerb, steps, wall between 1–2 spaces, with height) · materials (id, name, category).
+- Two checks: `DesignIntentJson.TryParse` (shape: unknown fields/kinds rejected) and
+  `DesignIntentValidator` (ids, references, usable geometry). Design rules are 2.2, not here.
+
+Claude client (0.4, palette mode of D9)
+- `Core/Claude`: `ClaudeClient` posts to the Messages API with plain HttpClient + System.Text.Json
+  (no SDK package). Settings: `%APPDATA%\CivilAI\settings.json` (`anthropicApiKey`, `model`,
+  `maxTokens`, `maxRetries`, `baseUrl`), overridden by env `ANTHROPIC_API_KEY` / `CIVILAI_CLAUDE_MODEL` (D2).
+- Content: text + images (JPEG/PNG/GIF/WebP, base64, 5 MB each) for sketches and references.
+- Structured output by forced tool use: `JsonOutputSpec(toolName, schema)` sends the schema as the
+  tool's `input_schema` with `tool_choice` = that tool; the reply's tool input is `ClaudeResponse.Json`.
+  The Design Intent schema (`DesignIntentJson.ReadSchema()`) plugs in directly (1.2).
+- Retries 408/409/429/5xx/529 and transport errors with server `retry-after` or 1-2-4 s backoff +
+  jitter; 400/401/403/404 fail at once with the API's message (`ClaudeApiException`).
+
 Principles
 - Claude produces intent; deterministic code produces geometry.
 - Every generation step is previewable, reversible, and re-runnable.
 - `Core` has zero Autodesk references so it builds and tests in the cloud.
+
+Repository layout
+```
+CivilAI.sln
+src/Core/            CivilAI.Core         net8.0, no Autodesk refs (Geometry/, Intent/, later Rules/, Claude/)
+src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator; Schema/ holds the
+                     JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
+samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
+src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
+src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)
+tests/Core.Tests/    CivilAI.Core.Tests   xUnit tests for Core
+.github/workflows/ci.yml  CI: restore, build, test CivilAI.sln on ubuntu (every PR + main)
+```

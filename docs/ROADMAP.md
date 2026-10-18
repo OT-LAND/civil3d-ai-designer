@@ -5,15 +5,15 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 ## M0 — Foundations
 | # | Item | Status |
 |---|---|---|
-| 0.1 | Solution skeleton: `Core` (no Autodesk refs), `Civil3DPlugin`, `Tests`; Core builds and tests on Linux | todo |
-| 0.2 | GitHub Actions: build + test on every PR | todo |
+| 0.1 | Solution skeleton: `Core` (no Autodesk refs), `Civil3DPlugin`, `Tests`; Core builds and tests on Linux | done |
+| 0.2 | GitHub Actions: build + test on every PR | done |
 | 0.3 | Plugin load (bundle/PackageContents.xml), ribbon tab, empty palette, `AIHELLO` command (owner tests), Civil 3D 2027 | todo |
-| 0.4 | Claude API client in `Core` (key from settings, retries, image input, structured JSON output) | todo |
+| 0.4 | Claude API client in `Core` (key from settings, retries, image input, structured JSON output) | done |
 
 ## M1 — Design Intent pipeline (text → graded spaces)
 | # | Item | Status |
 |---|---|---|
-| 1.1 | Design Intent JSON schema v0: site, spaces (plaza/path/lawn/bed), levels, edges, materials | todo |
+| 1.1 | Design Intent JSON schema v0: site, spaces (plaza/path/lawn/bed), levels, edges, materials | done |
 | 1.2 | Prompt + validator: free text → Design Intent | todo |
 | 1.3 | Builders: existing surface from survey; feature lines + proposed surface for spaces | todo |
 | 1.4 | Preview-and-confirm UI before writing to the drawing | todo |

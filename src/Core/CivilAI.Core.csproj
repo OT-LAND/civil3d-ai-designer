@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Core: Civil 3D-independent logic (geometry, grading math, rule checks, Design Intent,
+    Claude client). No Autodesk references, so it builds and tests on Linux / in CI.
+    net8.0 matches Civil 3D 2025+. If D1 adds Civil 3D 2024 or older (.NET Framework 4.8),
+    retarget to netstandard2.0 (Slope.cs is already written to compile there).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>CivilAI.Core</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Design Intent JSON Schema; read with DesignIntentJson.ReadSchema(). -->
+    <EmbeddedResource Include="Intent\Schema\design-intent.v0.schema.json" LogicalName="CivilAI.Core.Intent.Schema.design-intent.v0.schema.json" />
+  </ItemGroup>
+
+</Project>

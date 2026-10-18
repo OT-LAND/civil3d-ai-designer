@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "0",
+  "site": {
+    "name": "Residential courtyard (sample for D6)",
+    "lotBoundary": [
+      { "x": -10, "y": -25 }, { "x": 30, "y": -25 }, { "x": 30, "y": 20 }, { "x": -10, "y": 20 }
+    ],
+    "buildings": [
+      {
+        "id": "bldg-a",
+        "name": "Building A",
+        "footprint": [
+          { "x": 0, "y": 0 }, { "x": 20, "y": 0 }, { "x": 20, "y": 12 }, { "x": 0, "y": 12 }
+        ],
+        "ffl": 52.40,
+        "entrances": [
+          { "id": "ent-main", "name": "Main entrance", "location": { "x": 10, "y": 0 }, "thresholdLevel": 52.38, "accessible": true }
+        ]
+      }
+    ]
+  },
+  "spaces": [
+    {
+      "id": "plaza-entry",
+      "kind": "plaza",
+      "name": "Entrance plaza",
+      "outline": [
+        { "x": 4, "y": -8 }, { "x": 16, "y": -8 }, { "x": 16, "y": 0 }, { "x": 4, "y": 0 }
+      ],
+      "level": {
+        "elevation": 52.38,
+        "spots": [ { "x": 10, "y": 0, "z": 52.38, "note": "door threshold" } ],
+        "fall": { "percent": 1.5, "directionDegrees": 270 }
+      },
+      "materialId": "pavers-grey"
+    },
+    {
+      "id": "path-street",
+      "kind": "path",
+      "name": "Accessible route from the street",
+      "centerline": [ { "x": 10, "y": -8 }, { "x": 10, "y": -25 } ],
+      "width": 1.8,
+      "level": {
+        "spots": [
+          { "x": 10, "y": -8, "z": 52.26, "note": "plaza edge" },
+          { "x": 10, "y": -25, "z": 51.60, "note": "street pavement" }
+        ]
+      },
+      "materialId": "pavers-grey"
+    },
+    {
+      "id": "lawn-west",
+      "kind": "lawn",
+      "name": "Play lawn",
+      "outline": [
+        { "x": -8, "y": -20 }, { "x": 8.5, "y": -20 }, { "x": 8.5, "y": -9 }, { "x": -8, "y": -9 }
+      ],
+      "materialId": "lawn"
+    },
+    {
+      "id": "bed-east",
+      "kind": "bed",
+      "name": "Shade planting",
+      "outline": [
+        { "x": 16, "y": -20 }, { "x": 28, "y": -20 }, { "x": 28, "y": -2 }, { "x": 16, "y": -2 }
+      ],
+      "level": { "elevation": 52.80, "spots": [] },
+      "materialId": "planting-mulch"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-plaza-path",
+      "kind": "flush",
+      "line": [ { "x": 9.1, "y": -8 }, { "x": 10.9, "y": -8 } ],
+      "spaceIds": [ "plaza-entry", "path-street" ]
+    },
+    {
+      "id": "wall-seat-east",
+      "kind": "wall",
+      "line": [ { "x": 16, "y": -8 }, { "x": 16, "y": -2 } ],
+      "spaceIds": [ "plaza-entry", "bed-east" ],
+      "height": 0.45
+    }
+  ],
+  "materials": [
+    { "id": "pavers-grey", "name": "Concrete pavers, grey", "category": "paving" },
+    { "id": "lawn", "name": "Lawn", "category": "lawn" },
+    { "id": "planting-mulch", "name": "Shrub planting with mulch", "category": "planting" }
+  ]
+}
