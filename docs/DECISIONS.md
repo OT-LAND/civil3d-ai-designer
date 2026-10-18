@@ -2,42 +2,40 @@
 
 ## Open (for the next meeting)
 
-**D3 — Office template and design standards**
-Is there an existing office .dwt (layers, styles, labels)? Which rules apply: Israeli
-accessibility regulations (route and ramp slopes, landings, handrails), municipal
-landscape and tree requirements, water-wise planting guidelines?
-*Recommendation:* send one real template and the key rule tables; the agent turns them
-into rule files.
-
-**D4b — Tree survey and coordinates (follow-up to D4)**
-The survey arrives as a DWG. Do existing trees come as blocks in that DWG with
-attributes (species, trunk, canopy), or as a separate table? Is the coordinate system
-always the Israeli TM Grid (ITM)?
-*Recommendation:* tree blocks in the DWG plus an optional CSV table; ITM.
-
-**D5 — Plant library**
-Is there an office plant list (species, size at planting, mature canopy, water needs,
-spacing)? Should the AI propose species or only planting zones the designer fills in?
-*Recommendation:* v1 proposes zones and tree positions; species from your office list.
-
-**D7 — Let the agent test in your Civil 3D?**
-Your computer has a Civil 3D connection the agent can drive (run commands, query the
-drawing). If work sessions may use it, the agent can load each build and check results
-itself, but only when your PC is on with the Claude desktop app open, and it uses more
-of your plan. Options: (a) cloud only, you test; (b) agent tests in Civil 3D on a
-sample drawing during the work session; (c) agent tests only when you ask in a meeting.
-*Recommendation:* (c) to start, move to (b) once the plugin loads reliably.
-
-**D8b — Network access for cloud sessions is not active yet (follow-up to D8)**
-On 2026-10-16 the cloud session was still refused `api.nuget.org` and `dot.net` (proxy
-403). The .NET SDK was installed from Ubuntu packages instead, but NuGet restore fails,
-so the agent cannot run `dotnet test` itself; CI (0.2) runs it on GitHub instead.
-Options: (a) add `api.nuget.org` (and optionally `dot.net`, `builds.dotnet.microsoft.com`)
-under claude.ai → Settings → Capabilities → network access; (b) rely on CI only.
-*Recommendation:* (a); a 2-minute settings change, and the agent can then prove tests
-pass before pushing.
+_None._
 
 ## Decided
+
+**D8b — Cloud network access is active** (2026-10-18)
+**(a)**: the owner has added the NuGet / .NET hosts to network access. Work sessions
+run the real `dotnet restore` / `dotnet test` before pushing; the offline stand-in
+runner is no longer needed. (If NuGet is still refused, log it and fall back to CI.)
+
+**D3 — Templates and design standards: user chooses** (2026-10-18)
+There is **no office template yet**. The designer must be able to **choose a template**
+(.dwt with layers, styles, labels) and a **design-rule set** per drawing/project.
+The plugin ships a **default starter template and a default rule set** (published
+Israeli accessibility values: route and ramp slopes, landings, handrails; plus generic
+lawn/bed slope and drainage-fall limits), all in editable data files with their source
+noted. Office- or municipality-specific rule sets are added later as extra files.
+
+**D4b — Trees and coordinates in the survey** (2026-10-18)
+**(c) Support both**: trees as attributed blocks in the survey DWG, and trees as
+points/blocks with species and sizes in a separate table (Excel/CSV), with a mapping
+step for field names. **Coordinate system and units vary** by project: the import must
+read the drawing's units and coordinate system when set, otherwise ask the designer
+(never assume ITM or metres silently). Core works in metres internally.
+
+**D5 — Planting: AI proposes species from the user's plant list** (2026-10-18)
+**(b)**: the AI proposes planting zones, tree positions **and species**, matched to
+sun, water and space, chosen **only from a plant list the user selects or uploads**
+(same pattern as D3: a default starter list ships, users choose/upload their own).
+Plant list fields: species, size at planting, mature canopy, water needs, spacing.
+
+**D7 — Agent testing in Civil 3D** (2026-10-18)
+**(c)**: the agent tests in the owner's Civil 3D only when asked during a meeting.
+Work sessions stay cloud-only; the owner tests "Please test" PRs. Revisit (b) once
+the plugin loads reliably.
 
 **D1 — Civil 3D version** (2026-10-16)
 Civil 3D **2027** only. Plugin targets the 2027 .NET API (.NET 8). The owner tests

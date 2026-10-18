@@ -1,5 +1,13 @@
 # Session log (newest first)
 
+## 2026-10-18 — Meeting 2
+- Decided: D8b (network access active), D3 (no office template; user chooses template and
+  rule set, default starter set ships), D4b (trees as DWG blocks or table; units/CRS vary,
+  read or ask), D5 (AI proposes species from user's plant list), D7 (test in Civil 3D only on request).
+- Unblocked: 2.2, 4.3, 5.1. Updated: 2.1 (tree sources, units/CRS).
+- Open: none.
+- Owner approved PRs #1–#4; merged as one stack via #4 (main merged into
+  `agent/claude-client`, stale open D8b dropped; 0.1, 0.2, 0.4, 1.1 → done).
 ## 2026-10-17 — Work: 0.4 Claude API client
 - Done: `Core/Claude`: `ClaudeClient` (Messages API on plain HttpClient, no package), `ClaudeSettings`
   (key/model from %APPDATA%\CivilAI\settings.json, env overrides; key never printed), text + image
