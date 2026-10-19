@@ -17,6 +17,8 @@
   <ItemGroup>
     <!-- Design Intent JSON Schema; read with DesignIntentJson.ReadSchema(). -->
     <EmbeddedResource Include="Intent\Schema\design-intent.v0.schema.json" LogicalName="CivilAI.Core.Intent.Schema.design-intent.v0.schema.json" />
+    <!-- System prompt for free text → Design Intent (1.2); read with TextToIntent.ReadSystemPrompt(). -->
+    <EmbeddedResource Include="Intent\Prompts\text-to-intent.v0.md" LogicalName="CivilAI.Core.Intent.Prompts.text-to-intent.v0.md" />
   </ItemGroup>
 
 </Project>
