@@ -1,5 +1,16 @@
 # Session log (newest first)
 
+## 2026-10-19 — Work: 0.3 Plugin load in Civil 3D 2027
+- Done: autoloader bundle (`PackageContents.xml`, Civil3D R26.0, load at startup), `PluginApp` with the
+  "AI Landscape" ribbon tab (Designer palette + Hello buttons, re-added after workspace switch), commands
+  `AIHELLO` and `AIPALETTE` (WPF palette, status panel). Status text in Core `Diagnostics/HelloReport`
+  (8 new tests). Autodesk code compiles only where Civil 3D 2027 is installed; CI builds the shell.
+- Real `dotnet build` + `dotnet test`: 73/73 pass. Plugin code type-checked here against throwaway stubs only.
+- Blocked: nothing. Owner must test in Civil 3D (steps in the PR).
+- Next: after the owner's test, 1.4 preview-and-confirm UI (palette: brief → Design Intent → preview), or 1.3.
+- Questions: none new. Unverified here: whether Civil 3D 2027 runs plugins on .NET 8 (D1) or a newer
+  runtime; the PR gives a one-flag fallback.
+
 ## 2026-10-19 — Meeting 3
 - Decided: none new (no open questions).
 - Owner approved PR #5 (1.2 free text → Design Intent); merged to main, 1.2 → done.

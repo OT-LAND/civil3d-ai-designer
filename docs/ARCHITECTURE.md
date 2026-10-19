@@ -48,6 +48,16 @@ Free text → Design Intent (1.2)
 - The given site always replaces Claude's site: the AI cannot move buildings or change FFLs.
 - Takes a send delegate, so the connector mode (D9) or tests can supply their own sender.
 
+Plugin shell (0.3)
+- `src/Civil3DPlugin` targets Civil 3D 2027 (D1, release R26.0). With Civil 3D installed (Windows,
+  `$(AutoCADDir)` = `C:\Program Files\Autodesk\AutoCAD 2027`) it references accoremgd/acdbmgd/acmgd/AdWindows/
+  AeccDbMgd (Private=false), compiles `Civil3D/` and writes `bin/<cfg>/<tfm>/CivilAI.bundle` (autoloader;
+  `-p:InstallBundle=true` copies it to `%APPDATA%\Autodesk\ApplicationPlugins`). Without Civil 3D (Linux/CI)
+  only the Autodesk-free `PluginInfo` compiles, so CI stays green.
+- `PluginApp` (IExtensionApplication): adds the "AI Landscape" ribbon tab when the ribbon is ready and after
+  a workspace switch (WSCURRENT). Commands (group CIVILAI): `AIHELLO` (status text from Core
+  `Diagnostics/HelloReport`), `AIPALETTE` (PaletteSet hosting WPF, fixed Guid; status panel for now).
+
 Principles
 - Claude produces intent; deterministic code produces geometry.
 - Every generation step is previewable, reversible, and re-runnable.
@@ -62,7 +72,9 @@ src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator;
 samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
-src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)
+src/Core/Diagnostics/ HelloReport: AIHELLO / palette status text (versions, Civil 3D, Claude key; never the key)
+src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D 2027 plugin; Civil3D/ (Autodesk code, Windows + Civil 3D only),
+                     Bundle/PackageContents.xml (autoloader manifest)
 tests/Core.Tests/    CivilAI.Core.Tests   xUnit tests for Core
 .github/workflows/ci.yml  CI: restore, build, test CivilAI.sln on ubuntu (every PR + main)
 ```

@@ -1,8 +1,7 @@
 # Roadmap 0.2: build + test on every PR and on main.
 # Runs on Linux: Core and its tests have no Autodesk references. The Civil 3D plugin shell
-# builds here via EnableWindowsTargeting; once 0.3 adds Autodesk references (Civil 3D 2027,
-# not available on CI runners), the plugin project will need its own Windows job or to be
-# excluded from this one.
+# builds here via EnableWindowsTargeting. Since 0.3 its Autodesk code (src/Civil3DPlugin/Civil3D)
+# compiles only where Civil 3D 2027 is installed, so here only the Autodesk-free shell builds.
 name: CI
 
 on:
