@@ -14,7 +14,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | # | Item | Status |
 |---|---|---|
 | 1.1 | Design Intent JSON schema v0: site, spaces (plaza/path/lawn/bed), levels, edges, materials | done |
-| 1.2 | Prompt + validator: free text → Design Intent | review |
+| 1.2 | Prompt + validator: free text → Design Intent | done |
 | 1.3 | Builders: existing surface from survey; feature lines + proposed surface for spaces | todo |
 | 1.4 | Preview-and-confirm UI before writing to the drawing | todo |
 

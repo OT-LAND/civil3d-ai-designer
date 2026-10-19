@@ -1,5 +1,10 @@
 # Session log (newest first)
 
+## 2026-10-19 — Meeting 3
+- Decided: none new (no open questions).
+- Owner approved PR #5 (1.2 free text → Design Intent); merged to main, 1.2 → done.
+- Next work item: 0.3 plugin loads in Civil 3D 2027 (will carry "Please test in Civil 3D" steps).
+
 ## 2026-10-18 — Work: 1.2 Prompt + validator (free text → Design Intent)
 - Done: `Core/Intent/TextToIntent` + system prompt `text-to-intent.v0.md` (embedded). Forced tool output
   `{assumptions, intent}`; shape + content validation; repair loop with the problem list (max 3 calls);
