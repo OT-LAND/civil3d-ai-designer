@@ -5,19 +5,23 @@
 
     Two build modes:
     - On a Windows PC with Civil 3D 2027 installed: Autodesk references are found in
-      $(AutoCADDir) (default C:\Program Files\Autodesk\AutoCAD 2027), the Civil3D/ code is
-      compiled, and the output folder gets a ready-to-copy CivilAI.bundle.
+      $(AutoCADDir) (default C:\Program Files\Autodesk\AutoCAD 2027), and the output folder
+      gets a ready-to-copy CivilAI.bundle.
       Override the folder with -p:AutoCADDir="D:\...\AutoCAD 2027".
       Add -p:InstallBundle=true to also copy the bundle to %APPDATA%\Autodesk\ApplicationPlugins.
-    - Anywhere else (Linux, CI): no Autodesk DLLs, so only the Autodesk-free shell compiles.
-      CI stays green; the real plugin is verified by the owner in Civil 3D.
+    - Anywhere else (Linux, CI): the AutoCAD code still compiles, against Autodesk's own
+      compile-only NuGet package AutoCAD.NET 26.0.0 ("AutoCAD 2027 .Net API"), so CI really
+      type-checks it. The Civil 3D API (AeccDbMgd) is not on NuGet; the one call that needs it
+      is behind CIVIL3D_API. No bundle is made in this mode.
 
-    Target framework: .NET 8 per D1. If Civil 3D 2027 turns out to need a newer runtime,
-    build with -p:Civil3DTargetFramework=net10.0-windows (needs that SDK).
+    Target framework: net10.0-windows. AutoCAD/Civil 3D 2027 run on .NET 10 (the AutoCAD.NET
+    26.0.0 package targets net10.0), so a .NET 8 plugin cannot reference the 2027 DLLs.
+    Core stays net8.0 and loads unchanged in the .NET 10 host.
   -->
   <PropertyGroup>
-    <Civil3DTargetFramework Condition="'$(Civil3DTargetFramework)' == ''">net8.0-windows</Civil3DTargetFramework>
-    <TargetFramework>$(Civil3DTargetFramework)</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -37,16 +41,14 @@
     <ProjectReference Include="..\Core\CivilAI.Core.csproj" />
   </ItemGroup>
 
-  <!-- Without Civil 3D: compile only the Autodesk-free shell. -->
+  <!-- Without Civil 3D: AutoCAD 2027 API from NuGet, compile-only (never copied to the output). -->
   <ItemGroup Condition="'$(HasAutoCAD)' != 'true'">
-    <Compile Remove="Civil3D\**" />
+    <PackageReference Include="AutoCAD.NET" Version="26.0.0" ExcludeAssets="runtime" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- With Civil 3D 2027 installed: the real plugin. -->
+  <!-- With Civil 3D 2027 installed: the real plugin, including the Civil 3D API. -->
   <PropertyGroup Condition="'$(HasAutoCAD)' == 'true'">
-    <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
-    <DefineConstants>$(DefineConstants);CIVIL3D</DefineConstants>
+    <DefineConstants>$(DefineConstants);CIVIL3D;CIVIL3D_API</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(HasAutoCAD)' == 'true'">

@@ -1,7 +1,7 @@
 # Roadmap 0.2: build + test on every PR and on main.
 # Runs on Linux: Core and its tests have no Autodesk references. The Civil 3D plugin shell
-# builds here via EnableWindowsTargeting. Since 0.3 its Autodesk code (src/Civil3DPlugin/Civil3D)
-# compiles only where Civil 3D 2027 is installed, so here only the Autodesk-free shell builds.
+# (net10.0-windows, Civil 3D 2027) builds here via EnableWindowsTargeting against Autodesk's
+# compile-only AutoCAD.NET 26.0.0 NuGet package; .NET 10 SDK builds it, .NET 8 runs Core tests.
 name: CI
 
 on:
@@ -25,7 +25,9 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: |
+            8.0.x
+            10.0.x
 
       - name: Restore
         run: dotnet restore CivilAI.sln

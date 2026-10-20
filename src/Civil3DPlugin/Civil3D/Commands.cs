@@ -39,9 +39,14 @@ namespace CivilAI.Civil3DPlugin.Civil3D
             catch (System.Exception) { return false; } // plain AutoCAD: AeccDbMgd is not there
         }
 
+#if CIVIL3D_API
         // Separate, non-inlined method so a missing Civil 3D assembly fails here, inside the try.
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool HasCivilDocument() =>
             Autodesk.Civil.ApplicationServices.CivilApplication.ActiveDocument != null;
+#else
+        // Cloud/CI type-check build only (no Civil 3D API on NuGet); never shipped in a bundle.
+        private static bool HasCivilDocument() => false;
+#endif
     }
 }

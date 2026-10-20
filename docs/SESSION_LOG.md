@@ -1,5 +1,19 @@
 # Session log (newest first)
 
+## 2026-10-20 — Work: fix 0.3 target runtime (PR #6)
+- Found: Autodesk's own NuGet package AutoCAD.NET 26.0.0 ("AutoCAD 2027 .Net API") targets **.NET 10**,
+  so the PR #6 default (net8.0-windows) could not reference the 2027 DLLs on the owner's PC. Answers the
+  open technical point from 2026-10-19; this is a fact about Civil 3D 2027, not a change to D1.
+- Done (pushed to PR #6): plugin targets net10.0-windows; without Civil 3D it compiles the real AutoCAD
+  code against AutoCAD.NET 26.0.0 (compile-only, never copied), so CI type-checks the ribbon, palette and
+  commands against the true 2027 API (was: throwaway stubs). Only the AeccDbMgd call is behind
+  `CIVIL3D_API`. CI installs .NET 8 + 10. Real build 0 warnings; tests 73/73 pass.
+- Note: this session first re-did 0.3 by mistake (missed open PR #6); that copy was discarded, not pushed.
+  Future sessions: check open PRs before picking an item.
+- Blocked: nothing. 0.3 still needs the owner's Civil 3D test (needs .NET 10 SDK to build).
+- Next: after the owner's test, 1.4 preview UI or 1.3; 2.2 rule engine is Core-only and unblocked.
+- Questions: none new.
+
 ## 2026-10-19 — Work: 0.3 Plugin load in Civil 3D 2027
 - Done: autoloader bundle (`PackageContents.xml`, Civil3D R26.0, load at startup), `PluginApp` with the
   "AI Landscape" ribbon tab (Designer palette + Hello buttons, re-added after workspace switch), commands

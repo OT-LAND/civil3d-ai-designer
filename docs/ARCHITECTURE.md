@@ -49,11 +49,13 @@ Free text → Design Intent (1.2)
 - Takes a send delegate, so the connector mode (D9) or tests can supply their own sender.
 
 Plugin shell (0.3)
-- `src/Civil3DPlugin` targets Civil 3D 2027 (D1, release R26.0). With Civil 3D installed (Windows,
+- `src/Civil3DPlugin` targets Civil 3D 2027 (D1, release R26.0) on **net10.0-windows**: the 2027 API is
+  .NET 10 (Autodesk NuGet AutoCAD.NET 26.0.0 targets net10.0); Core stays net8.0 and loads in that host. With Civil 3D installed (Windows,
   `$(AutoCADDir)` = `C:\Program Files\Autodesk\AutoCAD 2027`) it references accoremgd/acdbmgd/acmgd/AdWindows/
-  AeccDbMgd (Private=false), compiles `Civil3D/` and writes `bin/<cfg>/<tfm>/CivilAI.bundle` (autoloader;
+  AeccDbMgd (Private=false), defines CIVIL3D_API and writes `bin/<cfg>/<tfm>/CivilAI.bundle` (autoloader;
   `-p:InstallBundle=true` copies it to `%APPDATA%\Autodesk\ApplicationPlugins`). Without Civil 3D (Linux/CI)
-  only the Autodesk-free `PluginInfo` compiles, so CI stays green.
+  `Civil3D/` still compiles against the compile-only NuGet AutoCAD.NET 26.0.0 (never copied to output);
+  only the AeccDbMgd call sits behind `#if CIVIL3D_API`; no bundle is made. CI installs .NET 8 + 10 SDKs.
 - `PluginApp` (IExtensionApplication): adds the "AI Landscape" ribbon tab when the ribbon is ready and after
   a workspace switch (WSCURRENT). Commands (group CIVILAI): `AIHELLO` (status text from Core
   `Diagnostics/HelloReport`), `AIPALETTE` (PaletteSet hosting WPF, fixed Guid; status panel for now).
@@ -73,7 +75,7 @@ samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential c
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Core/Diagnostics/ HelloReport: AIHELLO / palette status text (versions, Civil 3D, Claude key; never the key)
-src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D 2027 plugin; Civil3D/ (Autodesk code, Windows + Civil 3D only),
+src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D 2027 plugin (net10.0-windows); Civil3D/ (Autodesk code),
                      Bundle/PackageContents.xml (autoloader manifest)
 tests/Core.Tests/    CivilAI.Core.Tests   xUnit tests for Core
 .github/workflows/ci.yml  CI: restore, build, test CivilAI.sln on ubuntu (every PR + main)
