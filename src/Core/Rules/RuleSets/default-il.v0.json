@@ -1,0 +1,57 @@
+{
+  "ruleSetVersion": "0",
+  "id": "default-il",
+  "name": "Default starter rule set (Israel)",
+  "description": "Starter design rules shipped with the plugin (D3). Copy this file and edit values for an office or municipality. Values marked verified=false still need checking against the published standard before relying on them.",
+  "rules": [
+    {
+      "id": "path.maxLongitudinalSlopePercent",
+      "value": 5.0,
+      "label": "Accessible route: maximum slope along the path",
+      "source": "SI 1918 part 1 (accessible route; steeper than this is a ramp)",
+      "verified": false
+    },
+    {
+      "id": "path.maxCrossFallPercent",
+      "value": 2.0,
+      "label": "Accessible route: maximum cross fall",
+      "source": "SI 1918 part 1 (accessible route cross slope)",
+      "verified": false
+    },
+    {
+      "id": "plaza.minFallPercent",
+      "value": 1.0,
+      "label": "Paved plaza: minimum drainage fall",
+      "source": "Generic good practice for unit paving drainage (editable)",
+      "verified": false
+    },
+    {
+      "id": "plaza.maxFallPercent",
+      "value": 2.0,
+      "label": "Paved plaza: maximum fall (plaza is part of the accessible route)",
+      "source": "SI 1918 part 1 (level areas on the accessible route)",
+      "verified": false
+    },
+    {
+      "id": "lawn.minFallPercent",
+      "value": 1.0,
+      "label": "Lawn: minimum fall so it drains",
+      "source": "Generic good practice (editable)",
+      "verified": false
+    },
+    {
+      "id": "lawn.maxSlopePercent",
+      "value": 25.0,
+      "label": "Lawn: maximum slope for mowing (1:4)",
+      "source": "Generic good practice (editable)",
+      "verified": false
+    },
+    {
+      "id": "bed.maxSlopePercent",
+      "value": 33.0,
+      "label": "Planting bed: maximum slope before it needs erosion control (1:3)",
+      "source": "Generic good practice (editable)",
+      "verified": false
+    }
+  ]
+}

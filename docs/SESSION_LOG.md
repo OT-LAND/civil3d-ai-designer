@@ -1,5 +1,16 @@
 # Session log (newest first)
 
+## 2026-10-21 — Work: 2.2a Rule engine, first slice
+- Done: `Core/Rules`: rule-set file format + strict loader, embedded default starter set `default-il.v0.json`
+  (D3; every value has a source note, all flagged not verified), `RuleEngine` checking path slope along the
+  route and cross fall, plaza min/max fall, lawn min fall / max slope, bed max slope; report is
+  pass / fail / not checked per rule per space, with a zoom point and a designer-facing sentence. Courtyard
+  sample passes. 11 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 76/76 pass.
+- Split 2.2: ramp/step geometry, tree protection zones and setbacks moved to new item 2.2b.
+- Blocked: nothing. (.NET 8 SDK had to be installed from apt this session.)
+- Next: 2.2b needs trees/setbacks in the intent (or 2.1 import); 2.3 report palette needs 0.3 (PR #6) tested first.
+- Questions: D10 (confirm default accessibility values), D11 (are all paths accessible routes?).
+
 ## 2026-10-21 — Meeting 4
 - Decided: none new (no open questions).
 - Reported: PR #6 (0.3 plugin load, now .NET 10) waits for the owner's Civil 3D test; needs .NET 10 SDK.

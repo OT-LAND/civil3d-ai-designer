@@ -2,7 +2,20 @@
 
 ## Open (for the next meeting)
 
-_None._
+**D10 — Confirm the default accessibility values** (raised 2026-10-21, 2.2a)
+The default rule set (`src/Core/Rules/RuleSets/default-il.v0.json`) ships with values
+marked *not verified*: accessible route max slope along the path **5%** (steeper = ramp),
+max cross fall **2%**, paved plaza fall **1–2%**, lawn fall min **1%** / max **25% (1:4)**,
+planting bed max **33% (1:3)**. Options: (a) owner confirms or corrects these against
+SI 1918 / the building regulations; (b) owner sends the standard text and the agent
+transcribes it; (c) keep as is, flagged "not verified" in the report. Recommendation: (a).
+
+**D11 — Is every path part of the accessible route?** (raised 2026-10-21, 2.2a)
+2.2a checks every path against accessible-route limits. Garden paths (stepping
+stones, steep woodland trails) may be meant as non-accessible. Options: (a) all paths
+accessible unless the designer marks one "not accessible" (adds a flag to the Design
+Intent); (b) only paths the designer marks "accessible route" are checked;
+(c) keep all paths accessible for now. Recommendation: (a), safe by default.
 
 ## Decided
 
