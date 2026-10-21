@@ -22,7 +22,8 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | # | Item | Status |
 |---|---|---|
 | 2.1 | Import survey, existing trees, lot borders, buildings/FFLs (DWG survey first; trees as DWG blocks or separate table with field mapping; read units/coordinate system or ask, per D4b) | todo |
-| 2.2 | Rule engine: accessible route slopes, ramp/step geometry, max lawn/bed slopes, drainage falls, tree protection zones, setbacks; rules from a selectable rule-set file, default set = published Israeli accessibility values (D3) | todo |
+| 2.2a | Rule engine, first slice: rule-set file format + loader, default starter set (D3), checks for path slope/cross fall, plaza/lawn min fall + max fall/slope, bed max slope; pass/fail/not-checked report with zoom points | review |
+| 2.2b | Rule engine, second slice: ramp/step geometry (landings, riser/tread, handrail zones), tree protection zones, setbacks (needs trees + setbacks in the intent or from 2.1) | todo |
 | 2.3 | Constraint report palette (pass/fail per rule, zoom to problem) | todo |
 
 ## M3 — Visual inputs
