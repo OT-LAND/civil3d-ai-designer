@@ -1,5 +1,10 @@
 # Session log (newest first)
 
+## 2026-10-21 — Meeting 4
+- Decided: none new (no open questions).
+- Reported: PR #6 (0.3 plugin load, now .NET 10) waits for the owner's Civil 3D test; needs .NET 10 SDK.
+- Next work item: 2.2 rule engine (Core-only) while 0.3 awaits test.
+
 ## 2026-10-19 — Meeting 3
 - Decided: none new (no open questions).
 - Owner approved PR #5 (1.2 free text → Design Intent); merged to main, 1.2 → done.
