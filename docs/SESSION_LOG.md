@@ -1,5 +1,9 @@
 # Session log (newest first)
 
+## 2026-10-22 — Meeting 5
+- Asked: D10 (confirm default accessibility values), D11 (are all paths accessible routes?); both raised in PR #7, awaiting answers.
+- Reported: PR #7 (2.2a rule engine) awaits review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
 ## 2026-10-21 — Meeting 4
 - Decided: none new (no open questions).
 - Reported: PR #6 (0.3 plugin load, now .NET 10) waits for the owner's Civil 3D test; needs .NET 10 SDK.
