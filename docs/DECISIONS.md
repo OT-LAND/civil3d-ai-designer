@@ -2,7 +2,14 @@
 
 ## Open (for the next meeting)
 
-_None._
+**D12 — Existing-tree tables: Excel and trunk size** (raised 2026-10-22, 2.1a)
+2.1a reads the arborist's tree table as **CSV** (Excel "Save as CSV"). Two questions:
+(1) Should the plugin open **.xlsx** directly? Options: (a) yes, add an Excel reader
+(one small open-source package); (b) CSV is enough for now. Recommendation: (a) if your
+arborists send .xlsx, since saving as CSV is an easy step to forget.
+(2) Do your tree surveys give the trunk as **diameter** or **circumference** (at 1.3 m)?
+Options: (a) diameter only (current); (b) either, the designer picks per table.
+Recommendation: (b) if circumference appears at all; it is a one-line conversion.
 
 ## Decided
 

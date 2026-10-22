@@ -1,5 +1,19 @@
 # Session log (newest first)
 
+## 2026-10-22 — Work: 2.1a Existing-tree table import (CSV)
+- Done: `Core/Survey`: `CsvTable` (comma/semicolon/tab detected, quotes, BOM, line numbers kept), `ExistingTree`,
+  `TreeFieldMapping.Suggest` (English + Hebrew survey headings), `TreeTableUnits.Suggest` (units only from
+  headings like "Trunk (cm)"), `TreeTableImport.Import`: unknown units / coordinate system / missing X-Y column
+  → questions for the designer and no trees (D4b: never assume); decimal comma accepted with `;`/tab files;
+  bad rows reported per line (no position → tree left out; bad size → value left empty; duplicate number and
+  implausible size flagged). Sample `samples/survey/trees-courtyard.csv` (courtyard local grid).
+  17 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 82/82 pass.
+- Split 2.1: DWG survey import (Civil 3D side) is 2.1b.
+- Blocked: nothing. (.NET 8 SDK installed from apt again.)
+- Next: 2.1b needs 0.3 (PR #6) tested; Core-only candidates: 2.2b after PR #7 merges, or D12 answer for .xlsx.
+- Questions: D12 (read Excel tree tables directly, or CSV export is enough? trunk as diameter or circumference?).
+  Note: this PR and PR #7 both add to DECISIONS/SESSION_LOG top; whichever merges second needs a trivial docs merge.
+
 ## 2026-10-22 — Meeting 5
 - Asked: D10 (confirm default accessibility values), D11 (are all paths accessible routes?); both raised in PR #7, awaiting answers.
 - Reported: PR #7 (2.2a rule engine) awaits review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
