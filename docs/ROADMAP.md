@@ -21,7 +21,8 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 ## M2 — Background data & constraints
 | # | Item | Status |
 |---|---|---|
-| 2.1 | Import survey, existing trees, lot borders, buildings/FFLs (DWG survey first; trees as DWG blocks or separate table with field mapping; read units/coordinate system or ask, per D4b) | todo |
+| 2.1a | Existing-tree table import (CSV, D4b c): separator/quote handling, column mapping proposal (English + Hebrew headings), units read from headings or asked, coordinate system asked, per-row problems, unit sanity check | review |
+| 2.1b | Import survey from DWG: points, breaklines, existing surface, lot borders, buildings/FFLs, trees as attributed blocks (field mapping shared with 2.1a); read drawing units/coordinate system or ask (D4b) | todo |
 | 2.2 | Rule engine: accessible route slopes, ramp/step geometry, max lawn/bed slopes, drainage falls, tree protection zones, setbacks; rules from a selectable rule-set file, default set = published Israeli accessibility values (D3) | todo |
 | 2.3 | Constraint report palette (pass/fail per rule, zoom to problem) | todo |
 
