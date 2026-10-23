@@ -1,5 +1,14 @@
 # Session log (newest first)
 
+## 2026-10-23 — Meeting 6
+- Asked: D10 (default accessibility values), D11 (which paths are accessible routes), D12 (Excel tree tables; trunk diameter vs circumference). D10/D11 are open on PR #7, D12 on PR #8.
+- Decided: D10 (a, values confirmed), D11 (a, all paths accessible unless marked), D12 (.xlsx read directly; trunk = diameter). New items 2.1c, 2.2c.
+- Reported: PR #8 (2.1a tree-table import) and PR #7 (2.2a rule engine) await review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
+## 2026-10-22 — Meeting 5
+- Asked: D10 (confirm default accessibility values), D11 (are all paths accessible routes?); both raised in PR #7, awaiting answers.
+- Reported: PR #7 (2.2a rule engine) awaits review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
 ## 2026-10-21 — Work: 2.2a Rule engine, first slice
 - Done: `Core/Rules`: rule-set file format + strict loader, embedded default starter set `default-il.v0.json`
   (D3; every value has a source note, all flagged not verified), `RuleEngine` checking path slope along the
