@@ -2,56 +2,56 @@
   "ruleSetVersion": "0",
   "id": "default-il",
   "name": "Default starter rule set (Israel)",
-  "description": "Starter design rules shipped with the plugin (D3). Copy this file and edit values for an office or municipality. Values marked verified=false still need checking against the published standard before relying on them.",
+  "description": "Starter design rules shipped with the plugin (D3). Copy this file and edit values for an office or municipality. Values marked verified=true were confirmed by the owner (D10, 2026-10-23); values added later with verified=false still need checking.",
   "rules": [
     {
       "id": "path.maxLongitudinalSlopePercent",
       "value": 5.0,
       "label": "Accessible route: maximum slope along the path",
-      "source": "SI 1918 part 1 (accessible route; steeper than this is a ramp)",
-      "verified": false
+      "source": "SI 1918 part 1 (accessible route; steeper than this is a ramp); confirmed by owner 2026-10-23 (D10)",
+      "verified": true
     },
     {
       "id": "path.maxCrossFallPercent",
       "value": 2.0,
       "label": "Accessible route: maximum cross fall",
-      "source": "SI 1918 part 1 (accessible route cross slope)",
-      "verified": false
+      "source": "SI 1918 part 1 (accessible route cross slope); confirmed by owner 2026-10-23 (D10)",
+      "verified": true
     },
     {
       "id": "plaza.minFallPercent",
       "value": 1.0,
       "label": "Paved plaza: minimum drainage fall",
-      "source": "Generic good practice for unit paving drainage (editable)",
-      "verified": false
+      "source": "Generic good practice for unit paving drainage (editable); confirmed by owner 2026-10-23 (D10)",
+      "verified": true
     },
     {
       "id": "plaza.maxFallPercent",
       "value": 2.0,
       "label": "Paved plaza: maximum fall (plaza is part of the accessible route)",
-      "source": "SI 1918 part 1 (level areas on the accessible route)",
-      "verified": false
+      "source": "SI 1918 part 1 (level areas on the accessible route); confirmed by owner 2026-10-23 (D10)",
+      "verified": true
     },
     {
       "id": "lawn.minFallPercent",
       "value": 1.0,
       "label": "Lawn: minimum fall so it drains",
-      "source": "Generic good practice (editable)",
-      "verified": false
+      "source": "Generic good practice (editable); confirmed by owner 2026-10-23 (D10)",
+      "verified": true
     },
     {
       "id": "lawn.maxSlopePercent",
       "value": 25.0,
       "label": "Lawn: maximum slope for mowing (1:4)",
-      "source": "Generic good practice (editable)",
-      "verified": false
+      "source": "Generic good practice (editable); confirmed by owner 2026-10-23 (D10)",
+      "verified": true
     },
     {
       "id": "bed.maxSlopePercent",
       "value": 33.0,
       "label": "Planting bed: maximum slope before it needs erosion control (1:3)",
-      "source": "Generic good practice (editable)",
-      "verified": false
+      "source": "Generic good practice (editable); confirmed by owner 2026-10-23 (D10)",
+      "verified": true
     }
   ]
 }

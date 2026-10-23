@@ -20,6 +20,7 @@ namespace CivilAI.Core.Tests.Rules
                 var rule = set.Find(id);
                 Assert.NotNull(rule);
                 Assert.False(string.IsNullOrWhiteSpace(rule!.Source), $"{id} needs a source note");
+                Assert.True(rule.Verified, $"{id} was confirmed by the owner (D10)");
             }
             Assert.Equal(5.0, set.Find(RuleIds.PathMaxLongitudinalSlopePercent)!.Value);
         }
@@ -122,6 +123,33 @@ namespace CivilAI.Core.Tests.Rules
             Assert.Equal(15.0, r.Location!.Value.X, 6);
             Assert.Contains("steeper than", r.Message);
             Assert.False(report.AllPass);
+        }
+
+        [Fact]
+        public void Path_marked_not_accessible_skips_the_accessible_route_rules()
+        {
+            // Same 8% stretch as above, but the designer marked the path not accessible (D11).
+            var steep = Path(new List<SpotLevel>
+            {
+                new SpotLevel { X = 0, Y = 0, Z = 10.0 }, new SpotLevel { X = 20, Y = 0, Z = 11.6 },
+            }, new Fall { Percent = 3, DirectionDegrees = 90 });
+            var service = new Space
+            {
+                Id = steep.Id, Kind = steep.Kind, Name = steep.Name, Centerline = steep.Centerline,
+                Width = steep.Width, Level = steep.Level, Accessible = false,
+            };
+
+            var report = RuleEngine.Check(With(service), Rules);
+            Assert.True(report.AllPass);
+            foreach (var id in new[] { RuleIds.PathMaxLongitudinalSlopePercent, RuleIds.PathMaxCrossFallPercent })
+            {
+                var r = Result(report, id);
+                Assert.Equal(RuleStatus.NotChecked, r.Status);
+                Assert.Contains("not part of the accessible route", r.Message);
+            }
+
+            // Omitted or true: still an accessible route, so it fails.
+            Assert.False(RuleEngine.Check(With(steep), Rules).AllPass);
         }
 
         [Fact]

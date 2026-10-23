@@ -58,6 +58,9 @@ Rule engine (2.2a)
 - Paths: slope along the path from spot levels ordered by station on the centerline (else the fall's along
   component); cross fall = the fall's component across each centerline segment. Plaza/lawn min fall needs a
   stated fall (spots only bound it); max fall/slope uses the fall and the steepest pair of spot levels.
+- Accessible route (D11): every path is one unless the intent marks it `"accessible": false` (path-only
+  field); such a path gets NotChecked for the two accessible-route rules. Default set values are
+  owner-confirmed (D10, `verified: true`).
 
 Principles
 - Claude produces intent; deterministic code produces geometry.

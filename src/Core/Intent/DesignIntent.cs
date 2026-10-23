@@ -102,6 +102,13 @@ namespace CivilAI.Core.Intent
         /// <summary>Path width in metres (path only).</summary>
         public double? Width { get; init; }
 
+        /// <summary>
+        /// Path only. Every path is an accessible route unless the designer marks it
+        /// <c>false</c> (D11); omitted means accessible. A path marked false is skipped by
+        /// the accessible-route rules; other rules still apply.
+        /// </summary>
+        public bool? Accessible { get; init; }
+
         public LevelIntent? Level { get; init; }
 
         /// <summary>Id of a <see cref="Material"/> in <see cref="DesignIntent.Materials"/>.</summary>
