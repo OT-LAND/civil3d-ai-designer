@@ -53,7 +53,9 @@ namespace CivilAI.Core.Rules
     /// <summary>
     /// Checks a Design Intent against a rule set (2.2, first slice: slopes and falls of
     /// paths, plazas, lawns and beds). Pure geometry on the intent; no Civil 3D needed.
-    /// Every path is treated as part of the accessible route in v0.
+    /// Every path is part of the accessible route unless the designer marked it
+    /// <c>accessible: false</c> (D11); such a path is reported "not checked" for the
+    /// accessible-route rules.
     /// </summary>
     public static class RuleEngine
     {
@@ -95,6 +97,19 @@ namespace CivilAI.Core.Rules
             var line = space.Centerline ?? new List<Point2>();
             var spots = space.Level?.Spots ?? new List<SpotLevel>();
             var fall = space.Level?.Fall;
+
+            // D11: a path marked not accessible skips the accessible-route rules (both path rules are).
+            if (space.Accessible == false)
+            {
+                foreach (var id in new[] { RuleIds.PathMaxLongitudinalSlopePercent, RuleIds.PathMaxCrossFallPercent })
+                {
+                    var rule = rules.Find(id);
+                    results.Add(rule is null
+                        ? NotInSet(space, id)
+                        : NotChecked(space, rule, "it is marked as not part of the accessible route"));
+                }
+                return;
+            }
 
             // Longitudinal: from spot levels in order along the centerline; else from the fall.
             var longRule = rules.Find(RuleIds.PathMaxLongitudinalSlopePercent);

@@ -79,6 +79,7 @@
         "outline": { "$ref": "#/$defs/polygon", "description": "Plaza, lawn and bed only." },
         "centerline": { "$ref": "#/$defs/polyline", "description": "Path only, start to end." },
         "width": { "type": "number", "exclusiveMinimum": 0, "description": "Path only, metres." },
+        "accessible": { "type": "boolean", "description": "Path only. Omit for an accessible route (the default); false only when the designer says this path is not part of the accessible route." },
         "level": { "$ref": "#/$defs/level" },
         "materialId": { "type": "string" }
       }

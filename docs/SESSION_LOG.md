@@ -1,5 +1,24 @@
 # Session log (newest first)
 
+## 2026-10-23 — Work: 2.2c Rule set verified (D10) + "not accessible" path flag (D11)
+- Done: all 7 default rules marked `verified: true` with "confirmed by owner 2026-10-23 (D10)" in the source note.
+  Design Intent: path-only `accessible` flag (omitted = accessible); validator rejects it on non-paths; schema and
+  text-to-intent prompt updated. `RuleEngine` reports a path marked not accessible as "not checked" for the
+  accessible-route rules. 2 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 78/78 pass.
+- Branch `agent/rule-set-d10-d11` is stacked on PR #7 (main merged in to pick up D10–D12 docs).
+- Blocked: nothing.
+- Next: 2.1c (.xlsx tree tables) on top of PR #8; 2.2b after that.
+- Questions: none new.
+
+## 2026-10-23 — Meeting 6
+- Asked: D10 (default accessibility values), D11 (which paths are accessible routes), D12 (Excel tree tables; trunk diameter vs circumference). D10/D11 are open on PR #7, D12 on PR #8.
+- Decided: D10 (a, values confirmed), D11 (a, all paths accessible unless marked), D12 (.xlsx read directly; trunk = diameter). New items 2.1c, 2.2c.
+- Reported: PR #8 (2.1a tree-table import) and PR #7 (2.2a rule engine) await review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
+## 2026-10-22 — Meeting 5
+- Asked: D10 (confirm default accessibility values), D11 (are all paths accessible routes?); both raised in PR #7, awaiting answers.
+- Reported: PR #7 (2.2a rule engine) awaits review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
 ## 2026-10-21 — Work: 2.2a Rule engine, first slice
 - Done: `Core/Rules`: rule-set file format + strict loader, embedded default starter set `default-il.v0.json`
   (D3; every value has a source note, all flagged not verified), `RuleEngine` checking path slope along the

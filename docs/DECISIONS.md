@@ -2,22 +2,25 @@
 
 ## Open (for the next meeting)
 
-**D10 — Confirm the default accessibility values** (raised 2026-10-21, 2.2a)
-The default rule set (`src/Core/Rules/RuleSets/default-il.v0.json`) ships with values
-marked *not verified*: accessible route max slope along the path **5%** (steeper = ramp),
-max cross fall **2%**, paved plaza fall **1–2%**, lawn fall min **1%** / max **25% (1:4)**,
-planting bed max **33% (1:3)**. Options: (a) owner confirms or corrects these against
-SI 1918 / the building regulations; (b) owner sends the standard text and the agent
-transcribes it; (c) keep as is, flagged "not verified" in the report. Recommendation: (a).
-
-**D11 — Is every path part of the accessible route?** (raised 2026-10-21, 2.2a)
-2.2a checks every path against accessible-route limits. Garden paths (stepping
-stones, steep woodland trails) may be meant as non-accessible. Options: (a) all paths
-accessible unless the designer marks one "not accessible" (adds a flag to the Design
-Intent); (b) only paths the designer marks "accessible route" are checked;
-(c) keep all paths accessible for now. Recommendation: (a), safe by default.
+_None._
 
 ## Decided
+
+**D10 — Default accessibility values confirmed** (2026-10-23)
+**(a) OK as proposed**: accessible route max **5%** along the path (steeper = ramp),
+max cross fall **2%**, paved plaza fall **1–2%**, lawn fall min **1%** / max **25% (1:4)**,
+planting bed max **33% (1:3)**. Mark these rules `verified: true` in
+`default-il.v0.json` (source note: confirmed by owner 2026-10-23).
+
+**D11 — All paths are accessible routes unless marked otherwise** (2026-10-23)
+**(a)**: every path is checked against accessible-route limits by default; the designer
+can mark a path "not accessible" (new flag in the Design Intent), and it is then
+skipped by the accessible-route rules (other slope rules still apply).
+
+**D12 — Tree tables: open Excel directly; trunk is diameter** (2026-10-23)
+(1) **(a)**: the plugin reads **.xlsx** tree tables directly (one small open-source
+reader package), in addition to CSV. (2) **(a)**: trunk is always given as
+**diameter** (at 1.3 m); no circumference option needed.
 
 **D8b — Cloud network access is active** (2026-10-18)
 **(a)**: the owner has added the NuGet / .NET hosts to network access. Work sessions
