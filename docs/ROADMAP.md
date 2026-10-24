@@ -24,6 +24,8 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | 2.1a | Existing-tree table import (CSV, D4b c): separator/quote handling, column mapping proposal (English + Hebrew headings), units read from headings or asked, coordinate system asked, per-row problems, unit sanity check | review |
 | 2.1b | Import survey from DWG: points, breaklines, existing surface, lot borders, buildings/FFLs, trees as attributed blocks (field mapping shared with 2.1a); read drawing units/coordinate system or ask (D4b) | todo |
 | 2.2 | Rule engine: accessible route slopes, ramp/step geometry, max lawn/bed slopes, drainage falls, tree protection zones, setbacks; rules from a selectable rule-set file, default set = published Israeli accessibility values (D3) | todo |
+| 2.1c | Tree table: read .xlsx directly, same field mapping as CSV; trunk = diameter (D12) | todo — after PR #8 |
+| 2.2c | Rule set: mark D10 values verified; Design Intent path flag "not accessible", skipped by accessible-route rules (D11) | todo — after PR #7 |
 | 2.3 | Constraint report palette (pass/fail per rule, zoom to problem) | todo |
 
 ## M3 — Visual inputs
