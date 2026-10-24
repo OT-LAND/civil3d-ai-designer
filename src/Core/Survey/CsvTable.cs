@@ -9,17 +9,27 @@ namespace CivilAI.Core.Survey
     /// A plain table read from CSV text: a header row and data rows. Surveyors export with
     /// commas, semicolons (European/Israeli Excel) or tabs; the separator is detected from the
     /// header line. Quoted cells ("a, b" and "" escapes, line breaks inside quotes) are supported.
+    /// Excel sheets are read into the same table by <see cref="XlsxTable"/> (D12), so field mapping
+    /// and import work the same for both.
     /// </summary>
     public sealed class CsvTable
     {
-        private CsvTable(char separator, IReadOnlyList<string> headers, IReadOnlyList<CsvRow> rows)
+        private CsvTable(char separator, IReadOnlyList<string> headers, IReadOnlyList<CsvRow> rows, bool allowDecimalComma)
         {
             Separator = separator;
             Headers = headers;
             Rows = rows;
+            AllowDecimalComma = allowDecimalComma;
         }
 
+        /// <summary>Cell separator of the CSV file; ',' for a table read from Excel.</summary>
         public char Separator { get; }
+
+        /// <summary>
+        /// Whether a lone comma in a number cell is a decimal comma ("12,5"). True for CSV files that
+        /// use ';' or tab; false for comma CSV and for Excel (numbers come from the cell values).
+        /// </summary>
+        public bool AllowDecimalComma { get; }
 
         public IReadOnlyList<string> Headers { get; }
 
@@ -40,7 +50,12 @@ namespace CivilAI.Core.Survey
 
             var separator = DetectSeparator(text);
             var records = ReadRecords(text, separator);
+            return FromRecords(records, separator, allowDecimalComma: separator != ',');
+        }
 
+        /// <summary>Builds a table from raw records (line/row number + cells): first non-blank record is the header.</summary>
+        internal static CsvTable FromRecords(List<(int Line, List<string> Cells)> records, char separator, bool allowDecimalComma)
+        {
             var headerIndex = records.FindIndex(r => !IsBlank(r.Cells));
             if (headerIndex < 0) throw new FormatException("The table is empty: no header row found.");
 
@@ -51,7 +66,7 @@ namespace CivilAI.Core.Survey
                 if (IsBlank(records[i].Cells)) continue;
                 rows.Add(new CsvRow(records[i].Line, records[i].Cells.Select(c => c.Trim()).ToList()));
             }
-            return new CsvTable(separator, headers, rows);
+            return new CsvTable(separator, headers, rows, allowDecimalComma);
         }
 
         private static bool IsBlank(List<string> cells) => cells.All(string.IsNullOrWhiteSpace);

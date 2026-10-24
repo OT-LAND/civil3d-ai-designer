@@ -1,5 +1,17 @@
 # Session log (newest first)
 
+## 2026-10-24 — Work: 2.1c Tree tables from Excel (.xlsx)
+- Done: `Core/Survey/XlsxTable.Read(stream, sheet?)` reads an .xlsx sheet into the same `CsvTable`, so mapping,
+  unit questions and import are unchanged. One package added (ExcelDataReader 3.7.0, MIT). Several sheets and
+  none chosen → "which sheet holds the trees?" (never guessed); hidden sheets ignored; Excel row numbers kept;
+  numbers read from cell values (text numbers still accepted); non-.xlsx file → clear error. Samples
+  `trees-courtyard.xlsx` (same trees as the CSV + a Notes sheet) and `trees-hebrew.xlsx`. 6 new tests;
+  `dotnet build` (Release, 0 warnings) + `dotnet test` 88/88 pass.
+- Branch `agent/tree-table-xlsx` is stacked on PR #8 (main merged in for the Meeting 6 docs).
+- Blocked: nothing. (.NET 8 SDK installed from apt again; `apt-get update` needed first.)
+- Next: 2.2b (ramp/step geometry, tree protection zones, setbacks) once PR #7 merges; Civil 3D items wait on PR #6 test.
+- Questions: none new. Old binary .xls is not read (save as .xlsx or CSV); say so if that is a problem.
+
 ## 2026-10-23 — Meeting 6
 - Asked: D10 (default accessibility values), D11 (which paths are accessible routes), D12 (Excel tree tables; trunk diameter vs circumference). D10/D11 are open on PR #7, D12 on PR #8.
 - Decided: D10 (a, values confirmed), D11 (a, all paths accessible unless marked), D12 (.xlsx read directly; trunk = diameter). New items 2.1c, 2.2c.

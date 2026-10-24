@@ -56,6 +56,10 @@ Existing-tree table import (2.1a)
 - `TreeTableImport.Import(table, mapping, units)` → `TreeImportResult {Questions, Trees, Problems}`. Any
   question ⇒ no trees. Sizes converted to metres; `ExistingTree` is Core's metre-based tree record (2.1b
   DWG blocks map into the same record).
+- `Core/Survey/XlsxTable.Read(stream, sheet?)` (2.1c, D12) reads an .xlsx sheet into the same `CsvTable`
+  (package ExcelDataReader, MIT). Several visible sheets with content and none chosen ⇒ a question, no table.
+  Excel row numbers are kept for messages; numbers come from cell values (no decimal-comma guessing).
+  Trunk is always a diameter (D12).
 
 Principles
 - Claude produces intent; deterministic code produces geometry.
@@ -70,8 +74,8 @@ src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator;
                      JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
 samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
-src/Core/Survey/     Survey import: CSV table reader, existing-tree table import (2.1a)
-samples/survey/      Sample survey data (trees-courtyard.csv)
+src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
+samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)
 tests/Core.Tests/    CivilAI.Core.Tests   xUnit tests for Core

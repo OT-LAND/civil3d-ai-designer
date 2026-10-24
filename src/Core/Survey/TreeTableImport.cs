@@ -9,7 +9,7 @@ namespace CivilAI.Core.Survey
 {
     // Existing-tree table import (roadmap 2.1a, D4b option c: trees as a separate table).
     //
-    // Flow: CsvTable.Parse → TreeFieldMapping.Suggest (designer confirms/corrects which column is
+    // Flow: CsvTable.Parse (or XlsxTable.Read for .xlsx, 2.1c) → TreeFieldMapping.Suggest (designer confirms/corrects which column is
     // what) → TreeTableUnits.Suggest (units read from headers like "Trunk (cm)") → Import.
     // Units and the coordinate system are never assumed: if one is unknown the import returns a
     // question for the designer and no trees (D4b).
@@ -245,7 +245,7 @@ namespace CivilAI.Core.Survey
 
             if (result.NeedsAnswers) return result;
 
-            var decimalComma = table.Separator != ',';
+            var decimalComma = table.AllowDecimalComma;
             var seenIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             for (var r = 0; r < table.Rows.Count; r++)

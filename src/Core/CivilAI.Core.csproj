@@ -21,4 +21,9 @@
     <EmbeddedResource Include="Intent\Prompts\text-to-intent.v0.md" LogicalName="CivilAI.Core.Intent.Prompts.text-to-intent.v0.md" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- .xlsx tree tables (2.1c, D12). MIT licence, no further dependencies. -->
+    <PackageReference Include="ExcelDataReader" Version="3.7.0" />
+  </ItemGroup>
+
 </Project>

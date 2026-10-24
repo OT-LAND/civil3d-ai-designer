@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Include="..\..\samples\intent\*.json" LinkBase="samples" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\survey\*.csv" LinkBase="samples\survey" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\samples\survey\*.xlsx" LinkBase="samples\survey" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
