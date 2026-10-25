@@ -2,7 +2,7 @@
 
 Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Civil 3D test) · `done` · `blocked:D#`
 
-**Priority from 2026-10-25 (D14):** merge Core-only PRs #7→#9, #8→#10 when CI is green (D13); #6 waits for the owner's Civil 3D test, then **MB** top to bottom, then
+**Priority from 2026-10-25 (D14):** Core-only stacks #7→#9 and #8→#10 merged 2026-10-25 (D13); #6 waits for the owner's Civil 3D test, then **MB** top to bottom, then
 1.3, 2.3, M4. Concept: `docs/CONCEPT.md`.
 
 ## MB — Design Brief & semi-parametric palette (D14, concept v1)
@@ -36,11 +36,12 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 ## M2 — Background data & constraints
 | # | Item | Status |
 |---|---|---|
-| 2.1 | Import survey, existing trees, lot borders, buildings/FFLs (DWG survey first; trees as DWG blocks or separate table with field mapping; read units/coordinate system or ask, per D4b) | todo |
-| 2.2a | Rule engine, first slice: rule-set file format + loader, default starter set (D3), checks for path slope/cross fall, plaza/lawn min fall + max fall/slope, bed max slope; pass/fail/not-checked report with zoom points | review |
+| 2.1a | Existing-tree table import (CSV, D4b c): separator/quote handling, column mapping proposal (English + Hebrew headings), units read from headings or asked, coordinate system asked, per-row problems, unit sanity check | done |
+| 2.1b | Import survey from DWG: points, breaklines, existing surface, lot borders, buildings/FFLs, trees as attributed blocks (field mapping shared with 2.1a); read drawing units/coordinate system or ask (D4b) | todo |
+| 2.2a | Rule engine, first slice: rule-set file format + loader, default starter set (D3), checks for path slope/cross fall, plaza/lawn min fall + max fall/slope, bed max slope; pass/fail/not-checked report with zoom points | done |
 | 2.2b | Rule engine, second slice: ramp/step geometry (landings, riser/tread, handrail zones), tree protection zones, setbacks (needs trees + setbacks in the intent or from 2.1) | todo |
-| 2.1c | Tree table: read .xlsx directly, same field mapping as CSV; trunk = diameter (D12) | todo — after PR #8 |
-| 2.2c | Rule set: mark D10 values verified; Design Intent path flag "not accessible", skipped by accessible-route rules (D11) | review (stacked on PR #7) |
+| 2.1c | Tree table: read .xlsx directly, same field mapping as CSV; trunk = diameter (D12) | done |
+| 2.2c | Rule set: mark D10 values verified; Design Intent path flag "not accessible", skipped by accessible-route rules (D11) | done |
 | 2.3 | Constraint report palette (pass/fail per rule, zoom to problem) | todo |
 
 ## M3 — Visual inputs

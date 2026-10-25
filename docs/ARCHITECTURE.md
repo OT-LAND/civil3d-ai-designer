@@ -53,6 +53,19 @@ Free text → Design Intent (1.2)
 - The given site always replaces Claude's site: the AI cannot move buildings or change FFLs.
 - Takes a send delegate, so the connector mode (D9) or tests can supply their own sender.
 
+Existing-tree table import (2.1a)
+- `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
+- `TreeFieldMapping.Suggest(headers)` proposes which column is id/species/X/Y/trunk/canopy/height/level
+  (English + Hebrew aliases, unit suffix ignored); the designer confirms it. `TreeTableUnits.Suggest` takes
+  units only from headings; the coordinate system is named by the designer.
+- `TreeTableImport.Import(table, mapping, units)` → `TreeImportResult {Questions, Trees, Problems}`. Any
+  question ⇒ no trees. Sizes converted to metres; `ExistingTree` is Core's metre-based tree record (2.1b
+  DWG blocks map into the same record).
+- `Core/Survey/XlsxTable.Read(stream, sheet?)` (2.1c, D12) reads an .xlsx sheet into the same `CsvTable`
+  (package ExcelDataReader, MIT). Several visible sheets with content and none chosen ⇒ a question, no table.
+  Excel row numbers are kept for messages; numbers come from cell values (no decimal-comma guessing).
+  Trunk is always a diameter (D12).
+
 Rule engine (2.2a)
 - `Core/Rules/RuleSet`: a rule-set file = `{ruleSetVersion, id, name, description, rules[{id, value, label,
   source, verified}]}`. Ids are a closed list (`RuleIds`); unknown/duplicate ids, negative values or another
@@ -80,6 +93,8 @@ src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator;
                      JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
 samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
+src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
+samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)

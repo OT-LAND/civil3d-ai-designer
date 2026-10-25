@@ -23,4 +23,9 @@
     <EmbeddedResource Include="Rules\RuleSets\default-il.v0.json" LogicalName="CivilAI.Core.Rules.RuleSets.default-il.v0.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- .xlsx tree tables (2.1c, D12). MIT licence, no further dependencies. -->
+    <PackageReference Include="ExcelDataReader" Version="3.7.0" />
+  </ItemGroup>
+
 </Project>

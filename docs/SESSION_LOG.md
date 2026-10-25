@@ -1,5 +1,14 @@
 # Session log (newest first)
 
+## 2026-10-25 — Work: merge Core-only stacks #7→#9 and #8→#10 (D13)
+- Done: main merged into `agent/rule-set-d10-d11` (PR #9) and then into `agent/tree-table-xlsx` (PR #10);
+  docs conflicts resolved (both ARCHITECTURE sections kept, D12 dropped from Open, M2 rows combined, log by date).
+  PRs retargeted to main and merged once CI is green; #7 and #8 come in with their stacks.
+  `dotnet build` (Release, 0 warnings) + `dotnet test` 101/101 pass. 2.1a, 2.1c, 2.2a, 2.2c → done.
+- Blocked: nothing. (.NET 8 SDK installed with dotnet-install.sh; apt not needed.)
+- Next: B.1 Design Brief schema v1 (Core).
+- Questions: none new.
+
 ## 2026-10-25 — Owner input: UI sketch → concept v1
 - Owner sent a hand-drawn palette sketch (Style / Polygon sliders / Curves / Points / Background tags) and asked to
   re-aim the product as a semi-parametric, host-agnostic generative designer, concept first.
@@ -18,6 +27,18 @@
 - Reported: PR #9 (2.2c) and PR #10 (2.1c) built; review stacks #7→#9 and #8→#10; PR #6 (0.3) still awaits the owner's Civil 3D test.
 - Asked: D13 (who approves PRs; recommended b, agent merges Core-only PRs when tests pass).
 
+## 2026-10-24 — Work: 2.1c Tree tables from Excel (.xlsx)
+- Done: `Core/Survey/XlsxTable.Read(stream, sheet?)` reads an .xlsx sheet into the same `CsvTable`, so mapping,
+  unit questions and import are unchanged. One package added (ExcelDataReader 3.7.0, MIT). Several sheets and
+  none chosen → "which sheet holds the trees?" (never guessed); hidden sheets ignored; Excel row numbers kept;
+  numbers read from cell values (text numbers still accepted); non-.xlsx file → clear error. Samples
+  `trees-courtyard.xlsx` (same trees as the CSV + a Notes sheet) and `trees-hebrew.xlsx`. 6 new tests;
+  `dotnet build` (Release, 0 warnings) + `dotnet test` 88/88 pass.
+- Branch `agent/tree-table-xlsx` is stacked on PR #8 (main merged in for the Meeting 6 docs).
+- Blocked: nothing. (.NET 8 SDK installed from apt again; `apt-get update` needed first.)
+- Next: 2.2b (ramp/step geometry, tree protection zones, setbacks) once PR #7 merges; Civil 3D items wait on PR #6 test.
+- Questions: none new. Old binary .xls is not read (save as .xlsx or CSV); say so if that is a problem.
+
 ## 2026-10-23 — Work: 2.2c Rule set verified (D10) + "not accessible" path flag (D11)
 - Done: all 7 default rules marked `verified: true` with "confirmed by owner 2026-10-23 (D10)" in the source note.
   Design Intent: path-only `accessible` flag (omitted = accessible); validator rejects it on non-paths; schema and
@@ -32,6 +53,20 @@
 - Asked: D10 (default accessibility values), D11 (which paths are accessible routes), D12 (Excel tree tables; trunk diameter vs circumference). D10/D11 are open on PR #7, D12 on PR #8.
 - Decided: D10 (a, values confirmed), D11 (a, all paths accessible unless marked), D12 (.xlsx read directly; trunk = diameter). New items 2.1c, 2.2c.
 - Reported: PR #8 (2.1a tree-table import) and PR #7 (2.2a rule engine) await review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
+## 2026-10-22 — Work: 2.1a Existing-tree table import (CSV)
+- Done: `Core/Survey`: `CsvTable` (comma/semicolon/tab detected, quotes, BOM, line numbers kept), `ExistingTree`,
+  `TreeFieldMapping.Suggest` (English + Hebrew survey headings), `TreeTableUnits.Suggest` (units only from
+  headings like "Trunk (cm)"), `TreeTableImport.Import`: unknown units / coordinate system / missing X-Y column
+  → questions for the designer and no trees (D4b: never assume); decimal comma accepted with `;`/tab files;
+  bad rows reported per line (no position → tree left out; bad size → value left empty; duplicate number and
+  implausible size flagged). Sample `samples/survey/trees-courtyard.csv` (courtyard local grid).
+  17 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 82/82 pass.
+- Split 2.1: DWG survey import (Civil 3D side) is 2.1b.
+- Blocked: nothing. (.NET 8 SDK installed from apt again.)
+- Next: 2.1b needs 0.3 (PR #6) tested; Core-only candidates: 2.2b after PR #7 merges, or D12 answer for .xlsx.
+- Questions: D12 (read Excel tree tables directly, or CSV export is enough? trunk as diameter or circumference?).
+  Note: this PR and PR #7 both add to DECISIONS/SESSION_LOG top; whichever merges second needs a trivial docs merge.
 
 ## 2026-10-22 — Meeting 5
 - Asked: D10 (confirm default accessibility values), D11 (are all paths accessible routes?); both raised in PR #7, awaiting answers.
