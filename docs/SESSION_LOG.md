@@ -1,5 +1,14 @@
 # Session log (newest first)
 
+## 2026-10-25 — Work: merge Core-only stacks #7→#9 and #8→#10 (D13)
+- Done: main merged into `agent/rule-set-d10-d11` (PR #9) and then into `agent/tree-table-xlsx` (PR #10);
+  docs conflicts resolved (both ARCHITECTURE sections kept, D12 dropped from Open, M2 rows combined, log by date).
+  PRs retargeted to main and merged once CI is green; #7 and #8 come in with their stacks.
+  `dotnet build` (Release, 0 warnings) + `dotnet test` 101/101 pass. 2.1a, 2.1c, 2.2a, 2.2c → done.
+- Blocked: nothing. (.NET 8 SDK installed with dotnet-install.sh; apt not needed.)
+- Next: B.1 Design Brief schema v1 (Core).
+- Questions: none new.
+
 ## 2026-10-25 — Owner input: UI sketch → concept v1
 - Owner sent a hand-drawn palette sketch (Style / Polygon sliders / Curves / Points / Background tags) and asked to
   re-aim the product as a semi-parametric, host-agnostic generative designer, concept first.
