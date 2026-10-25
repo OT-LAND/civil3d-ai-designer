@@ -2,16 +2,47 @@
 
 ## Open (for the next meeting)
 
-**D12 — Existing-tree tables: Excel and trunk size** (raised 2026-10-22, 2.1a)
-2.1a reads the arborist's tree table as **CSV** (Excel "Save as CSV"). Two questions:
-(1) Should the plugin open **.xlsx** directly? Options: (a) yes, add an Excel reader
-(one small open-source package); (b) CSV is enough for now. Recommendation: (a) if your
-arborists send .xlsx, since saving as CSV is an easy step to forget.
-(2) Do your tree surveys give the trunk as **diameter** or **circumference** (at 1.3 m)?
-Options: (a) diameter only (current); (b) either, the designer picks per table.
-Recommendation: (b) if circumference appears at all; it is a one-line conversion.
-
 ## Decided
+
+**D19 — "Max slope" = steepest walking surface on non-accessible paths** (2026-10-25)
+**(b)**: the max slope slider sets the steepest walking surface allowed on paths the designer marked
+"not accessible" (D11). Accessible routes always follow the rule set (D10). Max grade (D16) stays the
+ground/retaining-wall dial.
+
+
+**D15 — Sliders: global defaults with per-zone override** (2026-10-25)
+**(c)**: one global set of character sliders applies to every polygon; any polygon can override
+single sliders.
+
+**D16 — "Max grade" = steepest ground before a retaining wall** (2026-10-25)
+Owner's definition: max grade is the **maximum slope for graded ground before a retaining wall is
+used**. Where the levels need steeper ground, the generator puts in a wall (or terrace) instead.
+Capped by the rule set (lawn 1:4, bed 1:3). The meaning of "max slope" is now open as D19.
+
+**D17 — Contour = soft landform line; flow basin = flow line to a basin** (2026-10-25)
+Contour **(b)**: the ground follows its shape, and it becomes a hard level only if the designer gives one.
+Flow basin **(a)**: a swale or flow line, with a retention/infiltration area at its low end.
+
+**D18 — Three layout options, detail the chosen one** (2026-10-25)
+**(b)**: each Generate makes 3 quick layout options (plan stage). Only the option the designer picks
+goes through levels and detailing.
+
+**D13 — Agent merges Core-only PRs** (2026-10-25)
+**(b)**: the agent merges PRs that change only Core (checks, data import, schema, metrics) once CI and all
+tests pass. The owner reviews anything that changes the drawing or needs Civil 3D (plugin, builders,
+palette). PRs #7→#9 and #8→#10 are Core-only: the next work session merges them (in stack order,
+resolving docs conflicts) once CI is green.
+
+
+**D14 — UI and product direction: semi-parametric tagged-geometry designer** (2026-10-25)
+From the owner's hand sketch: the palette has five panels: **Style** (up to 6 reference
+images + text prompt), **Polygon** (zones with character sliders: accessibility,
+hardscape↔softscape, max grade, cut↔fill, max slope, shading, trees↔elements,
+curved↔straight), **Curves** (tags: walking network, contour, flow basin, border),
+**Points** (tags: entrance, interest point, elevation point, tree), **Background** (survey,
+structures, roads, orthophoto). The designer picks and tags drawing objects, and the AI generates the
+design. Solve the concept and the AI strategy first, host-agnostic (Civil 3D now, Revit or other
+hosts later). Concept: `docs/CONCEPT.md`. Sketch recognition (3.1/3.2) is replaced by tagged geometry.
 
 **D10 — Default accessibility values confirmed** (2026-10-23)
 **(a) OK as proposed**: accessible route max **5%** along the path (steeper = ramp),

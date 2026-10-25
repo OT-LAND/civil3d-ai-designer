@@ -1,5 +1,23 @@
 # Session log (newest first)
 
+## 2026-10-25 — Owner input: UI sketch → concept v1
+- Owner sent a hand-drawn palette sketch (Style / Polygon sliders / Curves / Points / Background tags) and asked to
+  re-aim the product as a semi-parametric, host-agnostic generative designer, concept first.
+- Done (docs only): `docs/CONCEPT.md`, D14 decided, new milestone MB (B.1–B.8) on top of the roadmap,
+  3.1/3.2/3.4/1.4 superseded, palette mockup `docs/ui/palette-mockup.html`.
+- Asked: D15 (sliders global/per zone), D16 (max grade meaning), D17 (contour, flow basin), D18 (options per run); D13 still open.
+- Next work item: B.1 Design Brief schema (not blocked).
+- Answers (same day): D15 c, D16 max grade = steepest ground before a retaining wall, D17 contour soft / flow basin to basin,
+  D18 three layout options, D13 b (agent merges Core-only PRs). New open: D19 (what max slope means). B.6 unblocked.
+- D19 answered: (b) max slope = steepest walking surface on non-accessible paths. No open questions.
+
+## 2026-10-25 — Meeting 8 (evening)
+- Nothing new since Meeting 7. Re-sent status (#7→#9, #8→#10 review; #6 Civil 3D test) and D13 (recommended b). No answer yet.
+
+## 2026-10-25 — Meeting 7
+- Reported: PR #9 (2.2c) and PR #10 (2.1c) built; review stacks #7→#9 and #8→#10; PR #6 (0.3) still awaits the owner's Civil 3D test.
+- Asked: D13 (who approves PRs; recommended b, agent merges Core-only PRs when tests pass).
+
 ## 2026-10-24 — Work: 2.1c Tree tables from Excel (.xlsx)
 - Done: `Core/Survey/XlsxTable.Read(stream, sheet?)` reads an .xlsx sheet into the same `CsvTable`, so mapping,
   unit questions and import are unchanged. One package added (ExcelDataReader 3.7.0, MIT). Several sheets and
@@ -11,6 +29,16 @@
 - Blocked: nothing. (.NET 8 SDK installed from apt again; `apt-get update` needed first.)
 - Next: 2.2b (ramp/step geometry, tree protection zones, setbacks) once PR #7 merges; Civil 3D items wait on PR #6 test.
 - Questions: none new. Old binary .xls is not read (save as .xlsx or CSV); say so if that is a problem.
+
+## 2026-10-23 — Work: 2.2c Rule set verified (D10) + "not accessible" path flag (D11)
+- Done: all 7 default rules marked `verified: true` with "confirmed by owner 2026-10-23 (D10)" in the source note.
+  Design Intent: path-only `accessible` flag (omitted = accessible); validator rejects it on non-paths; schema and
+  text-to-intent prompt updated. `RuleEngine` reports a path marked not accessible as "not checked" for the
+  accessible-route rules. 2 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 78/78 pass.
+- Branch `agent/rule-set-d10-d11` is stacked on PR #7 (main merged in to pick up D10–D12 docs).
+- Blocked: nothing.
+- Next: 2.1c (.xlsx tree tables) on top of PR #8; 2.2b after that.
+- Questions: none new.
 
 ## 2026-10-23 — Meeting 6
 - Asked: D10 (default accessibility values), D11 (which paths are accessible routes), D12 (Excel tree tables; trunk diameter vs circumference). D10/D11 are open on PR #7, D12 on PR #8.
@@ -34,6 +62,17 @@
 ## 2026-10-22 — Meeting 5
 - Asked: D10 (confirm default accessibility values), D11 (are all paths accessible routes?); both raised in PR #7, awaiting answers.
 - Reported: PR #7 (2.2a rule engine) awaits review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
+## 2026-10-21 — Work: 2.2a Rule engine, first slice
+- Done: `Core/Rules`: rule-set file format + strict loader, embedded default starter set `default-il.v0.json`
+  (D3; every value has a source note, all flagged not verified), `RuleEngine` checking path slope along the
+  route and cross fall, plaza min/max fall, lawn min fall / max slope, bed max slope; report is
+  pass / fail / not checked per rule per space, with a zoom point and a designer-facing sentence. Courtyard
+  sample passes. 11 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 76/76 pass.
+- Split 2.2: ramp/step geometry, tree protection zones and setbacks moved to new item 2.2b.
+- Blocked: nothing. (.NET 8 SDK had to be installed from apt this session.)
+- Next: 2.2b needs trees/setbacks in the intent (or 2.1 import); 2.3 report palette needs 0.3 (PR #6) tested first.
+- Questions: D10 (confirm default accessibility values), D11 (are all paths accessible routes?).
 
 ## 2026-10-21 — Meeting 4
 - Decided: none new (no open questions).

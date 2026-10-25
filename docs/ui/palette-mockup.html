@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Landscape Palette Mockup</title>
+<style>
+:root{--bg:#1e2228;--panel:#2b3038;--panel2:#343a44;--line:#454c58;--text:#e3e6ea;--mute:#9aa3ae;--acc:#3f8fd8;
+--zone:#5fb36b;--walk:#e8a33d;--contour:#b07cd8;--flow:#3fb0d8;--border:#d85f5f;--ent:#f2d24b;--poi:#ff7fb0;--elev:#c9c9c9;--tree:#3c9c4a;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:13px/1.35 "Segoe UI",system-ui,sans-serif}
+.app{display:flex;min-height:100vh;flex-wrap:wrap}
+.canvas{flex:1 1 420px;min-width:0;background:#15181c;position:relative}
+.canvas svg{width:100%;height:100%;min-height:420px;display:block}
+.canvas .cap{position:absolute;left:12px;top:10px;color:var(--mute);font-size:12px}
+.pal{flex:0 0 360px;max-width:100%;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column}
+.title{padding:8px 12px;background:#23272e;border-bottom:1px solid var(--line);font-weight:600;display:flex;justify-content:space-between}
+.title span{color:var(--mute);font-weight:400}
+.sec{border-bottom:1px solid var(--line)}
+.sec>h3{margin:0;padding:8px 12px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:flex;justify-content:space-between;background:var(--panel2)}
+.body{padding:10px 12px}
+.sec.closed .body{display:none}
+.imgs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.img{aspect-ratio:4/3;border:1px dashed var(--line);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:11px;cursor:pointer}
+.img.f1{background:linear-gradient(135deg,#b9a58a,#7d6b55);border-style:solid}
+.img.f2{background:linear-gradient(135deg,#6f8f5a,#3e5a34);border-style:solid}
+.img.f3{background:linear-gradient(135deg,#d8cbb3,#a99577);border-style:solid}
+textarea{width:100%;margin-top:8px;background:#1f2329;color:var(--text);border:1px solid var(--line);border-radius:4px;padding:6px;font:inherit;resize:vertical}
+.row{display:grid;grid-template-columns:86px 1fr 74px;align-items:center;gap:6px;margin:6px 0}
+.row .l{color:var(--mute);font-size:12px;text-align:right}
+.row .r{color:var(--mute);font-size:12px}
+.row.ov .l{color:var(--acc)}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.scope{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.btn{background:#3a414c;border:1px solid var(--line);color:var(--text);border-radius:4px;padding:5px 9px;font:inherit;cursor:pointer}
+.btn.on{background:var(--acc);border-color:var(--acc)}
+.btn.primary{background:var(--acc);border-color:var(--acc);font-weight:600;width:100%;padding:8px}
+.btn.sm{padding:3px 7px;font-size:12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:14px;padding:3px 9px 3px 6px;cursor:pointer;background:#252a31}
+.tag i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.tag b{font-weight:400;color:var(--mute);font-size:11px}
+.tag.on{outline:2px solid var(--acc)}
+.hint{color:var(--mute);font-size:11px;margin-top:6px}
+.gen{padding:10px 12px}
+.vars{display:grid;gap:8px;margin-top:10px}
+.var{border:1px solid var(--line);border-radius:6px;padding:8px;background:#252a31;cursor:pointer}
+.var.sel{border-color:var(--acc)}
+.var h4{margin:0 0 6px;font-size:12px;display:flex;justify-content:space-between}
+.m{display:grid;grid-template-columns:96px 1fr 60px;gap:6px;font-size:11px;align-items:center;margin:2px 0}
+.bar{height:6px;background:#3a414c;border-radius:3px;position:relative}
+.bar s{position:absolute;top:-3px;width:2px;height:12px;background:#fff}
+.bar u{position:absolute;left:0;top:0;height:6px;border-radius:3px;background:var(--zone)}
+.ok{color:#7fd38a}.warn{color:#f2b84b}
+@media (max-width:760px){.pal{flex-basis:100%;border-left:0}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="canvas">
+    <div class="cap">Model space · tagged objects shown in tag colours (mockup)</div>
+    <svg viewBox="0 0 600 460" aria-label="Tagged site plan">
+      <rect x="0" y="0" width="600" height="460" fill="#15181c"/>
+      <g stroke="#2a2f36" stroke-width="1" fill="none">
+        <path d="M0 80 C150 70 300 95 600 85"/><path d="M0 160 C150 150 320 175 600 165"/>
+        <path d="M0 240 C160 230 330 255 600 245"/><path d="M0 320 C170 310 340 335 600 325"/><path d="M0 400 C170 390 340 415 600 405"/>
+      </g>
+      <rect x="0" y="425" width="600" height="35" fill="#2a2d33"/><text x="12" y="447" fill="#777" font-size="12">road (background)</text>
+      <rect x="40" y="40" width="170" height="120" fill="#3b3f46" stroke="#777"/><text x="70" y="104" fill="#aaa" font-size="12">structure FFL 101.20</text>
+      <polygon points="230,60 560,50 570,260 240,280" fill="rgba(95,179,107,.15)" stroke="var(--zone)" stroke-width="2"/>
+      <text x="470" y="78" fill="var(--zone)" font-size="12">Z1 zone</text>
+      <polygon points="60,200 220,190 230,400 70,410" fill="rgba(95,179,107,.15)" stroke="var(--zone)" stroke-width="2" stroke-dasharray="6 3"/>
+      <text x="80" y="398" fill="var(--zone)" font-size="12">Z2 zone (override)</text>
+      <path d="M210 120 C290 150 360 120 430 180 S520 300 540 330" stroke="var(--walk)" stroke-width="3" fill="none"/>
+      <path d="M150 170 C160 240 120 300 160 380" stroke="var(--walk)" stroke-width="3" fill="none"/>
+      <path d="M260 230 C330 210 420 240 500 220" stroke="var(--contour)" stroke-width="2" stroke-dasharray="8 4" fill="none"/>
+      <path d="M300 270 C330 320 380 340 420 380" stroke="var(--flow)" stroke-width="3" fill="none"/>
+      <ellipse cx="430" cy="388" rx="26" ry="14" fill="rgba(63,176,216,.2)" stroke="var(--flow)"/>
+      <path d="M20 20 L585 20 L585 420 L20 420 Z" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="12 4" fill="none"/>
+      <circle cx="210" cy="120" r="7" fill="var(--ent)"/><circle cx="430" cy="180" r="7" fill="var(--poi)"/>
+      <rect x="535" y="325" width="10" height="10" fill="var(--elev)"/><text x="490" y="352" fill="var(--elev)" font-size="11">+100.40</text>
+      <circle cx="330" cy="100" r="11" fill="none" stroke="var(--tree)" stroke-width="2"/><circle cx="330" cy="100" r="2" fill="var(--tree)"/>
+      <circle cx="120" cy="260" r="22" fill="none" stroke="#7a8a5a" stroke-dasharray="3 3"/><text x="96" y="296" fill="#7a8a5a" font-size="10">existing tree</text>
+    </svg>
+  </div>
+
+  <div class="pal">
+    <div class="title">AI Landscape Designer <span>Civil 3D · mockup</span></div>
+
+    <div class="sec"><h3>Style <span>▾</span></h3><div class="body">
+      <div class="imgs">
+        <div class="img f1"></div><div class="img f2"></div><div class="img f3"></div>
+        <div class="img">+ image</div><div class="img">+ image</div><div class="img">+ image</div>
+      </div>
+      <textarea rows="2">Shaded Mediterranean courtyard, local limestone, dry planting, quiet seating under trees</textarea>
+    </div></div>
+
+    <div class="sec"><h3>Polygon · zones <span>▾</span></h3><div class="body">
+      <div class="scope">
+        <button class="btn sm on" data-scope="G">Global</button>
+        <button class="btn sm" data-scope="Z1">Z1</button>
+        <button class="btn sm" data-scope="Z2">Z2</button>
+        <button class="btn sm">+ Pick polygon</button>
+      </div>
+      <div id="sliders"></div>
+      <div class="hint" id="shint">Global values apply to every zone. Pick a zone to override single sliders.</div>
+    </div></div>
+
+    <div class="sec"><h3>Curves <span>▾</span></h3><div class="body">
+      <div class="tags">
+        <span class="tag"><i style="background:var(--walk)"></i>Walking network <b>2</b></span>
+        <span class="tag"><i style="background:var(--contour)"></i>Contour <b>1</b></span>
+        <span class="tag"><i style="background:var(--flow)"></i>Flow basin <b>1</b></span>
+        <span class="tag"><i style="background:var(--border)"></i>Border <b>1</b></span>
+      </div>
+      <div class="hint">Click a tag, then pick polylines/arcs in the drawing. Tags are stored on the objects.</div>
+    </div></div>
+
+    <div class="sec"><h3>Points <span>▾</span></h3><div class="body">
+      <div class="tags">
+        <span class="tag"><i style="background:var(--ent)"></i>Entrance <b>1</b></span>
+        <span class="tag"><i style="background:var(--poi)"></i>Interest point <b>1</b></span>
+        <span class="tag"><i style="background:var(--elev)"></i>Elevation point <b>1</b></span>
+        <span class="tag"><i style="background:var(--tree)"></i>Tree <b>1</b></span>
+      </div>
+    </div></div>
+
+    <div class="sec closed"><h3>Background <span>▸</span></h3><div class="body">
+      <div class="tags">
+        <span class="tag">Survey <b>V-TOPO-*</b></span><span class="tag">Structures <b>A-BLDG</b></span>
+        <span class="tag">Roads <b>C-ROAD</b></span><span class="tag">Orthophoto <b>ortho.tif</b></span>
+      </div>
+      <div class="hint">Read-only context: existing ground, FFLs, existing trees, edges.</div>
+    </div></div>
+
+    <div class="gen">
+      <button class="btn primary" id="gen">Generate 3 options</button>
+      <div class="vars" id="vars"></div>
+    </div>
+  </div>
+</div>
+<script>
+const S=[["acc","Accessibility","minimum","all step-free",70],["hs","Hardscape","","Softscape",55],["mg","Max grade","keep ground","free form",30],
+["cf","Cut","","Fill",50],["ms","Max slope","gentle","rule max",40],["sh","Shading","open","full canopy",65],["te","Trees","","Elements",30],["cs","Curved","","Straight",35]];
+const vals={G:Object.fromEntries(S.map(s=>[s[0],s[4]])),Z1:{},Z2:{hs:30}};
+let scope="G";
+function render(){
+  const box=document.getElementById("sliders");box.innerHTML="";
+  S.forEach(([k,l,lo,r])=>{
+    const ov=scope!=="G"&&k in vals[scope];const v=scope==="G"?vals.G[k]:(ov?vals[scope][k]:vals.G[k]);
+    const d=document.createElement("div");d.className="row"+(ov?" ov":"");
+    d.innerHTML=`<div class="l" title="${lo}">${l}</div><input type="range" min="0" max="100" value="${v}"><div class="r">${r} <span style="color:var(--text)">${v}</span></div>`;
+    d.querySelector("input").oninput=e=>{const n=+e.target.value;if(scope==="G")vals.G[k]=n;else vals[scope][k]=n;render();};
+    box.appendChild(d);
+  });
+  document.getElementById("shint").textContent=scope==="G"?"Global values apply to every zone. Pick a zone to override single sliders.":"Blue = overridden for "+scope+". Moving a slider overrides it.";
+}
+document.querySelectorAll("[data-scope]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-scope]").forEach(x=>x.classList.remove("on"));b.classList.add("on");scope=b.dataset.scope;render();});
+document.querySelectorAll(".sec>h3").forEach(h=>h.onclick=()=>{const s=h.parentElement;s.classList.toggle("closed");h.lastElementChild.textContent=s.classList.contains("closed")?"▸":"▾";});
+document.querySelectorAll(".tag").forEach(t=>t.onclick=()=>t.classList.toggle("on"));
+document.getElementById("gen").onclick=()=>{
+  const g=vals.G,mk=(n,d)=>{const rows=[["Softscape %",g.hs,d[0]],["Canopy %",g.sh,d[1]],["Straight %",g.cs,d[2]],["Accessible %",g.acc,d[3]]];
+    const fails=rows.filter(r=>Math.abs(r[1]-r[2])>5).length;
+    return `<div class="var" onclick="document.querySelectorAll('.var').forEach(x=>x.classList.remove('sel'));this.classList.add('sel')"><h4>Option ${n}<span class="${fails?'warn':'ok'}">${fails?fails+' target(s) off':'all targets met'} · rules ✓</span></h4>`+
+    rows.map(r=>`<div class="m"><span>${r[0]}</span><div class="bar"><u style="width:${r[2]}%"></u><s style="left:${r[1]}%"></s></div><span>${r[2]} / ${r[1]}</span></div>`).join("")+`</div>`;};
+  const j=a=>Math.max(0,Math.min(100,a));
+  document.getElementById("vars").innerHTML=mk("A",[j(g.hs+2),j(g.sh-3),j(g.cs+1),j(g.acc+4)])+mk("B",[j(g.hs-4),j(g.sh+8),j(g.cs-2),j(g.acc)])+mk("C",[j(g.hs+1),j(g.sh+1),j(g.cs+12),j(g.acc-2)])+
+  `<button class="btn primary" style="margin-top:4px">Detail selected option → preview → Apply (one undo)</button>`;
+};
+render();
+</script>
+</body>
+</html>
