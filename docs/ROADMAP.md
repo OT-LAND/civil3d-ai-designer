@@ -2,18 +2,18 @@
 
 Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Civil 3D test) · `done` · `blocked:D#`
 
-**Priority from 2026-10-25 (D14):** finish open PRs (#6–#10), then **MB** top to bottom, then
+**Priority from 2026-10-25 (D14):** merge Core-only PRs #7→#9, #8→#10 when CI is green (D13); #6 waits for the owner's Civil 3D test, then **MB** top to bottom, then
 1.3, 2.3, M4. Concept: `docs/CONCEPT.md`.
 
 ## MB — Design Brief & semi-parametric palette (D14, concept v1)
 | # | Item | Status |
 |---|---|---|
-| B.1 | Design Brief schema v1 in Core: background refs, zones + character sliders (global, optional per-zone override), tagged curves (walkingNetwork/contour/flowBasin/border), tagged points (entrance/interestPoint/elevation/tree), style (images + prompt); JSON read/write, validator, sample, tests | todo |
+| B.1 | Design Brief schema v1 in Core: background refs, zones + character sliders (global defaults, per-zone override per D15), tagged curves (walkingNetwork/contour/flowBasin/border), tagged points (entrance/interestPoint/elevation/tree), style (images + prompt); JSON read/write, validator, sample, tests | todo |
 | B.2 | Metrics on a Design Intent (Core): hard/soft share, canopy cover, curved/straight share, accessible share, steepest slopes; compare to slider targets with tolerance → "target vs achieved" | todo |
 | B.3 | Design Intent v1: zone refs, trees (new + kept), drainage (swale, basin, low points), site elements, interest-point places | todo |
 | B.4 | Style profile: reference images + prompt → material palette, planting character, form language (Claude vision), cached | todo |
-| B.5 | Plan stage: brief + style profile + site → Design Intent spaces/paths; repair loop on metric misses and rule failures (extends 1.2); variants per D18 | todo — variants blocked:D18 |
-| B.6 | Grading solver v0 (Core): levels from entrances/FFL, elevation points, contours, survey; max grade, cut/fill and max slope targets; reasons sent back to Plan | blocked:D16,D17 |
+| B.5 | Plan stage: brief + style profile + site → Design Intent spaces/paths; repair loop on metric misses and rule failures (extends 1.2); 3 layout variants per run, only the chosen one is detailed (D18) | todo |
+| B.6 | Grading solver v0 (Core): levels from entrances/FFL, elevation points, contours, survey; contours are soft unless given a level (D17); ground steeper than max grade becomes a retaining wall/terrace (D16); cut/fill target; reasons sent back to Plan | todo — max-slope slider blocked:D19 |
 | B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment → Design Brief | todo — after 0.3 |
 | B.8 | Generate → variants → target-vs-achieved card + rule report → Apply in one undo (replaces 1.4) | todo — after B.5, B.7 |
 

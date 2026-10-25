@@ -1,7 +1,6 @@
 # Concept v1: Semi-parametric generative designer
 
-Status: proposed 2026-10-25 from the owner's UI sketch (D14). Open points are in `DECISIONS.md`
-(D15–D19). This file is the product concept; `ARCHITECTURE.md` is how it is built.
+Status: agreed 2026-10-25 from the owner's UI sketch (D14–D18, D13). Open: D19 (max slope). This file is the product concept; `ARCHITECTURE.md` is how it is built.
 
 ## 1. The idea in one paragraph
 The designer does not draw the design and does not write a long prompt. They **pick loose
@@ -18,7 +17,7 @@ One palette, five panels, top to bottom:
 | Panel | What the designer does | Becomes in the brief |
 |---|---|---|
 | **Style** | Drops up to 6 reference images (mood, materials, planting) and/or writes a text prompt | `style.images[]`, `style.prompt` |
-| **Polygon** | Picks closed polylines/regions = design zones. Sets character sliders (global, optionally per zone) | `zones[]` + `character` |
+| **Polygon** | Picks closed polylines/regions = design zones. Sets character sliders (global defaults, any zone can override single sliders, D15) | `zones[]` + `character` |
 | **Curves** | Picks open polylines/arcs/splines and tags each: walking network · contour · flow basin · border | `curves[]` with `tag` |
 | **Points** | Picks points/blocks and tags each: entrance · interest point · elevation point · tree | `points[]` with `tag` |
 | **Background** | Assigns layers/objects/xrefs/images as: survey · structures · roads · orthophoto | `background` (read-only context) |
@@ -31,9 +30,9 @@ Bottom of the palette: **Generate** → 2–3 variants → per variant a *target
 |---|---|---|---|
 | Accessibility | legal minimum only | everything step-free | share of the zone's spaces reached by accessible routes; legal minimum (D10/D11) is always enforced |
 | Hardscape ↔ Softscape | all paved | all planted | target share of zone area paved vs planted (lawn + beds), ±5 % |
-| Max grade | keep existing ground | free landform | how far levels may move from existing ground (see D16) |
+| Max grade | gentle | rule-set maximum | steepest graded ground before a retaining wall is used; steeper level changes become walls/terraces (D16) |
 | Cut ↔ Fill | export soil | import soil | earthwork balance target; 50 = balanced on site |
-| Max slope | gentle | rule-set maximum | steepest soft bank allowed, capped by the rule set (lawn 1:4, bed 1:3) |
+| Max slope | gentle | rule-set maximum | open (D19); proposed: steepest walking surface for paths not marked accessible |
 | Shading | open / sunny | full canopy | target canopy cover at maturity (trees + shade structures) |
 | Trees ↔ Elements | trees only | built elements only | how vertical elements and shade are made: trees vs pergolas, shade sails, furniture, play |
 | Curved ↔ Straight | organic / curvilinear | orthogonal / rectilinear | geometric language of edges, paths and beds |
@@ -47,9 +46,9 @@ every slider is a number with a tolerance, and the result reports how close it g
   rule set and style), connected to entrances and interest points. Accessible unless the
   designer marks it otherwise (D11).
 - **Contour**: a landform gesture: "the ground should follow this line". The designer can
-  give it a level (hard) or leave it relative (soft, see D17).
+  give it a level (then it is hard); otherwise it is soft (D17).
 - **Flow basin**: where water should go: a swale or flow line, ending in a retention or
-  infiltration area (see D17).
+  infiltration area at its low end (D17).
 - **Border**: an edge the design must respect or build: lot border, wall, kerb, hedge line.
 
 ### Point tags
@@ -95,9 +94,9 @@ every slider is a number with a tolerance, and the result reports how close it g
    form language. Cached; reused across runs.
 3. **Plan**: per zone, spaces and paths (the zoning) → measured against the hard/soft,
    shading, curved/straight and accessibility targets. Misses go back as a repair prompt
-   (as in 1.2). Produces **2–3 variants** cheaply at this stage.
+   (as in 1.2). Produces **3 layout variants** at this stage (D18).
 4. **Level**: Core grading solver sets levels from hard constraints, then within the
-   max grade / cut-fill / max slope targets. Failures go back to Plan with the reason
+   cut/fill target; ground steeper than max grade becomes a retaining wall or terrace. Failures go back to Plan with the reason
    ("plaza can't reach entrance E1 within 5 %, needs a ramp").
 5. **Detail**: steps, ramps, walls, edges, drainage along flow basins, planting, elements.
 6. **Check**: rule report + target vs achieved. Shown to the designer before Apply.

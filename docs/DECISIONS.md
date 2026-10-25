@@ -2,35 +2,36 @@
 
 ## Open (for the next meeting)
 
-**D15 — Do the polygon sliders apply to the whole site or to each zone?** (raised 2026-10-25, concept v1)
-(a) one global set for all polygons; (b) each polygon has its own sliders; (c) global defaults,
-and any polygon can override single sliders. Recommendation: (c), because most sites have one
-character with one or two exceptions (e.g. a play lawn in a hard plaza).
-
-**D16 — What does "max grade" mean, next to "max slope"?** (raised 2026-10-25)
-(a) max grade = how much the ground may be reshaped from existing (keep existing ↔ free
-landform); max slope = steepest soft bank allowed; (b) max grade = steepest walking surface
-(paths, plazas) for routes not marked accessible; max slope = steepest soft bank.
-Recommendation: (a), because walking grades already come from the Accessibility slider and the rule set,
-and there is no other dial for how sculpted the land is.
-
-**D17 — What do the "contour" and "flow basin" curves mean?** (raised 2026-10-25)
-Contour: (a) a hard proposed contour at a level you type; (b) a soft landform gesture
-(the ground follows its shape, with a level only if you give one). Flow basin: (a) a swale or flow line, with
-a retention/infiltration area at its low end; (b) the outline of a basin only.
-Recommendation: contour (b), flow basin (a).
-
-**D18 — How many design options per Generate?** (raised 2026-10-25)
-(a) one; (b) three layout options shown as quick plans, detailed only after you pick one;
-(c) three fully detailed options. Recommendation: (b), which gives real choice at about a third of the cost of (c)
-on your own Claude key.
-
-**D13 — Who approves PRs** (raised 2026-10-25, Meeting 7)
-PRs #7–#10 await review. Options: (a) owner approves every PR; (b) agent merges Core-only PRs
-(checks, data import) once all tests pass, owner reviews anything that changes the drawing or
-needs Civil 3D; (c) owner approves each stack as a whole. Recommendation: (b).
+**D19 — What does the "max slope" slider control, now that "max grade" is the wall threshold?** (raised 2026-10-25)
+(a) steepest soft bank by planting (lawn vs planted bed), within the rule-set limits; (b) steepest walking
+surface for paths not marked accessible; (c) drop it, since max grade covers it. Recommendation: (b), so that
+max grade stays the ground/wall dial and max slope becomes the walking dial.
 
 ## Decided
+
+**D15 — Sliders: global defaults with per-zone override** (2026-10-25)
+**(c)**: one global set of character sliders applies to every polygon; any polygon can override
+single sliders.
+
+**D16 — "Max grade" = steepest ground before a retaining wall** (2026-10-25)
+Owner's definition: max grade is the **maximum slope for graded ground before a retaining wall is
+used**. Where the levels need steeper ground, the generator puts in a wall (or terrace) instead.
+Capped by the rule set (lawn 1:4, bed 1:3). The meaning of "max slope" is now open as D19.
+
+**D17 — Contour = soft landform line; flow basin = flow line to a basin** (2026-10-25)
+Contour **(b)**: the ground follows its shape, and it becomes a hard level only if the designer gives one.
+Flow basin **(a)**: a swale or flow line, with a retention/infiltration area at its low end.
+
+**D18 — Three layout options, detail the chosen one** (2026-10-25)
+**(b)**: each Generate makes 3 quick layout options (plan stage). Only the option the designer picks
+goes through levels and detailing.
+
+**D13 — Agent merges Core-only PRs** (2026-10-25)
+**(b)**: the agent merges PRs that change only Core (checks, data import, schema, metrics) once CI and all
+tests pass. The owner reviews anything that changes the drawing or needs Civil 3D (plugin, builders,
+palette). PRs #7→#9 and #8→#10 are Core-only: the next work session merges them (in stack order,
+resolving docs conflicts) once CI is green.
+
 
 **D14 — UI and product direction: semi-parametric tagged-geometry designer** (2026-10-25)
 From the owner's hand sketch: the palette has five panels: **Style** (up to 6 reference
