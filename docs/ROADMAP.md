@@ -2,6 +2,21 @@
 
 Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Civil 3D test) · `done` · `blocked:D#`
 
+**Priority from 2026-10-25 (D14):** finish open PRs (#6–#10), then **MB** top to bottom, then
+1.3, 2.3, M4. Concept: `docs/CONCEPT.md`.
+
+## MB — Design Brief & semi-parametric palette (D14, concept v1)
+| # | Item | Status |
+|---|---|---|
+| B.1 | Design Brief schema v1 in Core: background refs, zones + character sliders (global, optional per-zone override), tagged curves (walkingNetwork/contour/flowBasin/border), tagged points (entrance/interestPoint/elevation/tree), style (images + prompt); JSON read/write, validator, sample, tests | todo |
+| B.2 | Metrics on a Design Intent (Core): hard/soft share, canopy cover, curved/straight share, accessible share, steepest slopes; compare to slider targets with tolerance → "target vs achieved" | todo |
+| B.3 | Design Intent v1: zone refs, trees (new + kept), drainage (swale, basin, low points), site elements, interest-point places | todo |
+| B.4 | Style profile: reference images + prompt → material palette, planting character, form language (Claude vision), cached | todo |
+| B.5 | Plan stage: brief + style profile + site → Design Intent spaces/paths; repair loop on metric misses and rule failures (extends 1.2); variants per D18 | todo — variants blocked:D18 |
+| B.6 | Grading solver v0 (Core): levels from entrances/FFL, elevation points, contours, survey; max grade, cut/fill and max slope targets; reasons sent back to Plan | blocked:D16,D17 |
+| B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment → Design Brief | todo — after 0.3 |
+| B.8 | Generate → variants → target-vs-achieved card + rule report → Apply in one undo (replaces 1.4) | todo — after B.5, B.7 |
+
 ## M0 — Foundations
 | # | Item | Status |
 |---|---|---|
@@ -16,7 +31,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | 1.1 | Design Intent JSON schema v0: site, spaces (plaza/path/lawn/bed), levels, edges, materials | done |
 | 1.2 | Prompt + validator: free text → Design Intent | done |
 | 1.3 | Builders: existing surface from survey; feature lines + proposed surface for spaces | todo |
-| 1.4 | Preview-and-confirm UI before writing to the drawing | todo |
+| 1.4 | Preview-and-confirm UI before writing to the drawing | superseded by B.8 |
 
 ## M2 — Background data & constraints
 | # | Item | Status |
@@ -30,10 +45,10 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 ## M3 — Visual inputs
 | # | Item | Status |
 |---|---|---|
-| 3.1 | Hand sketch over site plan → spaces and edges, with scale/georeference calibration | todo |
-| 3.2 | Concept diagram → zoning, circulation and level intent | todo |
-| 3.3 | Render/reference image → material palette and planting character | todo |
-| 3.4 | Multi-input fusion: text + sketches + images + background into one Design Intent | todo |
+| 3.1 | Hand sketch over site plan → spaces and edges, with scale/georeference calibration | superseded by tagged geometry (D14); maybe later as "trace scan into tagged geometry" |
+| 3.2 | Concept diagram → zoning, circulation and level intent | superseded by tagged geometry (D14) |
+| 3.3 | Render/reference image → material palette and planting character | moved to B.4 |
+| 3.4 | Multi-input fusion: text + sketches + images + background into one Design Intent | superseded by Design Brief (B.1, B.5) |
 
 ## M4 — Detailed landscape design
 | # | Item | Status |

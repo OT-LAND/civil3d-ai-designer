@@ -1,5 +1,13 @@
 # Session log (newest first)
 
+## 2026-10-25 — Owner input: UI sketch → concept v1
+- Owner sent a hand-drawn palette sketch (Style / Polygon sliders / Curves / Points / Background tags) and asked to
+  re-aim the product as a semi-parametric, host-agnostic generative designer, concept first.
+- Done (docs only): `docs/CONCEPT.md`, D14 decided, new milestone MB (B.1–B.8) on top of the roadmap,
+  3.1/3.2/3.4/1.4 superseded, palette mockup `docs/ui/palette-mockup.html`.
+- Asked: D15 (sliders global/per zone), D16 (max grade meaning), D17 (contour, flow basin), D18 (options per run); D13 still open.
+- Next work item: B.1 Design Brief schema (not blocked).
+
 ## 2026-10-25 — Meeting 8 (evening)
 - Nothing new since Meeting 7. Re-sent status (#7→#9, #8→#10 review; #6 Civil 3D test) and D13 (recommended b). No answer yet.
 

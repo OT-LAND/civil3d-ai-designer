@@ -2,12 +2,45 @@
 
 ## Open (for the next meeting)
 
+**D15 — Do the polygon sliders apply to the whole site or to each zone?** (raised 2026-10-25, concept v1)
+(a) one global set for all polygons; (b) each polygon has its own sliders; (c) global defaults,
+and any polygon can override single sliders. Recommendation: (c), because most sites have one
+character with one or two exceptions (e.g. a play lawn in a hard plaza).
+
+**D16 — What does "max grade" mean, next to "max slope"?** (raised 2026-10-25)
+(a) max grade = how much the ground may be reshaped from existing (keep existing ↔ free
+landform); max slope = steepest soft bank allowed; (b) max grade = steepest walking surface
+(paths, plazas) for routes not marked accessible; max slope = steepest soft bank.
+Recommendation: (a), because walking grades already come from the Accessibility slider and the rule set,
+and there is no other dial for how sculpted the land is.
+
+**D17 — What do the "contour" and "flow basin" curves mean?** (raised 2026-10-25)
+Contour: (a) a hard proposed contour at a level you type; (b) a soft landform gesture
+(the ground follows its shape, with a level only if you give one). Flow basin: (a) a swale or flow line, with
+a retention/infiltration area at its low end; (b) the outline of a basin only.
+Recommendation: contour (b), flow basin (a).
+
+**D18 — How many design options per Generate?** (raised 2026-10-25)
+(a) one; (b) three layout options shown as quick plans, detailed only after you pick one;
+(c) three fully detailed options. Recommendation: (b), which gives real choice at about a third of the cost of (c)
+on your own Claude key.
+
 **D13 — Who approves PRs** (raised 2026-10-25, Meeting 7)
 PRs #7–#10 await review. Options: (a) owner approves every PR; (b) agent merges Core-only PRs
 (checks, data import) once all tests pass, owner reviews anything that changes the drawing or
 needs Civil 3D; (c) owner approves each stack as a whole. Recommendation: (b).
 
 ## Decided
+
+**D14 — UI and product direction: semi-parametric tagged-geometry designer** (2026-10-25)
+From the owner's hand sketch: the palette has five panels: **Style** (up to 6 reference
+images + text prompt), **Polygon** (zones with character sliders: accessibility,
+hardscape↔softscape, max grade, cut↔fill, max slope, shading, trees↔elements,
+curved↔straight), **Curves** (tags: walking network, contour, flow basin, border),
+**Points** (tags: entrance, interest point, elevation point, tree), **Background** (survey,
+structures, roads, orthophoto). The designer picks and tags drawing objects, and the AI generates the
+design. Solve the concept and the AI strategy first, host-agnostic (Civil 3D now, Revit or other
+hosts later). Concept: `docs/CONCEPT.md`. Sketch recognition (3.1/3.2) is replaced by tagged geometry.
 
 **D10 — Default accessibility values confirmed** (2026-10-23)
 **(a) OK as proposed**: accessible route max **5%** along the path (steeper = ramp),
