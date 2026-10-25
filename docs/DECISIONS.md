@@ -2,12 +2,13 @@
 
 ## Open (for the next meeting)
 
-**D19 — What does the "max slope" slider control, now that "max grade" is the wall threshold?** (raised 2026-10-25)
-(a) steepest soft bank by planting (lawn vs planted bed), within the rule-set limits; (b) steepest walking
-surface for paths not marked accessible; (c) drop it, since max grade covers it. Recommendation: (b), so that
-max grade stays the ground/wall dial and max slope becomes the walking dial.
-
 ## Decided
+
+**D19 — "Max slope" = steepest walking surface on non-accessible paths** (2026-10-25)
+**(b)**: the max slope slider sets the steepest walking surface allowed on paths the designer marked
+"not accessible" (D11). Accessible routes always follow the rule set (D10). Max grade (D16) stays the
+ground/retaining-wall dial.
+
 
 **D15 — Sliders: global defaults with per-zone override** (2026-10-25)
 **(c)**: one global set of character sliders applies to every polygon; any polygon can override

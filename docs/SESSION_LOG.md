@@ -9,6 +9,7 @@
 - Next work item: B.1 Design Brief schema (not blocked).
 - Answers (same day): D15 c, D16 max grade = steepest ground before a retaining wall, D17 contour soft / flow basin to basin,
   D18 three layout options, D13 b (agent merges Core-only PRs). New open: D19 (what max slope means). B.6 unblocked.
+- D19 answered: (b) max slope = steepest walking surface on non-accessible paths. No open questions.
 
 ## 2026-10-25 — Meeting 8 (evening)
 - Nothing new since Meeting 7. Re-sent status (#7→#9, #8→#10 review; #6 Civil 3D test) and D13 (recommended b). No answer yet.

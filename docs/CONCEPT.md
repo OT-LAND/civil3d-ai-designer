@@ -1,6 +1,6 @@
 # Concept v1: Semi-parametric generative designer
 
-Status: agreed 2026-10-25 from the owner's UI sketch (D14–D18, D13). Open: D19 (max slope). This file is the product concept; `ARCHITECTURE.md` is how it is built.
+Status: agreed 2026-10-25 from the owner's UI sketch (D14–D18, D13). Max slope: D19. This file is the product concept; `ARCHITECTURE.md` is how it is built.
 
 ## 1. The idea in one paragraph
 The designer does not draw the design and does not write a long prompt. They **pick loose
@@ -32,7 +32,7 @@ Bottom of the palette: **Generate** → 2–3 variants → per variant a *target
 | Hardscape ↔ Softscape | all paved | all planted | target share of zone area paved vs planted (lawn + beds), ±5 % |
 | Max grade | gentle | rule-set maximum | steepest graded ground before a retaining wall is used; steeper level changes become walls/terraces (D16) |
 | Cut ↔ Fill | export soil | import soil | earthwork balance target; 50 = balanced on site |
-| Max slope | gentle | rule-set maximum | open (D19); proposed: steepest walking surface for paths not marked accessible |
+| Max slope | gentle | rule-set maximum | steepest walking surface on paths marked not accessible (D19); accessible routes follow the rule set |
 | Shading | open / sunny | full canopy | target canopy cover at maturity (trees + shade structures) |
 | Trees ↔ Elements | trees only | built elements only | how vertical elements and shade are made: trees vs pergolas, shade sails, furniture, play |
 | Curved ↔ Straight | organic / curvilinear | orthogonal / rectilinear | geometric language of edges, paths and beds |

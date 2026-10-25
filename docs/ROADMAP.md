@@ -13,7 +13,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | B.3 | Design Intent v1: zone refs, trees (new + kept), drainage (swale, basin, low points), site elements, interest-point places | todo |
 | B.4 | Style profile: reference images + prompt → material palette, planting character, form language (Claude vision), cached | todo |
 | B.5 | Plan stage: brief + style profile + site → Design Intent spaces/paths; repair loop on metric misses and rule failures (extends 1.2); 3 layout variants per run, only the chosen one is detailed (D18) | todo |
-| B.6 | Grading solver v0 (Core): levels from entrances/FFL, elevation points, contours, survey; contours are soft unless given a level (D17); ground steeper than max grade becomes a retaining wall/terrace (D16); cut/fill target; reasons sent back to Plan | todo — max-slope slider blocked:D19 |
+| B.6 | Grading solver v0 (Core): levels from entrances/FFL, elevation points, contours, survey; contours are soft unless given a level (D17); ground steeper than max grade becomes a retaining wall/terrace (D16); cut/fill target; max slope caps non-accessible paths (D19); reasons sent back to Plan | todo |
 | B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment → Design Brief | todo — after 0.3 |
 | B.8 | Generate → variants → target-vs-achieved card + rule report → Apply in one undo (replaces 1.4) | todo — after B.5, B.7 |
 
