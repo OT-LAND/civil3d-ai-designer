@@ -1,5 +1,8 @@
 # Session log (newest first)
 
+## 2026-10-25 — Meeting 8 (evening)
+- Nothing new since Meeting 7. Re-sent status (#7→#9, #8→#10 review; #6 Civil 3D test) and D13 (recommended b). No answer yet.
+
 ## 2026-10-25 — Meeting 7
 - Reported: PR #9 (2.2c) and PR #10 (2.1c) built; review stacks #7→#9 and #8→#10; PR #6 (0.3) still awaits the owner's Civil 3D test.
 - Asked: D13 (who approves PRs; recommended b, agent merges Core-only PRs when tests pass).
