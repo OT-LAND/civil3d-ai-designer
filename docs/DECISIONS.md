@@ -2,7 +2,10 @@
 
 ## Open (for the next meeting)
 
-_None._
+**D13 — Who approves PRs** (raised 2026-10-25, Meeting 7)
+PRs #7–#10 await review. Options: (a) owner approves every PR; (b) agent merges Core-only PRs
+(checks, data import) once all tests pass, owner reviews anything that changes the drawing or
+needs Civil 3D; (c) owner approves each stack as a whole. Recommendation: (b).
 
 ## Decided
 

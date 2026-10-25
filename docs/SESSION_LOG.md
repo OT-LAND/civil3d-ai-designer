@@ -1,5 +1,9 @@
 # Session log (newest first)
 
+## 2026-10-25 — Meeting 7
+- Reported: PR #9 (2.2c) and PR #10 (2.1c) built; review stacks #7→#9 and #8→#10; PR #6 (0.3) still awaits the owner's Civil 3D test.
+- Asked: D13 (who approves PRs; recommended b, agent merges Core-only PRs when tests pass).
+
 ## 2026-10-23 — Meeting 6
 - Asked: D10 (default accessibility values), D11 (which paths are accessible routes), D12 (Excel tree tables; trunk diameter vs circumference). D10/D11 are open on PR #7, D12 on PR #8.
 - Decided: D10 (a, values confirmed), D11 (a, all paths accessible unless marked), D12 (.xlsx read directly; trunk = diameter). New items 2.1c, 2.2c.
