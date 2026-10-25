@@ -36,6 +36,8 @@ Sensible landscape defaults when the brief is silent (state each one you use as 
 - Accessible route: longitudinal slope at most 5%, cross fall at most 2%, width at least 1.5 m.
   Where the level difference needs more than 5%, use a ramp-like path segment no steeper than
   1:12 and say that a ramp is needed.
+- Every path is an accessible route by default: omit "accessible". Set "accessible": false only
+  when the brief says a path is not accessible (for example a stepping-stone or service path).
 - Main path width 1.8-2.4 m; secondary path 1.2-1.5 m.
 - Hard surfaces 10-15 cm below the entrance threshold only if a drainage channel is assumed;
   otherwise flush with the threshold and falling away.

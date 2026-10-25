@@ -96,6 +96,26 @@ namespace CivilAI.Core.Tests.Intent
         }
 
         [Fact]
+        public void Accessible_flag_round_trips_on_a_path_and_is_rejected_elsewhere()
+        {
+            const string json = """
+            { "schemaVersion": "0",
+              "spaces": [
+                { "id": "p", "kind": "path", "centerline": [ { "x": 0, "y": 0 }, { "x": 5, "y": 0 } ],
+                  "width": 1.2, "accessible": false },
+                { "id": "l", "kind": "lawn", "accessible": false,
+                  "outline": [ { "x": 0, "y": 0 }, { "x": 5, "y": 0 }, { "x": 5, "y": 5 } ] } ] }
+            """;
+            Assert.True(DesignIntentJson.TryParse(json, out var intent, out var error), error);
+            Assert.False(intent!.Spaces[0].Accessible);
+            Assert.Contains("\"accessible\": false", DesignIntentJson.Serialize(intent));
+
+            var issues = DesignIntentValidator.Validate(intent);
+            Assert.False(HasIssue(issues, "spaces[0].accessible"));
+            Assert.True(HasIssue(issues, "spaces[1].accessible"));
+        }
+
+        [Fact]
         public void Degenerate_and_explicitly_closed_outlines_are_reported()
         {
             var flat = new List<Point2> { new Point2(0, 0), new Point2(5, 0), new Point2(10, 0) };

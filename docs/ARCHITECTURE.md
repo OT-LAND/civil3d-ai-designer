@@ -53,6 +53,20 @@ Free text → Design Intent (1.2)
 - The given site always replaces Claude's site: the AI cannot move buildings or change FFLs.
 - Takes a send delegate, so the connector mode (D9) or tests can supply their own sender.
 
+Rule engine (2.2a)
+- `Core/Rules/RuleSet`: a rule-set file = `{ruleSetVersion, id, name, description, rules[{id, value, label,
+  source, verified}]}`. Ids are a closed list (`RuleIds`); unknown/duplicate ids, negative values or another
+  version are rejected with every problem listed. A rule left out of a set = "not checked" (office sets may omit).
+  Default starter set `Rules/RuleSets/default-il.v0.json` is embedded (`RuleSetJson.LoadDefault()`, D3).
+- `RuleEngine.Check(intent, ruleSet)` → `RuleReport` of `RuleResult {ruleId, spaceId, Pass|Fail|NotChecked,
+  measured, limit, location, message}`, one per rule per space, worst place found = zoom target (for 2.3).
+- Paths: slope along the path from spot levels ordered by station on the centerline (else the fall's along
+  component); cross fall = the fall's component across each centerline segment. Plaza/lawn min fall needs a
+  stated fall (spots only bound it); max fall/slope uses the fall and the steepest pair of spot levels.
+- Accessible route (D11): every path is one unless the intent marks it `"accessible": false` (path-only
+  field); such a path gets NotChecked for the two accessible-route rules. Default set values are
+  owner-confirmed (D10, `verified: true`).
+
 Principles
 - Claude produces intent; deterministic code produces geometry.
 - Every generation step is previewable, reversible, and re-runnable.
@@ -66,6 +80,7 @@ src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator;
                      JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
 samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
+src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)
 tests/Core.Tests/    CivilAI.Core.Tests   xUnit tests for Core

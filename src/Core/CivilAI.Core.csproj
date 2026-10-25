@@ -19,6 +19,8 @@
     <EmbeddedResource Include="Intent\Schema\design-intent.v0.schema.json" LogicalName="CivilAI.Core.Intent.Schema.design-intent.v0.schema.json" />
     <!-- System prompt for free text → Design Intent (1.2); read with TextToIntent.ReadSystemPrompt(). -->
     <EmbeddedResource Include="Intent\Prompts\text-to-intent.v0.md" LogicalName="CivilAI.Core.Intent.Prompts.text-to-intent.v0.md" />
+    <!-- Default starter design-rule set (2.2, D3); read with RuleSetJson.LoadDefault(). -->
+    <EmbeddedResource Include="Rules\RuleSets\default-il.v0.json" LogicalName="CivilAI.Core.Rules.RuleSets.default-il.v0.json" />
   </ItemGroup>
 
 </Project>
