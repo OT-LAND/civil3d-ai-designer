@@ -1,5 +1,23 @@
 # Session log (newest first)
 
+## 2026-10-25 — Owner input: UI sketch → concept v1
+- Owner sent a hand-drawn palette sketch (Style / Polygon sliders / Curves / Points / Background tags) and asked to
+  re-aim the product as a semi-parametric, host-agnostic generative designer, concept first.
+- Done (docs only): `docs/CONCEPT.md`, D14 decided, new milestone MB (B.1–B.8) on top of the roadmap,
+  3.1/3.2/3.4/1.4 superseded, palette mockup `docs/ui/palette-mockup.html`.
+- Asked: D15 (sliders global/per zone), D16 (max grade meaning), D17 (contour, flow basin), D18 (options per run); D13 still open.
+- Next work item: B.1 Design Brief schema (not blocked).
+- Answers (same day): D15 c, D16 max grade = steepest ground before a retaining wall, D17 contour soft / flow basin to basin,
+  D18 three layout options, D13 b (agent merges Core-only PRs). New open: D19 (what max slope means). B.6 unblocked.
+- D19 answered: (b) max slope = steepest walking surface on non-accessible paths. No open questions.
+
+## 2026-10-25 — Meeting 8 (evening)
+- Nothing new since Meeting 7. Re-sent status (#7→#9, #8→#10 review; #6 Civil 3D test) and D13 (recommended b). No answer yet.
+
+## 2026-10-25 — Meeting 7
+- Reported: PR #9 (2.2c) and PR #10 (2.1c) built; review stacks #7→#9 and #8→#10; PR #6 (0.3) still awaits the owner's Civil 3D test.
+- Asked: D13 (who approves PRs; recommended b, agent merges Core-only PRs when tests pass).
+
 ## 2026-10-23 — Work: 2.2c Rule set verified (D10) + "not accessible" path flag (D11)
 - Done: all 7 default rules marked `verified: true` with "confirmed by owner 2026-10-23 (D10)" in the source note.
   Design Intent: path-only `accessible` flag (omitted = accessible); validator rejects it on non-paths; schema and

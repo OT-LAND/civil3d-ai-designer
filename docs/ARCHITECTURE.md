@@ -1,5 +1,10 @@
 # Architecture (initial)
 
+> Concept v1 (D14, 2026-10-25): the designer's input is a host-neutral **Design Brief**
+> (tagged polygons/curves/points + character sliders + style + background) → staged generation
+> (Claude for style/plan/detail, Core for levels/metrics/rules) → Design Intent → host builders.
+> See `docs/CONCEPT.md` §3. This file is updated as MB items land.
+
 ```
 Designer inputs (sketch, image, text)      Background (survey, lots, rules)
               \                                   /
