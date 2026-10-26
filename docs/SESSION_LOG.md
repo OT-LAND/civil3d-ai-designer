@@ -9,6 +9,7 @@
 - Not measured yet (reported as such): canopy cover, trees vs elements (need B.3); max grade, cut/fill, max slope
   targets (need B.6 slider → slope mapping).
 - Blocked: nothing.
+- PR #12: merged by the agent once CI is green (D13).
 - Next: B.3 Design Intent v1.
 - Questions: none new. (Choices made, easy to change: curved/straight tolerance ±10, accessibility is a minimum
   with −5; accessibility measured as accessible share of path length until B.3/B.5 give route connectivity.)
