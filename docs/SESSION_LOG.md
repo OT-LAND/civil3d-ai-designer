@@ -1,5 +1,9 @@
 # Session log (newest first)
 
+## 2026-10-26 — Meeting 9
+- Reported: #7→#9 and #8→#10 merged (D13); concept v1 + D15–D19 recorded; next B.1 Design Brief schema. PR #6 (0.3 plugin load) still awaits the owner's Civil 3D test.
+- Asked: nothing (no open questions).
+
 ## 2026-10-25 — Work: merge Core-only stacks #7→#9 and #8→#10 (D13)
 - Done: main merged into `agent/rule-set-d10-d11` (PR #9) and then into `agent/tree-table-xlsx` (PR #10);
   docs conflicts resolved (both ARCHITECTURE sections kept, D12 dropped from Open, M2 rows combined, log by date).
