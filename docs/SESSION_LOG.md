@@ -9,6 +9,7 @@
   `samples/brief/courtyard.brief.v1.json`. 11 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 112/112 pass.
 - Note: bug 0.3a was already fixed on PR #6 earlier today; #6 waits for the owner's palette re-check.
 - Blocked: nothing.
+- PR #11: CI green, merged by the agent (D13).
 - Next: B.2 metrics on a Design Intent (Core).
 - Questions: none new. (Choices made, easy to change: brief points use `{x, y}` like the intent, not `[x, y]`
   as in the CONCEPT example; levels are a separate `level` field.)
