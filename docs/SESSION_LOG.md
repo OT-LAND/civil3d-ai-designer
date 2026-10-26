@@ -1,5 +1,18 @@
 # Session log (newest first)
 
+## 2026-10-26 — Work: B.1 Design Brief schema v1
+- Done: `Core/Brief`: `DesignBrief` model (background refs, style prompt + ≤6 images, 8 global sliders, zones with
+  per-zone overrides (D15), tagged curves and points, `hostId` back to the drawing object), `CharacterFor(zone)`,
+  `DesignBriefJson` read/write, embedded schema `design-brief.v1.schema.json`, `DesignBriefValidator`
+  (ids, geometry, slider 0–100, complete global set, level only on contour/entrance/elevation, elevation needs a
+  level, accessible only on walking network, species only on trees, metres only). Sample
+  `samples/brief/courtyard.brief.v1.json`. 11 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 112/112 pass.
+- Note: bug 0.3a was already fixed on PR #6 earlier today; #6 waits for the owner's palette re-check.
+- Blocked: nothing.
+- Next: B.2 metrics on a Design Intent (Core).
+- Questions: none new. (Choices made, easy to change: brief points use `{x, y}` like the intent, not `[x, y]`
+  as in the CONCEPT example; levels are a separate `level` field.)
+
 ## 2026-10-26 — Meeting 9: PR #6 Civil 3D test
 - Owner built PR #6 (after installing the .NET 10 SDK; the zip SDK was shadowed on Path, the installer fixed it) and loaded it in Civil 3D 2027.
 - Result: plugin loads, `AIHELLO` prints all 4 lines: host 26.0.0.0, "Civil 3D: ready.", Claude "no API key yet" (expected; no key set). Palette opens but shows only the "Check again" button on a black background: text is black on black (bug 0.3a, top of backlog). AI Landscape tab stays after a workspace switch.
