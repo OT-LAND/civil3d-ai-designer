@@ -9,7 +9,7 @@
     ProductType="Application"
     Name="Civil 3D AI Landscape Designer"
     Description="Turns a landscape architect's design inputs into a Civil 3D landscape model, with Claude."
-    AppVersion="0.3.0"
+    AppVersion="0.3.1"
     Author="OT-LAND"
     ProductCode="{5B0C6E1A-3D7F-4C2B-9A41-6E2F8D7C1A30}"
     UpgradeCode="{9E4A2B71-0C58-4F3D-8B16-2A7D5C9E4F10}">
@@ -22,7 +22,7 @@
     <RuntimeRequirements OS="Win64" Platform="Civil3D" SeriesMin="R26.0" SeriesMax="R26.0" />
     <ComponentEntry
         AppName="CivilAI"
-        Version="0.3.0"
+        Version="0.3.1"
         ModuleName="./Contents/CivilAI.Civil3DPlugin.dll"
         AppDescription="AI Landscape Designer: AIHELLO, AIPALETTE and the AI Landscape ribbon tab."
         LoadOnAutoCADStartup="True" />

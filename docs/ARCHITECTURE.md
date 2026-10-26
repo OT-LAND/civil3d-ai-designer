@@ -64,6 +64,8 @@ Plugin shell (0.3)
 - `PluginApp` (IExtensionApplication): adds the "AI Landscape" ribbon tab when the ribbon is ready and after
   a workspace switch (WSCURRENT). Commands (group CIVILAI): `AIHELLO` (status text from Core
   `Diagnostics/HelloReport`), `AIPALETTE` (PaletteSet hosting WPF, fixed Guid; status panel for now).
+- Palette colours are never WPF defaults: Core `Ui/PaletteTheme.ForColorTheme(COLORTHEME)` picks dark (0) or light (1)
+  colours (contrast unit-tested); the palette re-applies them on `SystemVariableChanged` for COLORTHEME (bug 0.3a).
 
 Existing-tree table import (2.1a)
 - `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
@@ -109,6 +111,7 @@ src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree t
 samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
+src/Core/Ui/          PaletteTheme: palette colours per AutoCAD colour theme
 src/Core/Diagnostics/ HelloReport: AIHELLO / palette status text (versions, Civil 3D, Claude key; never the key)
 src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D 2027 plugin (net10.0-windows); Civil3D/ (Autodesk code),
                      Bundle/PackageContents.xml (autoloader manifest)
