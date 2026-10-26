@@ -66,6 +66,18 @@ Design Brief v1 (B.1, concept v1)
   `Brief/Schema/design-brief.v1.schema.json`; `DesignBriefValidator` checks ids, geometry (shared helpers
   from `DesignIntentValidator`), slider ranges, a complete global set, and tag-only fields.
 
+Metrics on a Design Intent (B.2)
+- `Core/Metrics/IntentMetricsCalculator.Measure(intent, zoneOutline?)` → `IntentMetrics`: hard/soft area and
+  soft share (kind lawn/bed = soft, unless the material category says paving/gravel or lawn/planting/mulch),
+  curved/straight length share of outlines + path centerlines (a segment is curved when both ends are smooth
+  bends, turn 0.5°–30°), accessible share of path length (D11), steepest slope per surface (accessible path,
+  not-accessible path, plaza, lawn/bed) from falls and spot-level pairs. With a zone outline only spaces whose
+  centre lies inside are measured. v0 limits: overlaps not subtracted; path area = length × width.
+- `TargetComparison.Compare(metrics, brief.CharacterFor(zone), tolerances?)` → one `TargetResult` per slider
+  (Met / Missed / NotMeasured + note). Tolerances: hard/soft ±5 (concept), curved/straight ±10, accessibility
+  is a minimum (−5). Max grade, cut/fill, max slope wait for B.6; shading and trees/elements for B.3.
+- `Core/Geometry/PolygonGeometry`: area, length, point-in-polygon, half-length point, curved/straight split.
+
 Existing-tree table import (2.1a)
 - `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
 - `TreeFieldMapping.Suggest(headers)` proposes which column is id/species/X/Y/trunk/canopy/height/level
@@ -108,6 +120,7 @@ samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential c
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
 src/Core/Brief/      Design Brief v1 model, JSON read/write, validator; Schema/ holds the JSON Schema (B.1)
 samples/brief/       Sample Design Brief (courtyard.brief.v1.json); used by tests
+src/Core/Metrics/    Metrics on a Design Intent and target-vs-achieved against brief sliders (B.2)
 src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
 samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine

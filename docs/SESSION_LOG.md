@@ -1,5 +1,19 @@
 # Session log (newest first)
 
+## 2026-10-26 — Work: B.2 Metrics on a Design Intent
+- Done: `Core/Metrics`: `IntentMetricsCalculator.Measure(intent, zone?)` (hard/soft share, curved/straight share,
+  accessible share of path length, steepest slope on accessible paths / other paths / plazas / lawns+beds, optional
+  zone filter) and `TargetComparison.Compare(metrics, CharacterFor(zone))` → target vs achieved per slider
+  (Met/Missed/NotMeasured). `Core/Geometry/PolygonGeometry` helpers. 11 new tests; `dotnet build` (Release,
+  0 warnings) + `dotnet test` 123/123 pass.
+- Not measured yet (reported as such): canopy cover, trees vs elements (need B.3); max grade, cut/fill, max slope
+  targets (need B.6 slider → slope mapping).
+- Blocked: nothing.
+- PR #12: merged by the agent once CI is green (D13).
+- Next: B.3 Design Intent v1.
+- Questions: none new. (Choices made, easy to change: curved/straight tolerance ±10, accessibility is a minimum
+  with −5; accessibility measured as accessible share of path length until B.3/B.5 give route connectivity.)
+
 ## 2026-10-26 — Meeting 10
 - Reported: B.1 Design Brief schema (PR #11, Core-only, agent merges per D13); PR #6 palette fix 0.3a awaits the owner's re-check in Civil 3D. Next: B.2.
 - Asked: nothing (no open questions).
