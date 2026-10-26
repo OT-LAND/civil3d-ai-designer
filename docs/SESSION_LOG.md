@@ -1,5 +1,9 @@
 # Session log (newest first)
 
+## 2026-10-26 — Meeting 10
+- Reported: B.1 Design Brief schema (PR #11, Core-only, agent merges per D13); PR #6 palette fix 0.3a awaits the owner's re-check in Civil 3D. Next: B.2.
+- Asked: nothing (no open questions).
+
 ## 2026-10-26 — Work: B.1 Design Brief schema v1
 - Done: `Core/Brief`: `DesignBrief` model (background refs, style prompt + ≤6 images, 8 global sliders, zones with
   per-zone overrides (D15), tagged curves and points, `hostId` back to the drawing object), `CharacterFor(zone)`,
