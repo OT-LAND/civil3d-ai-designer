@@ -1,29 +1,102 @@
 # Session log (newest first)
 
-## 2026-10-20 — Work: fix 0.3 target runtime (PR #6)
-- Found: Autodesk's own NuGet package AutoCAD.NET 26.0.0 ("AutoCAD 2027 .Net API") targets **.NET 10**,
-  so the PR #6 default (net8.0-windows) could not reference the 2027 DLLs on the owner's PC. Answers the
-  open technical point from 2026-10-19; this is a fact about Civil 3D 2027, not a change to D1.
-- Done (pushed to PR #6): plugin targets net10.0-windows; without Civil 3D it compiles the real AutoCAD
-  code against AutoCAD.NET 26.0.0 (compile-only, never copied), so CI type-checks the ribbon, palette and
-  commands against the true 2027 API (was: throwaway stubs). Only the AeccDbMgd call is behind
-  `CIVIL3D_API`. CI installs .NET 8 + 10. Real build 0 warnings; tests 73/73 pass.
-- Note: this session first re-did 0.3 by mistake (missed open PR #6); that copy was discarded, not pushed.
-  Future sessions: check open PRs before picking an item.
-- Blocked: nothing. 0.3 still needs the owner's Civil 3D test (needs .NET 10 SDK to build).
-- Next: after the owner's test, 1.4 preview UI or 1.3; 2.2 rule engine is Core-only and unblocked.
+## 2026-10-26 — Meeting 9: PR #6 Civil 3D test
+- Owner built PR #6 (after installing the .NET 10 SDK; the zip SDK was shadowed on Path, the installer fixed it) and loaded it in Civil 3D 2027.
+- Result: plugin loads, `AIHELLO` prints all 4 lines: host 26.0.0.0, "Civil 3D: ready.", Claude "no API key yet" (expected; no key set). Palette opens but shows only the "Check again" button on a black background: text is black on black (bug 0.3a, top of backlog). AI Landscape tab stays after a workspace switch.
+- Note: Core shows version 1.0.0 (Core assembly has no version set); cosmetic, fix with the next plugin PR.
+- Build note for the PR/README: needs the .NET 10 **SDK installer** (`dotnet --list-sdks` must show 10.x).
+
+## 2026-10-26 — Meeting 9
+- Reported: #7→#9 and #8→#10 merged (D13); concept v1 + D15–D19 recorded; next B.1 Design Brief schema. PR #6 (0.3 plugin load) still awaits the owner's Civil 3D test.
+- Asked: nothing (no open questions).
+
+## 2026-10-25 — Work: merge Core-only stacks #7→#9 and #8→#10 (D13)
+- Done: main merged into `agent/rule-set-d10-d11` (PR #9) and then into `agent/tree-table-xlsx` (PR #10);
+  docs conflicts resolved (both ARCHITECTURE sections kept, D12 dropped from Open, M2 rows combined, log by date).
+  PRs retargeted to main and merged once CI is green; #7 and #8 come in with their stacks.
+  `dotnet build` (Release, 0 warnings) + `dotnet test` 101/101 pass. 2.1a, 2.1c, 2.2a, 2.2c → done.
+- Blocked: nothing. (.NET 8 SDK installed with dotnet-install.sh; apt not needed.)
+- Next: B.1 Design Brief schema v1 (Core).
 - Questions: none new.
 
-## 2026-10-19 — Work: 0.3 Plugin load in Civil 3D 2027
-- Done: autoloader bundle (`PackageContents.xml`, Civil3D R26.0, load at startup), `PluginApp` with the
-  "AI Landscape" ribbon tab (Designer palette + Hello buttons, re-added after workspace switch), commands
-  `AIHELLO` and `AIPALETTE` (WPF palette, status panel). Status text in Core `Diagnostics/HelloReport`
-  (8 new tests). Autodesk code compiles only where Civil 3D 2027 is installed; CI builds the shell.
-- Real `dotnet build` + `dotnet test`: 73/73 pass. Plugin code type-checked here against throwaway stubs only.
-- Blocked: nothing. Owner must test in Civil 3D (steps in the PR).
-- Next: after the owner's test, 1.4 preview-and-confirm UI (palette: brief → Design Intent → preview), or 1.3.
-- Questions: none new. Unverified here: whether Civil 3D 2027 runs plugins on .NET 8 (D1) or a newer
-  runtime; the PR gives a one-flag fallback.
+## 2026-10-25 — Owner input: UI sketch → concept v1
+- Owner sent a hand-drawn palette sketch (Style / Polygon sliders / Curves / Points / Background tags) and asked to
+  re-aim the product as a semi-parametric, host-agnostic generative designer, concept first.
+- Done (docs only): `docs/CONCEPT.md`, D14 decided, new milestone MB (B.1–B.8) on top of the roadmap,
+  3.1/3.2/3.4/1.4 superseded, palette mockup `docs/ui/palette-mockup.html`.
+- Asked: D15 (sliders global/per zone), D16 (max grade meaning), D17 (contour, flow basin), D18 (options per run); D13 still open.
+- Next work item: B.1 Design Brief schema (not blocked).
+- Answers (same day): D15 c, D16 max grade = steepest ground before a retaining wall, D17 contour soft / flow basin to basin,
+  D18 three layout options, D13 b (agent merges Core-only PRs). New open: D19 (what max slope means). B.6 unblocked.
+- D19 answered: (b) max slope = steepest walking surface on non-accessible paths. No open questions.
+
+## 2026-10-25 — Meeting 8 (evening)
+- Nothing new since Meeting 7. Re-sent status (#7→#9, #8→#10 review; #6 Civil 3D test) and D13 (recommended b). No answer yet.
+
+## 2026-10-25 — Meeting 7
+- Reported: PR #9 (2.2c) and PR #10 (2.1c) built; review stacks #7→#9 and #8→#10; PR #6 (0.3) still awaits the owner's Civil 3D test.
+- Asked: D13 (who approves PRs; recommended b, agent merges Core-only PRs when tests pass).
+
+## 2026-10-24 — Work: 2.1c Tree tables from Excel (.xlsx)
+- Done: `Core/Survey/XlsxTable.Read(stream, sheet?)` reads an .xlsx sheet into the same `CsvTable`, so mapping,
+  unit questions and import are unchanged. One package added (ExcelDataReader 3.7.0, MIT). Several sheets and
+  none chosen → "which sheet holds the trees?" (never guessed); hidden sheets ignored; Excel row numbers kept;
+  numbers read from cell values (text numbers still accepted); non-.xlsx file → clear error. Samples
+  `trees-courtyard.xlsx` (same trees as the CSV + a Notes sheet) and `trees-hebrew.xlsx`. 6 new tests;
+  `dotnet build` (Release, 0 warnings) + `dotnet test` 88/88 pass.
+- Branch `agent/tree-table-xlsx` is stacked on PR #8 (main merged in for the Meeting 6 docs).
+- Blocked: nothing. (.NET 8 SDK installed from apt again; `apt-get update` needed first.)
+- Next: 2.2b (ramp/step geometry, tree protection zones, setbacks) once PR #7 merges; Civil 3D items wait on PR #6 test.
+- Questions: none new. Old binary .xls is not read (save as .xlsx or CSV); say so if that is a problem.
+
+## 2026-10-23 — Work: 2.2c Rule set verified (D10) + "not accessible" path flag (D11)
+- Done: all 7 default rules marked `verified: true` with "confirmed by owner 2026-10-23 (D10)" in the source note.
+  Design Intent: path-only `accessible` flag (omitted = accessible); validator rejects it on non-paths; schema and
+  text-to-intent prompt updated. `RuleEngine` reports a path marked not accessible as "not checked" for the
+  accessible-route rules. 2 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 78/78 pass.
+- Branch `agent/rule-set-d10-d11` is stacked on PR #7 (main merged in to pick up D10–D12 docs).
+- Blocked: nothing.
+- Next: 2.1c (.xlsx tree tables) on top of PR #8; 2.2b after that.
+- Questions: none new.
+
+## 2026-10-23 — Meeting 6
+- Asked: D10 (default accessibility values), D11 (which paths are accessible routes), D12 (Excel tree tables; trunk diameter vs circumference). D10/D11 are open on PR #7, D12 on PR #8.
+- Decided: D10 (a, values confirmed), D11 (a, all paths accessible unless marked), D12 (.xlsx read directly; trunk = diameter). New items 2.1c, 2.2c.
+- Reported: PR #8 (2.1a tree-table import) and PR #7 (2.2a rule engine) await review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
+## 2026-10-22 — Work: 2.1a Existing-tree table import (CSV)
+- Done: `Core/Survey`: `CsvTable` (comma/semicolon/tab detected, quotes, BOM, line numbers kept), `ExistingTree`,
+  `TreeFieldMapping.Suggest` (English + Hebrew survey headings), `TreeTableUnits.Suggest` (units only from
+  headings like "Trunk (cm)"), `TreeTableImport.Import`: unknown units / coordinate system / missing X-Y column
+  → questions for the designer and no trees (D4b: never assume); decimal comma accepted with `;`/tab files;
+  bad rows reported per line (no position → tree left out; bad size → value left empty; duplicate number and
+  implausible size flagged). Sample `samples/survey/trees-courtyard.csv` (courtyard local grid).
+  17 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 82/82 pass.
+- Split 2.1: DWG survey import (Civil 3D side) is 2.1b.
+- Blocked: nothing. (.NET 8 SDK installed from apt again.)
+- Next: 2.1b needs 0.3 (PR #6) tested; Core-only candidates: 2.2b after PR #7 merges, or D12 answer for .xlsx.
+- Questions: D12 (read Excel tree tables directly, or CSV export is enough? trunk as diameter or circumference?).
+  Note: this PR and PR #7 both add to DECISIONS/SESSION_LOG top; whichever merges second needs a trivial docs merge.
+
+## 2026-10-22 — Meeting 5
+- Asked: D10 (confirm default accessibility values), D11 (are all paths accessible routes?); both raised in PR #7, awaiting answers.
+- Reported: PR #7 (2.2a rule engine) awaits review; PR #6 (0.3 plugin load, .NET 10) still awaits the owner's Civil 3D test.
+
+## 2026-10-21 — Work: 2.2a Rule engine, first slice
+- Done: `Core/Rules`: rule-set file format + strict loader, embedded default starter set `default-il.v0.json`
+  (D3; every value has a source note, all flagged not verified), `RuleEngine` checking path slope along the
+  route and cross fall, plaza min/max fall, lawn min fall / max slope, bed max slope; report is
+  pass / fail / not checked per rule per space, with a zoom point and a designer-facing sentence. Courtyard
+  sample passes. 11 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 76/76 pass.
+- Split 2.2: ramp/step geometry, tree protection zones and setbacks moved to new item 2.2b.
+- Blocked: nothing. (.NET 8 SDK had to be installed from apt this session.)
+- Next: 2.2b needs trees/setbacks in the intent (or 2.1 import); 2.3 report palette needs 0.3 (PR #6) tested first.
+- Questions: D10 (confirm default accessibility values), D11 (are all paths accessible routes?).
+
+## 2026-10-21 — Meeting 4
+- Decided: none new (no open questions).
+- Reported: PR #6 (0.3 plugin load, now .NET 10) waits for the owner's Civil 3D test; needs .NET 10 SDK.
+- Next work item: 2.2 rule engine (Core-only) while 0.3 awaits test.
 
 ## 2026-10-19 — Meeting 3
 - Decided: none new (no open questions).

@@ -1,5 +1,10 @@
 # Architecture (initial)
 
+> Concept v1 (D14, 2026-10-25): the designer's input is a host-neutral **Design Brief**
+> (tagged polygons/curves/points + character sliders + style + background) → staged generation
+> (Claude for style/plan/detail, Core for levels/metrics/rules) → Design Intent → host builders.
+> See `docs/CONCEPT.md` §3. This file is updated as MB items land.
+
 ```
 Designer inputs (sketch, image, text)      Background (survey, lots, rules)
               \                                   /
@@ -60,6 +65,33 @@ Plugin shell (0.3)
   a workspace switch (WSCURRENT). Commands (group CIVILAI): `AIHELLO` (status text from Core
   `Diagnostics/HelloReport`), `AIPALETTE` (PaletteSet hosting WPF, fixed Guid; status panel for now).
 
+Existing-tree table import (2.1a)
+- `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
+- `TreeFieldMapping.Suggest(headers)` proposes which column is id/species/X/Y/trunk/canopy/height/level
+  (English + Hebrew aliases, unit suffix ignored); the designer confirms it. `TreeTableUnits.Suggest` takes
+  units only from headings; the coordinate system is named by the designer.
+- `TreeTableImport.Import(table, mapping, units)` → `TreeImportResult {Questions, Trees, Problems}`. Any
+  question ⇒ no trees. Sizes converted to metres; `ExistingTree` is Core's metre-based tree record (2.1b
+  DWG blocks map into the same record).
+- `Core/Survey/XlsxTable.Read(stream, sheet?)` (2.1c, D12) reads an .xlsx sheet into the same `CsvTable`
+  (package ExcelDataReader, MIT). Several visible sheets with content and none chosen ⇒ a question, no table.
+  Excel row numbers are kept for messages; numbers come from cell values (no decimal-comma guessing).
+  Trunk is always a diameter (D12).
+
+Rule engine (2.2a)
+- `Core/Rules/RuleSet`: a rule-set file = `{ruleSetVersion, id, name, description, rules[{id, value, label,
+  source, verified}]}`. Ids are a closed list (`RuleIds`); unknown/duplicate ids, negative values or another
+  version are rejected with every problem listed. A rule left out of a set = "not checked" (office sets may omit).
+  Default starter set `Rules/RuleSets/default-il.v0.json` is embedded (`RuleSetJson.LoadDefault()`, D3).
+- `RuleEngine.Check(intent, ruleSet)` → `RuleReport` of `RuleResult {ruleId, spaceId, Pass|Fail|NotChecked,
+  measured, limit, location, message}`, one per rule per space, worst place found = zoom target (for 2.3).
+- Paths: slope along the path from spot levels ordered by station on the centerline (else the fall's along
+  component); cross fall = the fall's component across each centerline segment. Plaza/lawn min fall needs a
+  stated fall (spots only bound it); max fall/slope uses the fall and the steepest pair of spot levels.
+- Accessible route (D11): every path is one unless the intent marks it `"accessible": false` (path-only
+  field); such a path gets NotChecked for the two accessible-route rules. Default set values are
+  owner-confirmed (D10, `verified: true`).
+
 Principles
 - Claude produces intent; deterministic code produces geometry.
 - Every generation step is previewable, reversible, and re-runnable.
@@ -73,6 +105,9 @@ src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator;
                      JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
 samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
+src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
+samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
+src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Core/Diagnostics/ HelloReport: AIHELLO / palette status text (versions, Civil 3D, Claude key; never the key)
 src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D 2027 plugin (net10.0-windows); Civil3D/ (Autodesk code),

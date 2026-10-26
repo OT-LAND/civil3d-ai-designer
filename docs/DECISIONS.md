@@ -2,9 +2,63 @@
 
 ## Open (for the next meeting)
 
-_None._
-
 ## Decided
+
+**D19 — "Max slope" = steepest walking surface on non-accessible paths** (2026-10-25)
+**(b)**: the max slope slider sets the steepest walking surface allowed on paths the designer marked
+"not accessible" (D11). Accessible routes always follow the rule set (D10). Max grade (D16) stays the
+ground/retaining-wall dial.
+
+
+**D15 — Sliders: global defaults with per-zone override** (2026-10-25)
+**(c)**: one global set of character sliders applies to every polygon; any polygon can override
+single sliders.
+
+**D16 — "Max grade" = steepest ground before a retaining wall** (2026-10-25)
+Owner's definition: max grade is the **maximum slope for graded ground before a retaining wall is
+used**. Where the levels need steeper ground, the generator puts in a wall (or terrace) instead.
+Capped by the rule set (lawn 1:4, bed 1:3). The meaning of "max slope" is now open as D19.
+
+**D17 — Contour = soft landform line; flow basin = flow line to a basin** (2026-10-25)
+Contour **(b)**: the ground follows its shape, and it becomes a hard level only if the designer gives one.
+Flow basin **(a)**: a swale or flow line, with a retention/infiltration area at its low end.
+
+**D18 — Three layout options, detail the chosen one** (2026-10-25)
+**(b)**: each Generate makes 3 quick layout options (plan stage). Only the option the designer picks
+goes through levels and detailing.
+
+**D13 — Agent merges Core-only PRs** (2026-10-25)
+**(b)**: the agent merges PRs that change only Core (checks, data import, schema, metrics) once CI and all
+tests pass. The owner reviews anything that changes the drawing or needs Civil 3D (plugin, builders,
+palette). PRs #7→#9 and #8→#10 are Core-only: the next work session merges them (in stack order,
+resolving docs conflicts) once CI is green.
+
+
+**D14 — UI and product direction: semi-parametric tagged-geometry designer** (2026-10-25)
+From the owner's hand sketch: the palette has five panels: **Style** (up to 6 reference
+images + text prompt), **Polygon** (zones with character sliders: accessibility,
+hardscape↔softscape, max grade, cut↔fill, max slope, shading, trees↔elements,
+curved↔straight), **Curves** (tags: walking network, contour, flow basin, border),
+**Points** (tags: entrance, interest point, elevation point, tree), **Background** (survey,
+structures, roads, orthophoto). The designer picks and tags drawing objects, and the AI generates the
+design. Solve the concept and the AI strategy first, host-agnostic (Civil 3D now, Revit or other
+hosts later). Concept: `docs/CONCEPT.md`. Sketch recognition (3.1/3.2) is replaced by tagged geometry.
+
+**D10 — Default accessibility values confirmed** (2026-10-23)
+**(a) OK as proposed**: accessible route max **5%** along the path (steeper = ramp),
+max cross fall **2%**, paved plaza fall **1–2%**, lawn fall min **1%** / max **25% (1:4)**,
+planting bed max **33% (1:3)**. Mark these rules `verified: true` in
+`default-il.v0.json` (source note: confirmed by owner 2026-10-23).
+
+**D11 — All paths are accessible routes unless marked otherwise** (2026-10-23)
+**(a)**: every path is checked against accessible-route limits by default; the designer
+can mark a path "not accessible" (new flag in the Design Intent), and it is then
+skipped by the accessible-route rules (other slope rules still apply).
+
+**D12 — Tree tables: open Excel directly; trunk is diameter** (2026-10-23)
+(1) **(a)**: the plugin reads **.xlsx** tree tables directly (one small open-source
+reader package), in addition to CSV. (2) **(a)**: trunk is always given as
+**diameter** (at 1.3 m); no circumference option needed.
 
 **D8b — Cloud network access is active** (2026-10-18)
 **(a)**: the owner has added the NuGet / .NET hosts to network access. Work sessions

@@ -96,6 +96,8 @@ namespace CivilAI.Core.Intent
                         CheckPolygon($"{p}.outline", s.Outline, $"{s.Kind.ToString().ToLowerInvariant()} outline", Add);
                     if (s.Centerline is not null || s.Width is not null)
                         Add(p, "Only paths have a centerline and width.");
+                    if (s.Accessible is not null)
+                        Add($"{p}.accessible", "Only paths can be marked accessible or not accessible.");
                 }
 
                 if (s.MaterialId is not null && !materialIds.Contains(s.MaterialId))
