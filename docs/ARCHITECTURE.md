@@ -53,6 +53,19 @@ Free text → Design Intent (1.2)
 - The given site always replaces Claude's site: the AI cannot move buildings or change FFLs.
 - Takes a send delegate, so the connector mode (D9) or tests can supply their own sender.
 
+Design Brief v1 (B.1, concept v1)
+- `Core/Brief/DesignBrief`: the generation input captured from the palette: `background` refs (survey,
+  structures, roads, orthophoto; host refs like `layer:V-TOPO-*`), `style` (prompt + up to 6 images),
+  global `character` sliders (all 8 required, 0–100), `zones` (outline + per-zone slider overrides, D15),
+  tagged `curves` (walkingNetwork/contour/flowBasin/border) and `points` (entrance/interestPoint/elevation/tree).
+  Every item may carry `hostId` (Civil 3D: entity handle) so the brief can be re-read from the drawing.
+- Metres only (`units: "m"`); capture converts drawing units. Points are `{x, y}` like the Design Intent;
+  levels are a separate `level` field (contour → hard contour, D17; elevation point needs one; entrance optional).
+- `DesignBrief.CharacterFor(zone)` resolves the 8 sliders for a zone (own value, else global).
+- `DesignBriefJson` (same serializer options as the intent; unknown fields/tags rejected) + embedded schema
+  `Brief/Schema/design-brief.v1.schema.json`; `DesignBriefValidator` checks ids, geometry (shared helpers
+  from `DesignIntentValidator`), slider ranges, a complete global set, and tag-only fields.
+
 Existing-tree table import (2.1a)
 - `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
 - `TreeFieldMapping.Suggest(headers)` proposes which column is id/species/X/Y/trunk/canopy/height/level
@@ -93,6 +106,8 @@ src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator;
                      JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
 samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
+src/Core/Brief/      Design Brief v1 model, JSON read/write, validator; Schema/ holds the JSON Schema (B.1)
+samples/brief/       Sample Design Brief (courtyard.brief.v1.json); used by tests
 src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
 samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine

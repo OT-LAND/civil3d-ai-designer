@@ -147,12 +147,12 @@ namespace CivilAI.Core.Intent
             return issues;
         }
 
-        private static void CheckFinite(string path, double value, string what, Action<string, string> add)
+        internal static void CheckFinite(string path, double value, string what, Action<string, string> add)
         {
             if (double.IsNaN(value) || double.IsInfinity(value)) add(path, $"{what} must be a finite number.");
         }
 
-        private static bool CheckPoint(string path, Point2 pt, Action<string, string> add)
+        internal static bool CheckPoint(string path, Point2 pt, Action<string, string> add)
         {
             if (double.IsFinite(pt.X) && double.IsFinite(pt.Y)) return true;
             add(path, "Point coordinates must be finite numbers.");
@@ -166,7 +166,7 @@ namespace CivilAI.Core.Intent
             return ok;
         }
 
-        private static void CheckPolyline(string path, List<Point2> points, string what, Action<string, string> add)
+        internal static void CheckPolyline(string path, List<Point2> points, string what, Action<string, string> add)
         {
             if (!AllFinite(path, points, add)) return;
             for (int i = 1; i < points.Count; i++)
@@ -174,7 +174,7 @@ namespace CivilAI.Core.Intent
                     add($"{path}[{i}]", $"The {what} repeats the same point.");
         }
 
-        private static void CheckPolygon(string path, List<Point2> points, string what, Action<string, string> add)
+        internal static void CheckPolygon(string path, List<Point2> points, string what, Action<string, string> add)
         {
             if (points.Count < 3)
             {

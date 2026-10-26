@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1",
+  "units": "m",
+  "background": {
+    "survey": ["layer:V-TOPO-*"],
+    "structures": ["layer:A-BLDG"],
+    "roads": ["layer:C-ROAD"],
+    "orthophoto": ["image:ortho_2025.tif"]
+  },
+  "style": {
+    "prompt": "shaded Mediterranean courtyard, local stone, dry planting",
+    "images": ["ref1.jpg", "ref2.jpg"]
+  },
+  "character": {
+    "accessibility": 70, "hardSoft": 55, "maxGrade": 30, "cutFill": 50,
+    "maxSlope": 40, "shading": 65, "treesElements": 30, "curvedStraight": 35
+  },
+  "zones": [
+    {
+      "id": "Z1", "name": "Entry court",
+      "outline": [ { "x": 0, "y": 0 }, { "x": 20, "y": 0 }, { "x": 20, "y": 25 }, { "x": 0, "y": 25 } ],
+      "character": { "hardSoft": 30 },
+      "hostId": "2F3A"
+    },
+    {
+      "id": "Z2", "name": "Garden",
+      "outline": [ { "x": 20, "y": 0 }, { "x": 40, "y": 0 }, { "x": 40, "y": 25 }, { "x": 20, "y": 25 } ],
+      "character": { "hardSoft": 80, "shading": 80 },
+      "hostId": "2F3B"
+    }
+  ],
+  "curves": [
+    { "id": "C1", "tag": "walkingNetwork", "points": [ { "x": 2, "y": 12 }, { "x": 20, "y": 14 }, { "x": 38, "y": 10 } ], "hostId": "2F40" },
+    { "id": "C2", "tag": "walkingNetwork", "name": "Garden loop", "accessible": false, "points": [ { "x": 26, "y": 14 }, { "x": 30, "y": 22 }, { "x": 36, "y": 20 } ] },
+    { "id": "C3", "tag": "contour", "points": [ { "x": 22, "y": 2 }, { "x": 30, "y": 5 }, { "x": 39, "y": 4 } ], "level": 100.60 },
+    { "id": "C4", "tag": "flowBasin", "points": [ { "x": 30, "y": 2 }, { "x": 36, "y": 6 } ] },
+    { "id": "C5", "tag": "border", "name": "Lot border south", "points": [ { "x": 0, "y": 0 }, { "x": 40, "y": 0 } ] }
+  ],
+  "points": [
+    { "id": "P1", "tag": "entrance", "name": "Street gate", "at": { "x": 2, "y": 12 }, "level": 101.20 },
+    { "id": "P2", "tag": "interestPoint", "name": "Seat under the tree", "at": { "x": 24, "y": 18 } },
+    { "id": "P3", "tag": "elevation", "at": { "x": 38, "y": 10 }, "level": 100.40 },
+    { "id": "P4", "tag": "tree", "at": { "x": 12, "y": 20 } },
+    { "id": "P5", "tag": "tree", "at": { "x": 24, "y": 20 }, "species": "Ceratonia siliqua" }
+  ]
+}

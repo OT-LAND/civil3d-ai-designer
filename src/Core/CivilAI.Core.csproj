@@ -20,6 +20,8 @@
     <!-- System prompt for free text → Design Intent (1.2); read with TextToIntent.ReadSystemPrompt(). -->
     <EmbeddedResource Include="Intent\Prompts\text-to-intent.v0.md" LogicalName="CivilAI.Core.Intent.Prompts.text-to-intent.v0.md" />
     <!-- Default starter design-rule set (2.2, D3); read with RuleSetJson.LoadDefault(). -->
+    <!-- Design Brief v1 JSON Schema (B.1); read with DesignBriefJson.ReadSchema(). -->
+    <EmbeddedResource Include="Brief\Schema\design-brief.v1.schema.json" LogicalName="CivilAI.Core.Brief.Schema.design-brief.v1.schema.json" />
     <EmbeddedResource Include="Rules\RuleSets\default-il.v0.json" LogicalName="CivilAI.Core.Rules.RuleSets.default-il.v0.json" />
   </ItemGroup>
 
