@@ -7,7 +7,7 @@
   (by count, location in the zone). `TargetComparison` compares them to the shading and trees↔elements sliders
   (±10). 7 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 144/144 pass.
 - Blocked: nothing.
-- PR: Core-only, merged by the agent once CI is green (D13).
+- PR #14: Core-only, merged by the agent once CI is green (D13).
 - Next: B.4 style profile.
 - Questions: none new. (Choices made, easy to change: trees vs elements counts items, not area; kept trees are
   not counted there but do count for canopy; lighting counts as an element; tolerance ±10 for both sliders;
