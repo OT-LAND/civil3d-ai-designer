@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace CivilAI.Core.Intent
 {
-    // Design Intent v0 (roadmap 1.1).
+    // Design Intent v1 (roadmap 1.1, extended by B.3).
     //
     // The structured description of a landscape design that Claude produces and that the
     // deterministic Civil 3D builders consume. It speaks the designer's language (spaces,
@@ -12,13 +12,20 @@ namespace CivilAI.Core.Intent
     // Z = absolute level). Which coordinate system that is (ITM or local) is open in D4b;
     // the intent does not assume one.
     //
-    // The JSON form is described by Intent/Schema/design-intent.v0.schema.json. Keep the
-    // two in step: DesignIntentSchemaTests checks the enum lists and required fields match.
+    // The JSON form is described by Intent/Schema/design-intent.v1.schema.json. Keep the
+    // two in step: DesignIntentTests checks the enum lists and property names match.
+    //
+    // v1 adds (all optional, so v0 documents still read): zone and interest-point references
+    // back to the Design Brief, trees (new and kept), drainage (swales, basins, low points) and
+    // site elements. A document marked "0" must not use the v1 parts.
 
     /// <summary>Root of a Design Intent document.</summary>
     public sealed class DesignIntent
     {
-        public const string CurrentSchemaVersion = "0";
+        public const string CurrentSchemaVersion = "1";
+
+        /// <summary>Schema versions this code reads. v1 is a superset of v0.</summary>
+        public static readonly IReadOnlyList<string> SupportedSchemaVersions = new[] { "0", "1" };
 
         public string SchemaVersion { get; init; } = CurrentSchemaVersion;
 
@@ -29,6 +36,15 @@ namespace CivilAI.Core.Intent
         public List<Edge> Edges { get; init; } = new List<Edge>();
 
         public List<Material> Materials { get; init; } = new List<Material>();
+
+        /// <summary>Trees: new ones the design plants and existing ones it keeps (v1).</summary>
+        public List<TreeIntent> Trees { get; init; } = new List<TreeIntent>();
+
+        /// <summary>Surface drainage: swales, retention/infiltration basins, low points (v1).</summary>
+        public DrainageIntent Drainage { get; init; } = new DrainageIntent();
+
+        /// <summary>Site elements: seating, lighting, play, shade, water, art (v1).</summary>
+        public List<SiteElement> Elements { get; init; } = new List<SiteElement>();
     }
 
     /// <summary>The site: lot border and buildings with their finished floor levels.</summary>
@@ -113,6 +129,15 @@ namespace CivilAI.Core.Intent
 
         /// <summary>Id of a <see cref="Material"/> in <see cref="DesignIntent.Materials"/>.</summary>
         public string? MaterialId { get; init; }
+
+        /// <summary>v1: id of the Design Brief zone this space was planned in (not checked against the intent).</summary>
+        public string? ZoneId { get; init; }
+
+        /// <summary>
+        /// v1: id of the Design Brief interest point this space is the place for ("seat under the
+        /// tree"). The space is the special place designed around that point.
+        /// </summary>
+        public string? InterestPointId { get; init; }
     }
 
     /// <summary>
@@ -198,6 +223,159 @@ namespace CivilAI.Core.Intent
         public string Name { get; init; } = "";
 
         public MaterialCategory Category { get; init; }
+    }
+
+    public enum TreeStatus
+    {
+        /// <summary>A tree the design plants.</summary>
+        New,
+        /// <summary>An existing (surveyed) tree the design keeps, with its protection zone.</summary>
+        Existing,
+    }
+
+    /// <summary>A tree in the design (v1). Sizes in metres.</summary>
+    public sealed class TreeIntent
+    {
+        public string Id { get; init; } = "";
+
+        public TreeStatus Status { get; init; }
+
+        /// <summary>Trunk position.</summary>
+        public Point2 Location { get; init; }
+
+        /// <summary>Species (botanical name preferred). The AI picks it from the plant list unless the designer gave one.</summary>
+        public string? Species { get; init; }
+
+        /// <summary>Canopy diameter: at maturity for a new tree, as surveyed for an existing one. Used for canopy cover.</summary>
+        public double CanopyDiameter { get; init; }
+
+        /// <summary>Trunk diameter at 1.3 m (D12), metres.</summary>
+        public double? TrunkDiameter { get; init; }
+
+        /// <summary>Existing trees only: radius of the root protection zone around the trunk.</summary>
+        public double? ProtectionRadius { get; init; }
+
+        /// <summary>
+        /// Where the tree came from: the survey tree id for an existing tree (required), or the
+        /// brief's tree point id for a new tree the designer asked for.
+        /// </summary>
+        public string? SourceId { get; init; }
+
+        /// <summary>Design Brief zone id.</summary>
+        public string? ZoneId { get; init; }
+    }
+
+    /// <summary>Surface drainage intent (v1). Pipes come later (4.x).</summary>
+    public sealed class DrainageIntent
+    {
+        public List<Swale> Swales { get; init; } = new List<Swale>();
+
+        public List<DrainageBasin> Basins { get; init; } = new List<DrainageBasin>();
+
+        public List<LowPoint> LowPoints { get; init; } = new List<LowPoint>();
+    }
+
+    /// <summary>A swale or flow line, drawn from its high end to its low end (D17).</summary>
+    public sealed class Swale
+    {
+        public string Id { get; init; } = "";
+
+        /// <summary>Flow line, high end first.</summary>
+        public List<Point2> Line { get; init; } = new List<Point2>();
+
+        /// <summary>Top width, metres.</summary>
+        public double? Width { get; init; }
+
+        /// <summary>Depth below the surrounding ground, metres.</summary>
+        public double? Depth { get; init; }
+
+        /// <summary>Design Brief flow-basin curve this swale follows.</summary>
+        public string? FlowBasinId { get; init; }
+
+        /// <summary>Id of the <see cref="DrainageBasin"/> or <see cref="LowPoint"/> it drains into.</summary>
+        public string? OutletId { get; init; }
+    }
+
+    public enum BasinKind
+    {
+        /// <summary>Holds water and releases it slowly.</summary>
+        Retention,
+        /// <summary>Lets water soak into the ground.</summary>
+        Infiltration,
+    }
+
+    /// <summary>A retention or infiltration area, usually at the low end of a flow basin (D17).</summary>
+    public sealed class DrainageBasin
+    {
+        public string Id { get; init; } = "";
+
+        public BasinKind Kind { get; init; }
+
+        /// <summary>Top outline, closed polygon.</summary>
+        public List<Point2> Outline { get; init; } = new List<Point2>();
+
+        /// <summary>Bottom level, absolute, metres.</summary>
+        public double? BottomLevel { get; init; }
+
+        /// <summary>Depth below the rim, metres.</summary>
+        public double? Depth { get; init; }
+
+        /// <summary>Design Brief flow-basin curve this basin ends.</summary>
+        public string? FlowBasinId { get; init; }
+    }
+
+    /// <summary>A low point surface water runs to; with <see cref="Inlet"/> it is a drain into pipes.</summary>
+    public sealed class LowPoint
+    {
+        public string Id { get; init; } = "";
+
+        public Point2 Location { get; init; }
+
+        /// <summary>Level, absolute, metres. Omit to let grading set it.</summary>
+        public double? Level { get; init; }
+
+        /// <summary>True for an inlet/drain (a pipe network node later); false for a surface low point.</summary>
+        public bool Inlet { get; init; }
+    }
+
+    public enum ElementKind
+    {
+        Seating,
+        Lighting,
+        Play,
+        Shade,
+        Pergola,
+        Water,
+        Art,
+        Other,
+    }
+
+    /// <summary>A site element (v1), later an attributed block from the office library (5.1).</summary>
+    public sealed class SiteElement
+    {
+        public string Id { get; init; } = "";
+
+        public ElementKind Kind { get; init; }
+
+        public string? Name { get; init; }
+
+        /// <summary>Insertion point.</summary>
+        public Point2 Location { get; init; }
+
+        /// <summary>
+        /// Footprint, closed polygon. Required for shade and pergola (their cover counts toward
+        /// the shading target); optional for the rest.
+        /// </summary>
+        public List<Point2>? Outline { get; init; }
+
+        /// <summary>Rotation, degrees counter-clockwise from east.</summary>
+        public double? RotationDegrees { get; init; }
+
+        /// <summary>Design Brief zone id.</summary>
+        public string? ZoneId { get; init; }
+
+        /// <summary>Design Brief interest point this element marks or serves.</summary>
+        public string? InterestPointId { get; init; }
     }
 
     /// <summary>A plan point in metres.</summary>

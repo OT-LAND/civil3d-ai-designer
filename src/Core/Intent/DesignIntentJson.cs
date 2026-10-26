@@ -53,10 +53,10 @@ namespace CivilAI.Core.Intent
             }
         }
 
-        /// <summary>The JSON Schema (draft 2020-12) for Design Intent v0, embedded in Core.</summary>
+        /// <summary>The JSON Schema (draft 2020-12) for Design Intent v1, embedded in Core.</summary>
         public static string ReadSchema()
         {
-            const string name = "CivilAI.Core.Intent.Schema.design-intent.v0.schema.json";
+            const string name = "CivilAI.Core.Intent.Schema.design-intent.v1.schema.json";
             using var stream = typeof(DesignIntentJson).Assembly.GetManifestResourceStream(name)
                 ?? throw new InvalidOperationException($"Embedded resource '{name}' not found.");
             using var reader = new StreamReader(stream);

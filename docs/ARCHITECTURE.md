@@ -24,11 +24,18 @@ Designer inputs (sketch, image, text)      Background (survey, lots, rules)
         +----------------------------------------------------------------------+
 ```
 
-Design Intent v0 (1.1)
+Design Intent v1 (1.1, extended by B.3)
 - Metres, drawing coordinates (CRS per D4b), absolute levels. Polygons implicitly closed.
 - site (lot border, buildings with FFL and entrances) · spaces (plaza/lawn/bed by outline,
   path by centerline + width; level = nominal elevation, spot levels, fall) · edges (flush,
   kerb, steps, wall between 1–2 spaces, with height) · materials (id, name, category).
+- v1 (B.3, all optional so v0 files still read; "0" files must not use them): spaces carry
+  `zoneId` / `interestPointId` (Design Brief refs, not checked inside the intent) · trees (new or
+  existing, canopy diameter, trunk, protection radius for existing, `sourceId` = survey id (required
+  for existing) or brief point) · drainage (swales high→low with `outletId` → basin or low point,
+  retention/infiltration basins, low points with `inlet`) · elements (seating, lighting, play, shade,
+  pergola, water, art, other; shade/pergola need a footprint for canopy cover). Schema
+  `design-intent.v1.schema.json`; new intents default to "1".
 - Two checks: `DesignIntentJson.TryParse` (shape: unknown fields/kinds rejected) and
   `DesignIntentValidator` (ids, references, usable geometry). Design rules are 2.2, not here.
 
@@ -114,9 +121,10 @@ Repository layout
 ```
 CivilAI.sln
 src/Core/            CivilAI.Core         net8.0, no Autodesk refs (Geometry/, Intent/, later Rules/, Claude/)
-src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator; Schema/ holds the
+src/Core/Intent/     Design Intent v1 model, JSON read/write, content validator; Schema/ holds the
                      JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
-samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
+samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard; courtyard.v1.json
+                     = the B.1 brief's courtyard with trees, drainage, elements); used by tests
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
 src/Core/Brief/      Design Brief v1 model, JSON read/write, validator; Schema/ holds the JSON Schema (B.1)
 samples/brief/       Sample Design Brief (courtyard.brief.v1.json); used by tests

@@ -203,6 +203,9 @@ namespace CivilAI.Core.Intent
             Spaces = intent.Spaces,
             Edges = intent.Edges,
             Materials = intent.Materials,
+            Trees = intent.Trees,
+            Drainage = intent.Drainage,
+            Elements = intent.Elements,
         };
 
         /// <summary>The first user message: brief, then the site data as JSON (or a note that there is none).</summary>
@@ -243,7 +246,7 @@ namespace CivilAI.Core.Intent
         }
 
         /// <summary>
-        /// Tool input schema: { assumptions: string[], intent: Design Intent v0 }. The intent schema's
+        /// Tool input schema: { assumptions: string[], intent: Design Intent v1 }. The intent schema's
         /// $defs move to the root so its "#/$defs/..." references still resolve.
         /// </summary>
         public static string BuildOutputSchema()
