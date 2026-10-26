@@ -2,8 +2,13 @@
 
 Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Civil 3D test) · `done` · `blocked:D#`
 
-**Priority from 2026-10-25 (D14):** Core-only stacks #7→#9 and #8→#10 merged 2026-10-25 (D13); #6 waits for the owner's Civil 3D test, then **MB** top to bottom, then
+**Priority from 2026-10-25 (D14):** Core-only stacks #7→#9 and #8→#10 merged 2026-10-25 (D13); #6 tested OK except bug 0.3a (fix first), then **MB** top to bottom, then
 1.3, 2.3, M4. Concept: `docs/CONCEPT.md`.
+
+## Bugs (top priority)
+| # | Item | Status |
+|---|---|---|
+| 0.3a | **Palette text invisible** (owner test 2026-10-26): palette background is black in the dark theme and the WPF text is black, so only the "Check again" button shows. Fix on PR #6 branch: set the palette's background/foreground explicitly from the AutoCAD colour theme (COLORTHEME 0 = dark → light text, 1 = light → dark text), so the text is readable in both themes. Also set the Core assembly version (shows 1.0.0). Owner re-checks the palette, then merges #6. | todo |
 
 ## MB — Design Brief & semi-parametric palette (D14, concept v1)
 | # | Item | Status |
@@ -22,7 +27,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 |---|---|---|
 | 0.1 | Solution skeleton: `Core` (no Autodesk refs), `Civil3DPlugin`, `Tests`; Core builds and tests on Linux | done |
 | 0.2 | GitHub Actions: build + test on every PR | done |
-| 0.3 | Plugin load (bundle/PackageContents.xml), ribbon tab, empty palette, `AIHELLO` command (owner tests), Civil 3D 2027 | PR #6 — owner tested 2026-10-26: loads in Civil 3D 2027 (host 26.0), `AIHELLO` OK, Civil 3D ready; palette / workspace switch not yet reported; needs owner merge |
+| 0.3 | Plugin load (bundle/PackageContents.xml), ribbon tab, empty palette, `AIHELLO` command (owner tests), Civil 3D 2027 | test — PR #6, owner tested 2026-10-26: loads, `AIHELLO` OK, Civil 3D ready, tab survives workspace switch; **palette text invisible (bug 0.3a)** |
 | 0.4 | Claude API client in `Core` (key from settings, retries, image input, structured JSON output) | done |
 
 ## M1 — Design Intent pipeline (text → graded spaces)

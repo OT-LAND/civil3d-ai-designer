@@ -2,7 +2,7 @@
 
 ## 2026-10-26 — Meeting 9: PR #6 Civil 3D test
 - Owner built PR #6 (after installing the .NET 10 SDK; the zip SDK was shadowed on Path, the installer fixed it) and loaded it in Civil 3D 2027.
-- Result: plugin loads, `AIHELLO` prints all 4 lines: host 26.0.0.0, "Civil 3D: ready.", Claude "no API key yet" (expected; no key set). Not yet reported: palette, ribbon after workspace switch.
+- Result: plugin loads, `AIHELLO` prints all 4 lines: host 26.0.0.0, "Civil 3D: ready.", Claude "no API key yet" (expected; no key set). Palette opens but shows only the "Check again" button on a black background: text is black on black (bug 0.3a, top of backlog). AI Landscape tab stays after a workspace switch.
 - Note: Core shows version 1.0.0 (Core assembly has no version set); cosmetic, fix with the next plugin PR.
 - Build note for the PR/README: needs the .NET 10 **SDK installer** (`dotnet --list-sdks` must show 10.x).
 
