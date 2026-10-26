@@ -1,5 +1,9 @@
 # Session log (newest first)
 
+## 2026-10-26 — Meeting 10
+- Reported: B.1 Design Brief schema (PR #11, Core-only, agent merges per D13); PR #6 palette fix 0.3a awaits the owner's re-check in Civil 3D. Next: B.2.
+- Asked: nothing (no open questions).
+
 ## 2026-10-26 — Meeting 9: PR #6 Civil 3D test
 - Owner built PR #6 (after installing the .NET 10 SDK; the zip SDK was shadowed on Path, the installer fixed it) and loaded it in Civil 3D 2027.
 - Result: plugin loads, `AIHELLO` prints all 4 lines: host 26.0.0.0, "Civil 3D: ready.", Claude "no API key yet" (expected; no key set). Palette opens but shows only the "Check again" button on a black background: text is black on black (bug 0.3a, top of backlog). AI Landscape tab stays after a workspace switch.
