@@ -11,10 +11,19 @@ namespace CivilAI.Core.Metrics
     // Numbers measured on a Design Intent so the slider targets of a Design Brief can be
     // checked ("hard/soft 40/60 target → 43/57 achieved"). Pure Core, deterministic.
     //
-    // Measured on Design Intent v0: hard/soft share, curved/straight share, accessible
-    // share of path length, steepest slopes per kind of surface. Canopy cover, cut/fill and
-    // trees vs elements need trees, site elements and the grading solver (B.3, B.6) and are
-    // reported as not measured until then.
+    // Measured: hard/soft share, curved/straight share, accessible share of path length,
+    // steepest slopes per kind of surface, and (B.3a, Design Intent v1) canopy cover and the
+    // trees vs elements share. Cut/fill needs the grading solver (B.6) and is reported as not
+    // measured until then.
+    //
+    // Canopy cover (shading slider): tree canopy circles (new trees at maturity, kept trees as
+    // surveyed) plus shade/pergola footprints, overlaps counted once, as a share of the open
+    // ground: the zone outline when measuring a zone, otherwise the lot boundary; building
+    // footprints are left out. Not measured when there is no zone outline and no lot boundary.
+    //
+    // Trees vs elements: site elements as a share of new trees + site elements, by count, for
+    // those whose location lies in the zone. Kept trees are not counted (they are not a design
+    // choice); every element kind counts, lighting included.
     //
     // Simplifications (v0): overlapping spaces are not subtracted; a path's area is its
     // centerline length × width; a space belongs to a zone when its centre point (outline
@@ -65,8 +74,23 @@ namespace CivilAI.Core.Metrics
         /// <summary>Steepest graded ground on lawns and beds (the max grade slider, D16).</summary>
         public SteepestSlope? SteepestGround { get; init; }
 
-        /// <summary>Canopy cover at maturity, 0–100. Not measured on Design Intent v0 (no trees yet, B.3).</summary>
+        /// <summary>
+        /// Canopy cover at maturity, 0–100 (same direction as the shading slider): tree canopies and
+        /// shade/pergola footprints over the open ground. Null when there is no zone or lot outline.
+        /// </summary>
         public double? CanopyCoverPercent { get; init; }
+
+        /// <summary>New trees counted (location in the zone).</summary>
+        public int NewTreeCount { get; init; }
+
+        /// <summary>Site elements counted (location in the zone).</summary>
+        public int ElementCount { get; init; }
+
+        /// <summary>
+        /// Elements share of new trees + elements, 0–100 (same direction as the trees↔elements slider).
+        /// Null when there are neither.
+        /// </summary>
+        public double? ElementsSharePercent { get; init; }
 
         /// <summary>Ids of the spaces that were measured.</summary>
         public IReadOnlyList<string> SpaceIds { get; init; } = Array.Empty<string>();
@@ -150,6 +174,12 @@ namespace CivilAI.Core.Metrics
                 }
             }
 
+            bool InZone(Point2 p) => zoneOutline == null || zoneOutline.Count < 3 || PolygonGeometry.Contains(zoneOutline, p);
+            var trees = (intent.Trees ?? new List<TreeIntent>()).Where(t => t != null).ToList();
+            var elements = (intent.Elements ?? new List<SiteElement>()).Where(e => e != null).ToList();
+            int newTrees = trees.Count(t => t.Status == TreeStatus.New && InZone(t.Location));
+            int elementCount = elements.Count(e => InZone(e.Location));
+
             return new IntentMetrics
             {
                 HardArea = hard,
@@ -165,9 +195,27 @@ namespace CivilAI.Core.Metrics
                 SteepestOtherPath = otherPath,
                 SteepestPlaza = plaza,
                 SteepestGround = ground,
-                CanopyCoverPercent = null,
+                CanopyCoverPercent = CanopyCover(intent, zoneOutline, trees, elements),
+                NewTreeCount = newTrees,
+                ElementCount = elementCount,
+                ElementsSharePercent = Share(elementCount, newTrees + elementCount),
                 SpaceIds = spaces.Select(s => s.Id).ToList(),
             };
+        }
+
+        private static double? CanopyCover(
+            DesignIntent intent, IReadOnlyList<Point2>? zoneOutline, List<TreeIntent> trees, List<SiteElement> elements)
+        {
+            var reference = zoneOutline != null && zoneOutline.Count >= 3 ? zoneOutline : intent.Site?.LotBoundary;
+            if (reference == null || reference.Count < 3) return null;
+            var buildings = (intent.Site?.Buildings ?? new List<Building>())
+                .Where(b => b?.Footprint != null)
+                .Select(b => (IReadOnlyList<Point2>)b.Footprint);
+            var circles = trees.Select(t => new CoverArea.Circle(t.Location, Math.Max(0, t.CanopyDiameter) / 2.0));
+            var footprints = elements
+                .Where(e => (e.Kind == ElementKind.Shade || e.Kind == ElementKind.Pergola) && e.Outline != null)
+                .Select(e => (IReadOnlyList<Point2>)e.Outline!);
+            return CoverArea.CoveredPercent(reference, buildings, circles, footprints);
         }
 
         private static double? Share(double part, double total) => total > 1e-9 ? 100.0 * part / total : (double?)null;

@@ -27,7 +27,9 @@ namespace CivilAI.Core.Metrics
     /// How close a metric must be to its slider target, in percentage points.
     /// Hard/soft ±5 comes from CONCEPT.md §2; the others are starting values, easy to change.
     /// </summary>
-    public sealed record MetricTolerances(double HardSoft = 5, double CurvedStraight = 10, double Accessibility = 5)
+    public sealed record MetricTolerances(
+        double HardSoft = 5, double CurvedStraight = 10, double Accessibility = 5,
+        double Shading = 10, double TreesElements = 10)
     {
         public static MetricTolerances Default { get; } = new MetricTolerances();
     }
@@ -54,8 +56,10 @@ namespace CivilAI.Core.Metrics
                 NotMeasured("maxGrade", character.MaxGrade, "needs the grading solver (B.6); steepest ground is listed in the metrics"),
                 NotMeasured("cutFill", character.CutFill, "needs the grading solver (B.6)"),
                 NotMeasured("maxSlope", character.MaxSlope, "needs the grading solver (B.6); steepest not-accessible path is listed in the metrics"),
-                NotMeasured("shading", character.Shading, "needs trees and shade elements in the Design Intent (B.3)"),
-                NotMeasured("treesElements", character.TreesElements, "needs trees and site elements in the Design Intent (B.3)"),
+                Within("shading", character.Shading, metrics.CanopyCoverPercent, tol.Shading,
+                    "canopy cover at maturity (trees + shade/pergola footprints) over open ground", "no zone or lot outline"),
+                Within("treesElements", character.TreesElements, metrics.ElementsSharePercent, tol.TreesElements,
+                    "site elements share of new trees + site elements, by count", "no new trees or site elements"),
                 Within("curvedStraight", character.CurvedStraight, metrics.StraightSharePercent, tol.CurvedStraight,
                     "straight share of outline and path length", "no outlines or paths"),
             };

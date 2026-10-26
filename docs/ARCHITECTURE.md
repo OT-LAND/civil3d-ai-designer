@@ -80,9 +80,12 @@ Metrics on a Design Intent (B.2)
   bends, turn 0.5°–30°), accessible share of path length (D11), steepest slope per surface (accessible path,
   not-accessible path, plaza, lawn/bed) from falls and spot-level pairs. With a zone outline only spaces whose
   centre lies inside are measured. v0 limits: overlaps not subtracted; path area = length × width.
+  B.3a adds canopy cover (tree canopy circles + shade/pergola footprints, overlaps once, over the zone outline
+  or else the lot boundary, buildings left out; `CoverArea` grid sampling, ~250k cells) and the elements share
+  of new trees + site elements by count (location in the zone; kept trees not counted).
 - `TargetComparison.Compare(metrics, brief.CharacterFor(zone), tolerances?)` → one `TargetResult` per slider
   (Met / Missed / NotMeasured + note). Tolerances: hard/soft ±5 (concept), curved/straight ±10, accessibility
-  is a minimum (−5). Max grade, cut/fill, max slope wait for B.6; shading and trees/elements for B.3.
+  is a minimum (−5), shading ±10, trees/elements ±10. Max grade, cut/fill, max slope wait for B.6.
 - `Core/Geometry/PolygonGeometry`: area, length, point-in-polygon, half-length point, curved/straight split.
 
 Existing-tree table import (2.1a)

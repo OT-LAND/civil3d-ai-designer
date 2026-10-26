@@ -1,5 +1,18 @@
 # Session log (newest first)
 
+## 2026-10-26 — Work: B.3a Canopy cover + trees vs elements metrics
+- Done: `IntentMetrics` now measures canopy cover (tree canopies at maturity / as surveyed + shade and pergola
+  footprints, overlaps counted once, clipped to the zone outline or else the lot boundary, building footprints
+  left out; new `Core/Metrics/CoverArea` grid sampler) and the elements share of new trees + site elements
+  (by count, location in the zone). `TargetComparison` compares them to the shading and trees↔elements sliders
+  (±10). 7 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 144/144 pass.
+- Blocked: nothing.
+- PR #14: Core-only, merged by the agent once CI is green (D13).
+- Next: B.4 style profile.
+- Questions: none new. (Choices made, easy to change: trees vs elements counts items, not area; kept trees are
+  not counted there but do count for canopy; lighting counts as an element; tolerance ±10 for both sliders;
+  no lot and no zone → canopy not measured.)
+
 ## 2026-10-26 — Work: B.3 Design Intent v1
 - Done: `Core/Intent` v1 (schema `design-intent.v1.schema.json`, new intents default to "1", "0" still read):
   spaces get `zoneId` / `interestPointId`; `trees` (new/existing, canopy, trunk, protection radius, `sourceId`);
