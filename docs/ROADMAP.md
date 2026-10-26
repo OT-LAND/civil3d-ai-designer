@@ -14,7 +14,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | # | Item | Status |
 |---|---|---|
 | B.1 | Design Brief schema v1 in Core: background refs, zones + character sliders (global defaults, per-zone override per D15), tagged curves (walkingNetwork/contour/flowBasin/border), tagged points (entrance/interestPoint/elevation/tree), style (images + prompt); JSON read/write, validator, sample, tests | done — PR #11 (Core-only, merged per D13) |
-| B.2 | Metrics on a Design Intent (Core): hard/soft share, canopy cover, curved/straight share, accessible share, steepest slopes; compare to slider targets with tolerance → "target vs achieved" | todo |
+| B.2 | Metrics on a Design Intent (Core): hard/soft share, canopy cover, curved/straight share, accessible share, steepest slopes; compare to slider targets with tolerance → "target vs achieved" | done — PR (Core-only, D13); canopy cover waits for trees (B.3) |
 | B.3 | Design Intent v1: zone refs, trees (new + kept), drainage (swale, basin, low points), site elements, interest-point places | todo |
 | B.4 | Style profile: reference images + prompt → material palette, planting character, form language (Claude vision), cached | todo |
 | B.5 | Plan stage: brief + style profile + site → Design Intent spaces/paths; repair loop on metric misses and rule failures (extends 1.2); 3 layout variants per run, only the chosen one is detailed (D18) | todo |
