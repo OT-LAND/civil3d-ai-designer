@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1",
+  "site": {
+    "name": "Courtyard (v1 sample, matches samples/brief/courtyard.brief.v1.json)",
+    "lotBoundary": [ { "x": 0, "y": 0 }, { "x": 40, "y": 0 }, { "x": 40, "y": 25 }, { "x": 0, "y": 25 } ],
+    "buildings": []
+  },
+  "spaces": [
+    {
+      "id": "plaza-gate", "kind": "plaza", "name": "Gate plaza", "zoneId": "Z1",
+      "outline": [ { "x": 0, "y": 8 }, { "x": 8, "y": 8 }, { "x": 8, "y": 16 }, { "x": 0, "y": 16 } ],
+      "level": { "elevation": 101.20, "spots": [], "fall": { "percent": 1.5, "directionDegrees": 0 } },
+      "materialId": "stone"
+    },
+    {
+      "id": "path-spine", "kind": "path", "name": "Spine", "zoneId": "Z1",
+      "centerline": [ { "x": 8, "y": 12 }, { "x": 20, "y": 14 }, { "x": 38, "y": 10 } ],
+      "width": 1.8, "materialId": "stone"
+    },
+    {
+      "id": "plaza-seat", "kind": "plaza", "name": "Seat under the carob", "zoneId": "Z2", "interestPointId": "P2",
+      "outline": [ { "x": 22, "y": 16 }, { "x": 27, "y": 16 }, { "x": 27, "y": 21 }, { "x": 22, "y": 21 } ],
+      "materialId": "gravel"
+    },
+    {
+      "id": "bed-garden", "kind": "bed", "name": "Dry garden", "zoneId": "Z2",
+      "outline": [ { "x": 28, "y": 12 }, { "x": 39, "y": 12 }, { "x": 39, "y": 24 }, { "x": 28, "y": 24 } ],
+      "materialId": "mulch"
+    }
+  ],
+  "edges": [],
+  "materials": [
+    { "id": "stone", "name": "Local limestone paving", "category": "paving" },
+    { "id": "gravel", "name": "Compacted gravel", "category": "gravel" },
+    { "id": "mulch", "name": "Stone mulch, dry planting", "category": "planting" }
+  ],
+  "trees": [
+    { "id": "t-new-1", "status": "new", "location": { "x": 12, "y": 20 }, "species": "Quercus ithaburensis",
+      "canopyDiameter": 8, "sourceId": "P4", "zoneId": "Z1" },
+    { "id": "t-new-2", "status": "new", "location": { "x": 24, "y": 20 }, "species": "Ceratonia siliqua",
+      "canopyDiameter": 7, "sourceId": "P5", "zoneId": "Z2" },
+    { "id": "t-keep-17", "status": "existing", "location": { "x": 34, "y": 3 }, "species": "Olea europaea",
+      "canopyDiameter": 5, "trunkDiameter": 0.35, "protectionRadius": 4.2, "sourceId": "17", "zoneId": "Z2" }
+  ],
+  "drainage": {
+    "swales": [
+      { "id": "sw-1", "line": [ { "x": 30, "y": 2 }, { "x": 36, "y": 6 } ], "width": 1.2, "depth": 0.25,
+        "flowBasinId": "C4", "outletId": "basin-1" }
+    ],
+    "basins": [
+      { "id": "basin-1", "kind": "infiltration",
+        "outline": [ { "x": 36, "y": 5 }, { "x": 39.5, "y": 5 }, { "x": 39.5, "y": 9 }, { "x": 36, "y": 9 } ],
+        "depth": 0.4, "flowBasinId": "C4" }
+    ],
+    "lowPoints": [
+      { "id": "lp-gate", "location": { "x": 4, "y": 15.5 }, "inlet": true }
+    ]
+  },
+  "elements": [
+    { "id": "bench-1", "kind": "seating", "name": "Bench under the carob", "location": { "x": 24.5, "y": 17 },
+      "rotationDegrees": 90, "zoneId": "Z2", "interestPointId": "P2" },
+    { "id": "shade-gate", "kind": "shade", "name": "Shade sail at the gate", "location": { "x": 4, "y": 12 },
+      "outline": [ { "x": 1, "y": 9 }, { "x": 7, "y": 9 }, { "x": 7, "y": 15 }, { "x": 1, "y": 15 } ], "zoneId": "Z1" },
+    { "id": "light-1", "kind": "lighting", "location": { "x": 20, "y": 15.2 }, "zoneId": "Z1" }
+  ]
+}

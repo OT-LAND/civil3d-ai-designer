@@ -1,5 +1,20 @@
 # Session log (newest first)
 
+## 2026-10-26 — Work: B.3 Design Intent v1
+- Done: `Core/Intent` v1 (schema `design-intent.v1.schema.json`, new intents default to "1", "0" still read):
+  spaces get `zoneId` / `interestPointId`; `trees` (new/existing, canopy, trunk, protection radius, `sourceId`);
+  `drainage` (swales with outlet → basin/low point, retention/infiltration basins, low points with inlet flag);
+  `elements` (8 kinds, shade/pergola need a footprint). Validator checks the new parts and that "0" documents
+  don't use them; TextToIntent keeps the new parts when it swaps in the surveyed site. Sample
+  `samples/intent/courtyard.v1.json` (matches the B.1 brief). 14 new tests; `dotnet build` (Release, 0 warnings)
+  + `dotnet test` 137/137 pass.
+- Blocked: nothing.
+- PR #13: Core-only, merged by the agent once CI is green (D13).
+- Next: B.3a canopy cover + trees vs elements metrics (small), then B.4 style profile.
+- Questions: none new. (Choices made, easy to change: existing trees must carry their survey id; brief refs
+  are not checked inside the intent (the brief is a separate file); the text-to-intent prompt is still v0 and
+  will be rewritten in B.5.)
+
 ## 2026-10-26 — Work: B.2 Metrics on a Design Intent
 - Done: `Core/Metrics`: `IntentMetricsCalculator.Measure(intent, zone?)` (hard/soft share, curved/straight share,
   accessible share of path length, steepest slope on accessible paths / other paths / plazas / lawns+beds, optional

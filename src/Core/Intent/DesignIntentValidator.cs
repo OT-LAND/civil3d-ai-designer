@@ -11,9 +11,10 @@ namespace CivilAI.Core.Intent
     }
 
     /// <summary>
-    /// Content checks the JSON Schema cannot express: unique ids, references between items,
-    /// usable geometry (closed outlines with area, paths with a centerline and width), finite
-    /// numbers. Design rules (slopes, accessibility, tree zones) are not checked here; that is
+    /// Content checks the JSON Schema cannot express: unique ids, references between items
+    /// (materials, edge spaces, swale outlets), usable geometry (closed outlines with area,
+    /// paths with a centerline and width), finite numbers, v1 parts only under schema "1".
+    /// References to the Design Brief (zoneId, interestPointId, flowBasinId) are not checked here. Design rules (slopes, accessibility, tree zones) are not checked here; that is
     /// the rule engine (2.2).
     /// </summary>
     public static class DesignIntentValidator
@@ -28,8 +29,10 @@ namespace CivilAI.Core.Intent
             var issues = new List<IntentIssue>();
             void Add(string path, string message) => issues.Add(new IntentIssue(path, message));
 
-            if (intent.SchemaVersion != DesignIntent.CurrentSchemaVersion)
+            if (!DesignIntent.SupportedSchemaVersions.Contains(intent.SchemaVersion))
                 Add("schemaVersion", $"Expected schema version \"{DesignIntent.CurrentSchemaVersion}\", got \"{intent.SchemaVersion}\".");
+            else if (intent.SchemaVersion == "0" && UsesV1(intent))
+                Add("schemaVersion", "Trees, drainage, site elements and brief references need schema version \"1\".");
 
             // Ids are unique across the whole document so edits can refer to any item by id.
             var ids = new HashSet<string>(StringComparer.Ordinal);
@@ -144,7 +147,96 @@ namespace CivilAI.Core.Intent
                     Add($"{p}.height", $"{e.Kind} need a height (the level difference they take up).");
             }
 
+            ValidateV1(intent, CheckId, Add);
+
             return issues;
+        }
+
+        private static bool UsesV1(DesignIntent intent)
+        {
+            var d = intent.Drainage ?? new DrainageIntent();
+            return intent.Trees.Count > 0 || intent.Elements.Count > 0
+                || d.Swales.Count > 0 || d.Basins.Count > 0 || d.LowPoints.Count > 0
+                || intent.Spaces.Any(s => s.ZoneId is not null || s.InterestPointId is not null);
+        }
+
+        /// <summary>Trees, drainage and site elements (v1).</summary>
+        private static void ValidateV1(DesignIntent intent, Action<string, string> checkId, Action<string, string> add)
+        {
+            for (int i = 0; i < intent.Trees.Count; i++)
+            {
+                var t = intent.Trees[i];
+                var p = $"trees[{i}]";
+                checkId($"{p}.id", t.Id);
+                CheckPoint($"{p}.location", t.Location, add);
+                CheckPositive($"{p}.canopyDiameter", t.CanopyDiameter, "A tree needs a canopy diameter greater than 0 m.", add);
+                if (t.TrunkDiameter is double trunk)
+                    CheckPositive($"{p}.trunkDiameter", trunk, "Trunk diameter must be greater than 0 m.", add);
+                if (t.Status == TreeStatus.New)
+                {
+                    if (t.ProtectionRadius is not null)
+                        add($"{p}.protectionRadius", "Only existing trees have a root protection zone.");
+                }
+                else
+                {
+                    if (t.ProtectionRadius is double r)
+                        CheckPositive($"{p}.protectionRadius", r, "Protection radius must be greater than 0 m.", add);
+                    if (string.IsNullOrWhiteSpace(t.SourceId))
+                        add($"{p}.sourceId", "An existing tree needs the survey tree id it was kept from.");
+                }
+            }
+
+            var drainage = intent.Drainage ?? new DrainageIntent();
+            var outletIds = new HashSet<string>(StringComparer.Ordinal);
+            for (int i = 0; i < drainage.Basins.Count; i++)
+            {
+                var b = drainage.Basins[i];
+                var p = $"drainage.basins[{i}]";
+                checkId($"{p}.id", b.Id);
+                if (!string.IsNullOrWhiteSpace(b.Id)) outletIds.Add(b.Id);
+                CheckPolygon($"{p}.outline", b.Outline, "basin outline", add);
+                if (b.BottomLevel is double z) CheckFinite($"{p}.bottomLevel", z, "Bottom level", add);
+                if (b.Depth is double depth) CheckPositive($"{p}.depth", depth, "Depth must be greater than 0 m.", add);
+            }
+            for (int i = 0; i < drainage.LowPoints.Count; i++)
+            {
+                var lp = drainage.LowPoints[i];
+                var p = $"drainage.lowPoints[{i}]";
+                checkId($"{p}.id", lp.Id);
+                if (!string.IsNullOrWhiteSpace(lp.Id)) outletIds.Add(lp.Id);
+                CheckPoint($"{p}.location", lp.Location, add);
+                if (lp.Level is double z) CheckFinite($"{p}.level", z, "Level", add);
+            }
+            for (int i = 0; i < drainage.Swales.Count; i++)
+            {
+                var sw = drainage.Swales[i];
+                var p = $"drainage.swales[{i}]";
+                checkId($"{p}.id", sw.Id);
+                if (sw.Line.Count < 2) add($"{p}.line", "A swale needs a flow line with at least 2 points.");
+                else CheckPolyline($"{p}.line", sw.Line, "swale line", add);
+                if (sw.Width is double w) CheckPositive($"{p}.width", w, "Width must be greater than 0 m.", add);
+                if (sw.Depth is double depth) CheckPositive($"{p}.depth", depth, "Depth must be greater than 0 m.", add);
+                if (sw.OutletId is not null && !outletIds.Contains(sw.OutletId))
+                    add($"{p}.outletId", $"Outlet \"{sw.OutletId}\" is not a basin or low point.");
+            }
+
+            for (int i = 0; i < intent.Elements.Count; i++)
+            {
+                var e = intent.Elements[i];
+                var p = $"elements[{i}]";
+                checkId($"{p}.id", e.Id);
+                CheckPoint($"{p}.location", e.Location, add);
+                if (e.Outline is not null)
+                    CheckPolygon($"{p}.outline", e.Outline, $"{e.Kind.ToString().ToLowerInvariant()} footprint", add);
+                else if (e.Kind == ElementKind.Shade || e.Kind == ElementKind.Pergola)
+                    add($"{p}.outline", $"A {e.Kind.ToString().ToLowerInvariant()} needs a footprint (its cover counts toward shading).");
+                if (e.RotationDegrees is double rot) CheckFinite($"{p}.rotationDegrees", rot, "Rotation", add);
+            }
+        }
+
+        private static void CheckPositive(string path, double value, string message, Action<string, string> add)
+        {
+            if (!(value > 0) || double.IsInfinity(value)) add(path, message);
         }
 
         internal static void CheckFinite(string path, double value, string what, Action<string, string> add)
