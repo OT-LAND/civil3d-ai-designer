@@ -1,5 +1,11 @@
 # Session log (newest first)
 
+## 2026-10-26 — Meeting 9: PR #6 Civil 3D test
+- Owner built PR #6 (after installing the .NET 10 SDK; the zip SDK was shadowed on Path, the installer fixed it) and loaded it in Civil 3D 2027.
+- Result: plugin loads, `AIHELLO` prints all 4 lines: host 26.0.0.0, "Civil 3D: ready.", Claude "no API key yet" (expected; no key set). Not yet reported: palette, ribbon after workspace switch.
+- Note: Core shows version 1.0.0 (Core assembly has no version set); cosmetic, fix with the next plugin PR.
+- Build note for the PR/README: needs the .NET 10 **SDK installer** (`dotnet --list-sdks` must show 10.x).
+
 ## 2026-10-26 — Meeting 9
 - Reported: #7→#9 and #8→#10 merged (D13); concept v1 + D15–D19 recorded; next B.1 Design Brief schema. PR #6 (0.3 plugin load) still awaits the owner's Civil 3D test.
 - Asked: nothing (no open questions).
