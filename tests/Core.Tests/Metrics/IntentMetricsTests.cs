@@ -38,7 +38,8 @@ namespace CivilAI.Core.Tests.Metrics
             Assert.Equal(17, m.PathLength, 6);
             Assert.Equal(100, m.AccessibleSharePercent!.Value, 6);
             Assert.Equal(100, m.StraightSharePercent!.Value, 6);
-            Assert.Null(m.CanopyCoverPercent);
+            Assert.Equal(0, m.CanopyCoverPercent!.Value, 6); // v0: lot boundary, no trees or shade
+            Assert.Null(m.ElementsSharePercent);
             Assert.Equal(4, m.SpaceIds.Count);
         }
 
@@ -164,7 +165,9 @@ namespace CivilAI.Core.Tests.Metrics
             var curved = rows.Single(r => r.Slider == "curvedStraight");
             Assert.Equal(TargetStatus.Missed, curved.Status);
             Assert.Equal(100, curved.Achieved!.Value, 6);
-            Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "shading").Status);
+            Assert.Equal(TargetStatus.Missed, rows.Single(r => r.Slider == "shading").Status); // 0 % canopy
+            Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "treesElements").Status);
+            Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "cutFill").Status);
         }
 
         [Fact]
