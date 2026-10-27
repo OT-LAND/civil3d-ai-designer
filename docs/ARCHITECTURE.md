@@ -100,6 +100,17 @@ Style profile (B.4, CONCEPT §3.3 stage 2)
 - Cache: `StyleProfileCache(folder)` keeps `<sha256>.json` per input set; key = prompt version + trimmed
   prompt + image types/bytes in order (file names ignored). Bad entries are misses. The plugin chooses the folder.
 
+Plan stage (B.5a, CONCEPT §3.3 stage 3)
+- `Core/Plan/PlanStage.GenerateAsync(PlanRequest {Brief, Style?, Site?, Rules?})` → one Design Intent. User
+  message: resolved sliders per zone in plain words, then brief, style profile and site as JSON; system prompt
+  `Plan/Prompts/plan.v1.md`; same forced output and answer reading as 1.2 (`TextToIntent.TryReadAnswer`, given
+  site swapped in). Default 3 calls, 16k output tokens per call.
+- `PlanStage.Review(intent, brief, rules)` → `PlanReview`: **problems** (space zoneId not a brief zone or missing,
+  interestPointId unknown, interest point with no place or several) block the plan; **open issues** (rule
+  failures, slider misses per zone with "raise/lower it") are repaired but not blocking. After the last call
+  the usable plan with the fewest open issues is returned with them (`AllTargetsMet` false); no usable plan ⇒
+  `PlanStageException`. Three variants per run (D18) come in B.5b.
+
 Existing-tree table import (2.1a)
 - `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
 - `TreeFieldMapping.Suggest(headers)` proposes which column is id/species/X/Y/trunk/canopy/height/level

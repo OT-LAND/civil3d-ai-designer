@@ -25,6 +25,8 @@
     <!-- Style Profile v1 schema + system prompt (B.4); read with StyleProfileJson.ReadSchema() / StyleReader.ReadSystemPrompt(). -->
     <EmbeddedResource Include="Style\Schema\style-profile.v1.schema.json" LogicalName="CivilAI.Core.Style.Schema.style-profile.v1.schema.json" />
     <EmbeddedResource Include="Style\Prompts\style-reader.v1.md" LogicalName="CivilAI.Core.Style.Prompts.style-reader.v1.md" />
+    <!-- Plan stage system prompt (B.5a); read with PlanStage.ReadSystemPrompt(). -->
+    <EmbeddedResource Include="Plan\Prompts\plan.v1.md" LogicalName="CivilAI.Core.Plan.Prompts.plan.v1.md" />
     <EmbeddedResource Include="Rules\RuleSets\default-il.v0.json" LogicalName="CivilAI.Core.Rules.RuleSets.default-il.v0.json" />
   </ItemGroup>
 

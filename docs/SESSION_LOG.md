@@ -1,5 +1,22 @@
 # Session log (newest first)
 
+## 2026-10-27 — Work: B.5a Plan stage (one plan)
+- Done: `Core/Plan/PlanStage`: brief + style profile + site → one Design Intent (system prompt `plan.v1`, sliders
+  per zone written out in plain words, forced JSON as 1.2). `PlanStage.Review` checks each answer: brief refs
+  (zones, interest points each get exactly one place) are blocking problems; rule failures and slider misses
+  ("zone Z2 (Garden): hardSoft target 62, achieved 0 … raise it") are open issues sent back as repair. After the
+  last call the best usable plan is returned with its open issues. 11 new tests; `dotnet build` (Release,
+  0 warnings) + `dotnet test` 166/166 pass.
+- Split B.5 into B.5a (this) and B.5b (3 variants, D18).
+- Also: ROADMAP B.4 marked done (merged).
+- Blocked: nothing.
+- PR #16: Core-only, merged by the agent once CI is green (D13).
+- Not verified: a real Claude plan on the sample brief (needs the owner's key); first check when B.8 wires Generate.
+- Next: B.5b plan variants.
+- Questions: none new. (Choices made, easy to change: slider misses never block, the designer sees them on the
+  card; 3 calls max; entrance reach and walking-network following are not checked yet (B.6 / later); existing
+  trees are not passed to the plan yet.)
+
 ## 2026-10-27 — Work: B.4 Style profile
 - Done: `Core/Style`: `StyleProfile` (summary, material palette ≤12 → Design Intent materials, planting character
   (water use, density, layers, palette, example genera), form language (geometry, curved share 0–100, edges,
