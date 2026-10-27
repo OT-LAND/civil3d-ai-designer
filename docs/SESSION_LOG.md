@@ -1,5 +1,9 @@
 # Session log (newest first)
 
+## 2026-10-27 — Meeting 11
+- Reported: B.2 metrics (PR #12), B.3 Design Intent v1 (PR #13), B.3a canopy/trees-vs-elements metrics (PR #14), all Core-only and merged (D13); PR #6 palette fix 0.3a still awaits the owner's re-check in Civil 3D. Next: B.4.
+- Asked: nothing (no open questions).
+
 ## 2026-10-26 — Work: B.3a Canopy cover + trees vs elements metrics
 - Done: `IntentMetrics` now measures canopy cover (tree canopies at maturity / as surveyed + shade and pergola
   footprints, overlaps counted once, clipped to the zone outline or else the lot boundary, building footprints
