@@ -9,6 +9,7 @@
   `samples/style/courtyard.style.v1.json`. 11 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 155/155 pass.
 - Also: ROADMAP B.3a marked done (merged).
 - Blocked: nothing.
+- PR #15: Core-only, merged by the agent once CI is green (D13).
 - Not verified: a real Claude call on real reference images (needs the owner's key); first check when B.7/B.8 wire the Style panel.
 - Next: B.5 plan stage.
 - Questions: none new. (Choices made, easy to change: max 2 Claude calls for style; cache ignores file names
