@@ -23,6 +23,7 @@
     <None Include="..\..\samples\brief\*.json" LinkBase="samples\brief" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\survey\*.csv" LinkBase="samples\survey" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\survey\*.xlsx" LinkBase="samples\survey" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\samples\style\*.json" LinkBase="samples\style" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

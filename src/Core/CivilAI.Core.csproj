@@ -22,6 +22,9 @@
     <!-- Default starter design-rule set (2.2, D3); read with RuleSetJson.LoadDefault(). -->
     <!-- Design Brief v1 JSON Schema (B.1); read with DesignBriefJson.ReadSchema(). -->
     <EmbeddedResource Include="Brief\Schema\design-brief.v1.schema.json" LogicalName="CivilAI.Core.Brief.Schema.design-brief.v1.schema.json" />
+    <!-- Style Profile v1 schema + system prompt (B.4); read with StyleProfileJson.ReadSchema() / StyleReader.ReadSystemPrompt(). -->
+    <EmbeddedResource Include="Style\Schema\style-profile.v1.schema.json" LogicalName="CivilAI.Core.Style.Schema.style-profile.v1.schema.json" />
+    <EmbeddedResource Include="Style\Prompts\style-reader.v1.md" LogicalName="CivilAI.Core.Style.Prompts.style-reader.v1.md" />
     <EmbeddedResource Include="Rules\RuleSets\default-il.v0.json" LogicalName="CivilAI.Core.Rules.RuleSets.default-il.v0.json" />
   </ItemGroup>
 
