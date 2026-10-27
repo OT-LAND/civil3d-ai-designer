@@ -88,6 +88,18 @@ Metrics on a Design Intent (B.2)
   is a minimum (−5), shading ±10, trees/elements ±10. Max grade, cut/fill, max slope wait for B.6.
 - `Core/Geometry/PolygonGeometry`: area, length, point-in-polygon, half-length point, curved/straight split.
 
+Style profile (B.4, CONCEPT §3.3 stage 2)
+- `Core/Style/StyleProfile`: summary, material palette (≤12, id/name/category/colour/finish/use; `ToIntentMaterials()`
+  gives Design Intent materials), planting character (water use, density, layers, palette, example genera —
+  suggestions only, D5), form language (orthogonal/angular/curvilinear/mixed, curved share 0–100 on the
+  curved↔straight scale, edges, level changes), one note per reference image. `StyleProfileJson` +
+  embedded `style-profile.v1.schema.json`; `StyleProfileValidator`.
+- `StyleReader.ReadAsync(StyleRequest)`: labelled images ("Reference image n: name") then the prompt, system
+  prompt `Style/Prompts/style-reader.v1.md`, forced JSON output, repair loop (default 2 calls).
+  `StyleRequest.FromInput(brief.Style, folder)` reads the brief's image files.
+- Cache: `StyleProfileCache(folder)` keeps `<sha256>.json` per input set; key = prompt version + trimmed
+  prompt + image types/bytes in order (file names ignored). Bad entries are misses. The plugin chooses the folder.
+
 Existing-tree table import (2.1a)
 - `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
 - `TreeFieldMapping.Suggest(headers)` proposes which column is id/species/X/Y/trunk/canopy/height/level
@@ -132,6 +144,8 @@ src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
 src/Core/Brief/      Design Brief v1 model, JSON read/write, validator; Schema/ holds the JSON Schema (B.1)
 samples/brief/       Sample Design Brief (courtyard.brief.v1.json); used by tests
 src/Core/Metrics/    Metrics on a Design Intent and target-vs-achieved against brief sliders (B.2)
+src/Core/Style/      Style profile (B.4): model, JSON, validator, StyleReader (Claude vision) + file cache; Schema/, Prompts/
+samples/style/       Sample style profile (courtyard.style.v1.json, matches the B.1 brief's style); used by tests
 src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
 samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine

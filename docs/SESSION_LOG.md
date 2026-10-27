@@ -1,5 +1,21 @@
 # Session log (newest first)
 
+## 2026-10-27 — Work: B.4 Style profile
+- Done: `Core/Style`: `StyleProfile` (summary, material palette ≤12 → Design Intent materials, planting character
+  (water use, density, layers, palette, example genera), form language (geometry, curved share 0–100, edges,
+  level changes), one note per image), JSON + embedded schema `style-profile.v1.schema.json`, validator;
+  `StyleReader` (Claude vision: labelled images + prompt, system prompt `style-reader.v1`, forced JSON, repair
+  loop) and `StyleProfileCache` (file per SHA-256 of prompt version + prompt + image bytes). Sample
+  `samples/style/courtyard.style.v1.json`. 11 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 155/155 pass.
+- Also: ROADMAP B.3a marked done (merged).
+- Blocked: nothing.
+- PR #15: Core-only, merged by the agent once CI is green (D13).
+- Not verified: a real Claude call on real reference images (needs the owner's key); first check when B.7/B.8 wire the Style panel.
+- Next: B.5 plan stage.
+- Questions: none new. (Choices made, easy to change: max 2 Claude calls for style; cache ignores file names
+  and model; the style's curved share is only a lean, the brief's curved↔straight slider stays the target;
+  example plants are suggestions, the plant list decides (D5).)
+
 ## 2026-10-27 — Meeting 11
 - Reported: B.2 metrics (PR #12), B.3 Design Intent v1 (PR #13), B.3a canopy/trees-vs-elements metrics (PR #14), all Core-only and merged (D13); PR #6 palette fix 0.3a still awaits the owner's re-check in Civil 3D. Next: B.4.
 - Asked: nothing (no open questions).
