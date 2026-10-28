@@ -83,9 +83,12 @@ Metrics on a Design Intent (B.2)
   B.3a adds canopy cover (tree canopy circles + shade/pergola footprints, overlaps once, over the zone outline
   or else the lot boundary, buildings left out; `CoverArea` grid sampling, ~250k cells) and the elements share
   of new trees + site elements by count (location in the zone; kept trees not counted).
+  B.1b adds the cost level (D20): Design Intent `costClass` (low/mid/high) on materials, new trees (size at
+  planting) and site elements, scored 0/50/100; parts = surfaces by area (through the material), new trees by
+  count, elements by count; cost level = average of the parts present, not measured when none. Walls/steps not counted yet.
 - `TargetComparison.Compare(metrics, brief.CharacterFor(zone), tolerances?)` → one `TargetResult` per slider
   (Met / Missed / NotMeasured + note). Tolerances: hard/soft ±5 (concept), curved/straight ±10, accessibility
-  is a minimum (−5), shading ±10, trees/elements ±10. Max grade, cut/fill, max slope wait for B.6.
+  is a minimum (−5), shading ±10, trees/elements ±10, budget ±15. Max grade, cut/fill, max slope wait for B.6.
 - `Core/Geometry/PolygonGeometry`: area, length, point-in-polygon, half-length point, curved/straight split.
 
 Style profile (B.4, CONCEPT §3.3 stage 2)
@@ -103,8 +106,8 @@ Style profile (B.4, CONCEPT §3.3 stage 2)
 Plan stage (B.5a/B.5b, CONCEPT §3.3 stage 3)
 - `Core/Plan/PlanStage.GenerateAsync(PlanRequest {Brief, Style?, Site?, Rules?})` → one Design Intent. User
   message: resolved sliders per zone in plain words, then brief, style profile and site as JSON; system prompt
-  `Plan/Prompts/plan.v3.md` (v2: budget in words via `PlanStage.BudgetWords`, utilities keep-clear; v3: layout
-  options, `concept` line); forced output = 1.2 shape plus a required `concept` string (`PlanStage.BuildOutputSchema`),
+  `Plan/Prompts/plan.v4.md` (v2: budget in words via `PlanStage.BudgetWords`, utilities keep-clear; v3: layout
+  options, `concept` line; v4: a `costClass` on every material, new tree and element); forced output = 1.2 shape plus a required `concept` string (`PlanStage.BuildOutputSchema`),
   answer read as 1.2 (`TextToIntent.TryReadAnswer`, given site swapped in); a missing concept never triggers a repair. Default 3 calls, 16k output tokens per call.
 - `PlanStage.Review(intent, brief, rules)` → `PlanReview`: **problems** (space zoneId not a brief zone or missing,
   interestPointId unknown, interest point with no place or several) block the plan; **open issues** (rule

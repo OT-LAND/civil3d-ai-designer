@@ -1,5 +1,22 @@
 # Session log (newest first)
 
+## 2026-10-28 — Work: B.1b Cost level
+- Done: Design Intent `costClass` (low · mid · high, optional) on materials, new trees (size at planting) and
+  site elements; schema + sample (courtyard v1). `IntentMetrics.CostLevelPercent` per zone: classes scored
+  0/50/100, surfaces by area through the material, new trees and elements by count, the parts present averaged.
+  The budget row on target-vs-achieved is now measured (±15) and slider misses go back to the plan as repair.
+  Plan prompt `plan.v4`: give every material, new tree and element a cost class. 11 new tests; `dotnet build`
+  (Release, 0 warnings) + `dotnet test` 192/192 pass.
+- Also: ROADMAP B.5b marked done (merged).
+- Blocked: nothing.
+- PR: Core-only, merged by the agent once CI is green (D13).
+- Not verified: whether Claude picks sensible cost classes (needs the owner's key); first check when B.8 wires Generate.
+- Next: B.6 grading solver v0.
+- Questions: none new. (Choices made, easy to change: no material/plant library exists yet, so the cost class
+  sits on the Design Intent items and Claude sets it; when office libraries come (5.1) the class moves there.
+  Equal weight for surfaces, trees and elements; walls and steps not counted yet; tolerance ±15 so an all-mid
+  design meets budgets 35–65; kept trees and unclassed items are left out.)
+
 ## 2026-10-28 — Work: B.5b Plan stage: three layout options
 - Done: `PlanStage.GenerateOptionsAsync(request, count = 3)` → `PlanOptions` (D18). Options are planned one after
   another; each prompt lists the concepts of the usable options so far and asks for a clearly different layout

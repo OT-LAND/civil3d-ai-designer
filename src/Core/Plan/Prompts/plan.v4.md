@@ -58,6 +58,11 @@ Character sliders (0-100), per zone, as listed in the user message
   natural stone), plant sizes at planting, how many walls and how much built detail, and the
   quality of site elements. Pick from the style palette the materials that fit the level; a
   low budget is never a reason to break a rule or drop a slider target.
+  Give every material, every new tree and every site element a "costClass": low, mid or high,
+  compared with the alternatives for the same job (gravel low, concrete pavers mid, natural
+  stone high; small nursery stock low, semi-mature trees high). The cost level is measured from
+  these classes (low 0, mid 50, high 100: surfaces by area, trees and elements by count, the
+  three averaged) and should be within 15 points of the budget.
 
 Tagged curves
 - walkingNetwork: becomes paths. Follow the curve closely (same start and end, same turns) and
