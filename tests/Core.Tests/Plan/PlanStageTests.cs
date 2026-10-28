@@ -38,8 +38,8 @@ namespace CivilAI.Core.Tests.Plan
         {
             var node = JsonNode.Parse(Sample("brief", "courtyard.brief.v1.json"))!.AsObject();
             var zones = node["zones"]!.AsArray();
-            zones[0]!["character"] = new JsonObject { ["hardSoft"] = 0, ["shading"] = 17, ["treesElements"] = 50, ["curvedStraight"] = 100 };
-            zones[1]!["character"] = new JsonObject { ["hardSoft"] = 62, ["shading"] = 12, ["treesElements"] = 67, ["curvedStraight"] = 100 };
+            zones[0]!["character"] = new JsonObject { ["hardSoft"] = 0, ["shading"] = 17, ["treesElements"] = 50, ["curvedStraight"] = 100, ["budget"] = 75 };
+            zones[1]!["character"] = new JsonObject { ["hardSoft"] = 62, ["shading"] = 12, ["treesElements"] = 67, ["curvedStraight"] = 100, ["budget"] = 52 };
             return Brief(node);
         }
 

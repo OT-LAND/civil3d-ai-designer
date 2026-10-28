@@ -143,7 +143,7 @@ namespace CivilAI.Core.Plan
     public sealed class PlanStage
     {
         public const string ToolName = "plan";
-        public const string PromptVersion = "plan.v3";
+        public const string PromptVersion = "plan.v4";
 
         private readonly Func<ClaudeRequest, CancellationToken, Task<ClaudeResponse>> _send;
 

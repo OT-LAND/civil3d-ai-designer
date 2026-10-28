@@ -25,6 +25,12 @@ namespace CivilAI.Core.Metrics
     // those whose location lies in the zone. Kept trees are not counted (they are not a design
     // choice); every element kind counts, lighting included.
     //
+    // Cost level (budget slider, D20, B.1b): cost classes scored low 0 · mid 50 · high 100.
+    // Three parts, each only when something in the zone has a cost class: surfaces (spaces by
+    // area, through their material's class), new trees by count, site elements by count. The
+    // cost level is the plain average of the parts present. Edges (walls, steps) are not
+    // counted yet. Not measured when nothing in the zone has a cost class.
+    //
     // Simplifications (v0): overlapping spaces are not subtracted; a path's area is its
     // centerline length × width; a space belongs to a zone when its centre point (outline
     // vertex average, or centerline midpoint) lies inside the zone outline.
@@ -92,6 +98,21 @@ namespace CivilAI.Core.Metrics
         /// </summary>
         public double? ElementsSharePercent { get; init; }
 
+        /// <summary>
+        /// Cost level, 0–100 (same direction as the budget slider): average of the surface,
+        /// tree and element parts that have cost classes. Null when nothing has a cost class.
+        /// </summary>
+        public double? CostLevelPercent { get; init; }
+
+        /// <summary>Surfaces part of the cost level: area-weighted cost class of the spaces' materials, 0–100.</summary>
+        public double? SurfaceCostLevel { get; init; }
+
+        /// <summary>Trees part of the cost level: average cost class of the new trees, 0–100.</summary>
+        public double? TreeCostLevel { get; init; }
+
+        /// <summary>Elements part of the cost level: average cost class of the site elements, 0–100.</summary>
+        public double? ElementCostLevel { get; init; }
+
         /// <summary>Ids of the spaces that were measured.</summary>
         public IReadOnlyList<string> SpaceIds { get; init; } = Array.Empty<string>();
     }
@@ -120,7 +141,7 @@ namespace CivilAI.Core.Metrics
             var materials = (intent.Materials ?? new List<Material>())
                 .Where(m => m != null && !string.IsNullOrEmpty(m.Id))
                 .GroupBy(m => m.Id)
-                .ToDictionary(g => g.Key, g => g.First().Category);
+                .ToDictionary(g => g.Key, g => g.First());
 
             var spaces = (intent.Spaces ?? new List<Space>())
                 .Where(s => s != null)
@@ -129,6 +150,7 @@ namespace CivilAI.Core.Metrics
                 .ToList();
 
             double hard = 0, soft = 0, curved = 0, straight = 0, pathLen = 0, accessibleLen = 0;
+            double costArea = 0, costWeighted = 0;
             SteepestSlope? accPath = null, otherPath = null, plaza = null, ground = null;
 
             foreach (var s in spaces)
@@ -153,6 +175,12 @@ namespace CivilAI.Core.Metrics
                 }
 
                 if (IsSoft(s, materials)) soft += area; else hard += area;
+
+                if (s.MaterialId != null && materials.TryGetValue(s.MaterialId, out var mat) && mat.CostClass is CostClass cc)
+                {
+                    costArea += area;
+                    costWeighted += area * CostScore(cc);
+                }
 
                 if (line != null)
                 {
@@ -180,6 +208,11 @@ namespace CivilAI.Core.Metrics
             int newTrees = trees.Count(t => t.Status == TreeStatus.New && InZone(t.Location));
             int elementCount = elements.Count(e => InZone(e.Location));
 
+            double? surfaceCost = costArea > 1e-9 ? costWeighted / costArea : (double?)null;
+            double? treeCost = Average(trees.Where(t => t.Status == TreeStatus.New && InZone(t.Location)).Select(t => t.CostClass));
+            double? elementCost = Average(elements.Where(e => InZone(e.Location)).Select(e => e.CostClass));
+            var costParts = new[] { surfaceCost, treeCost, elementCost }.Where(v => v.HasValue).Select(v => v!.Value).ToList();
+
             return new IntentMetrics
             {
                 HardArea = hard,
@@ -199,6 +232,10 @@ namespace CivilAI.Core.Metrics
                 NewTreeCount = newTrees,
                 ElementCount = elementCount,
                 ElementsSharePercent = Share(elementCount, newTrees + elementCount),
+                CostLevelPercent = costParts.Count > 0 ? costParts.Average() : (double?)null,
+                SurfaceCostLevel = surfaceCost,
+                TreeCostLevel = treeCost,
+                ElementCostLevel = elementCost,
                 SpaceIds = spaces.Select(s => s.Id).ToList(),
             };
         }
@@ -218,14 +255,28 @@ namespace CivilAI.Core.Metrics
             return CoverArea.CoveredPercent(reference, buildings, circles, footprints);
         }
 
+        /// <summary>Cost class in slider units: low 0, mid 50, high 100.</summary>
+        public static double CostScore(CostClass c) => c switch
+        {
+            CostClass.Low => 0,
+            CostClass.Mid => 50,
+            _ => 100,
+        };
+
+        private static double? Average(IEnumerable<CostClass?> classes)
+        {
+            var scores = classes.Where(c => c.HasValue).Select(c => CostScore(c!.Value)).ToList();
+            return scores.Count > 0 ? scores.Average() : (double?)null;
+        }
+
         private static double? Share(double part, double total) => total > 1e-9 ? 100.0 * part / total : (double?)null;
 
         /// <summary>Soft = lawn/bed, unless the material says otherwise (a gravel "bed" is hard, a lawn-material plaza soft).</summary>
-        private static bool IsSoft(Space s, IReadOnlyDictionary<string, MaterialCategory> materials)
+        private static bool IsSoft(Space s, IReadOnlyDictionary<string, Material> materials)
         {
-            if (s.MaterialId != null && materials.TryGetValue(s.MaterialId, out var cat))
+            if (s.MaterialId != null && materials.TryGetValue(s.MaterialId, out var material))
             {
-                switch (cat)
+                switch (material.Category)
                 {
                     case MaterialCategory.Lawn:
                     case MaterialCategory.Planting:

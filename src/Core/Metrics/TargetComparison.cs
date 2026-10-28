@@ -29,7 +29,7 @@ namespace CivilAI.Core.Metrics
     /// </summary>
     public sealed record MetricTolerances(
         double HardSoft = 5, double CurvedStraight = 10, double Accessibility = 5,
-        double Shading = 10, double TreesElements = 10)
+        double Shading = 10, double TreesElements = 10, double Budget = 15)
     {
         public static MetricTolerances Default { get; } = new MetricTolerances();
     }
@@ -62,7 +62,9 @@ namespace CivilAI.Core.Metrics
                     "site elements share of new trees + site elements, by count", "no new trees or site elements"),
                 Within("curvedStraight", character.CurvedStraight, metrics.StraightSharePercent, tol.CurvedStraight,
                     "straight share of outline and path length", "no outlines or paths"),
-                NotMeasured("budget", character.Budget, "needs cost classes on materials and plants (B.1b)"),
+                Within("budget", character.Budget, metrics.CostLevelPercent, tol.Budget,
+                    "cost level of materials (by area), new trees and site elements (low 0, mid 50, high 100)",
+                    "no material, new tree or site element has a cost class"),
             };
         }
 

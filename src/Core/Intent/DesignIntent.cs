@@ -215,6 +215,18 @@ namespace CivilAI.Core.Intent
         Other,
     }
 
+    /// <summary>
+    /// Cost class of a material, a planted tree or a site element (D20): what it costs relative
+    /// to the alternatives for the same job (gravel low, concrete pavers mid, natural stone high).
+    /// Measured against the budget slider as the cost level (B.1b).
+    /// </summary>
+    public enum CostClass
+    {
+        Low,
+        Mid,
+        High,
+    }
+
     /// <summary>A surface material. Office libraries replace these with catalogue ids later (5.1).</summary>
     public sealed class Material
     {
@@ -223,6 +235,9 @@ namespace CivilAI.Core.Intent
         public string Name { get; init; } = "";
 
         public MaterialCategory Category { get; init; }
+
+        /// <summary>Cost class (D20). Optional; spaces with an unclassed material are left out of the cost level.</summary>
+        public CostClass? CostClass { get; init; }
     }
 
     public enum TreeStatus
@@ -263,6 +278,9 @@ namespace CivilAI.Core.Intent
 
         /// <summary>Design Brief zone id.</summary>
         public string? ZoneId { get; init; }
+
+        /// <summary>New trees only: cost class of the size at planting (D20; low = small stock, high = semi-mature).</summary>
+        public CostClass? CostClass { get; init; }
     }
 
     /// <summary>Surface drainage intent (v1). Pipes come later (4.x).</summary>
@@ -376,6 +394,9 @@ namespace CivilAI.Core.Intent
 
         /// <summary>Design Brief interest point this element marks or serves.</summary>
         public string? InterestPointId { get; init; }
+
+        /// <summary>Cost class of the element's quality (D20). Optional.</summary>
+        public CostClass? CostClass { get; init; }
     }
 
     /// <summary>A plan point in metres.</summary>

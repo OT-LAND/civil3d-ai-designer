@@ -358,6 +358,9 @@
             "mulch",
             "other"
           ]
+        },
+        "costClass": {
+          "$ref": "#/$defs/costClass"
         }
       }
     },
@@ -409,6 +412,10 @@
         },
         "zoneId": {
           "type": "string"
+        },
+        "costClass": {
+          "$ref": "#/$defs/costClass",
+          "description": "New trees only: size at planting (low = small stock, high = semi-mature)."
         }
       }
     },
@@ -584,8 +591,19 @@
         },
         "interestPointId": {
           "type": "string"
+        },
+        "costClass": {
+          "$ref": "#/$defs/costClass"
         }
       }
+    },
+    "costClass": {
+      "enum": [
+        "low",
+        "mid",
+        "high"
+      ],
+      "description": "Cost level relative to alternatives for the same job (D20): low = economical (gravel, small stock), high = premium (natural stone, semi-mature trees)."
     }
   }
 }

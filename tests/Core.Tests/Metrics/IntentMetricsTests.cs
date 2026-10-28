@@ -168,7 +168,7 @@ namespace CivilAI.Core.Tests.Metrics
             Assert.Equal(TargetStatus.Missed, rows.Single(r => r.Slider == "shading").Status); // 0 % canopy
             Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "treesElements").Status);
             Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "cutFill").Status);
-            Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "budget").Status); // cost classes come in B.1b
+            Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "budget").Status); // no cost classes on this intent
         }
 
         [Fact]
