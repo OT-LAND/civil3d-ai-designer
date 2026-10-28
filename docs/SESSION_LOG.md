@@ -1,5 +1,9 @@
 # Session log (newest first)
 
+## 2026-10-28 — Meeting 12
+- Reported: B.4 style profile (PR #15) and B.5a plan stage (PR #16), both Core-only and merged (D13); next B.5b. PR #6 still waits on bug 0.3a fix, then the owner re-checks.
+- Asked: nothing (no open questions).
+
 ## 2026-10-27 — Work: B.5a Plan stage (one plan)
 - Done: `Core/Plan/PlanStage`: brief + style profile + site → one Design Intent (system prompt `plan.v1`, sliders
   per zone written out in plain words, forced JSON as 1.2). `PlanStage.Review` checks each answer: brief refs
