@@ -34,8 +34,10 @@ namespace CivilAI.Core.Brief
             // Background references
             var bg = brief.Background ?? new BackgroundRefs();
             CheckRefs("background.survey", bg.Survey, Add);
+            CheckRefs("background.parcel", bg.Parcel, Add);
             CheckRefs("background.structures", bg.Structures, Add);
             CheckRefs("background.roads", bg.Roads, Add);
+            CheckRefs("background.utilities", bg.Utilities, Add);
             CheckRefs("background.orthophoto", bg.Orthophoto, Add);
 
             // Style
@@ -46,7 +48,7 @@ namespace CivilAI.Core.Brief
             if (style.Prompt is not null && string.IsNullOrWhiteSpace(style.Prompt))
                 Add("style.prompt", "The style prompt is empty; leave it out or write a few words.");
 
-            // Global sliders: all eight set, each 0–100 (D15).
+            // Global sliders: all nine set, each 0–100 (D15).
             var global = brief.Character ?? new Character();
             foreach (var (name, value) in global.Sliders())
             {

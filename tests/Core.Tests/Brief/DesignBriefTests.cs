@@ -85,6 +85,42 @@ namespace CivilAI.Core.Tests.Brief
         }
 
         [Fact]
+        public void Budget_is_global_with_zone_override()
+        {
+            // D20: budget is a cost level, global default, any zone may override it.
+            var brief = Sample();
+            Assert.Equal(40, brief.Character.Budget);
+            Assert.Equal(70, brief.CharacterFor(brief.Zones[0]).Budget); // entry court: own
+            Assert.Equal(40, brief.CharacterFor(brief.Zones[1]).Budget); // global
+
+            var zones = new List<Zone> { new Zone { Id = "Z1", Outline = Square(0, 0, 10), Character = new Character { Budget = 101 } } };
+            Assert.True(HasIssue(DesignBriefValidator.Validate(Minimal(zones: zones)), "zones[0].character.budget"));
+        }
+
+        [Fact]
+        public void Background_has_parcel_and_utilities_slots()
+        {
+            // D21: survey · parcel · structures · roads · utilities · orthophoto.
+            var bg = Sample().Background;
+            Assert.Equal(new[] { "layer:C-PROP-LINE" }, bg.Parcel);
+            Assert.Equal(new[] { "layer:C-UTIL-*", "xref:Utilities2025" }, bg.Utilities);
+
+            var json = DesignBriefJson.Serialize(Sample());
+            Assert.Contains("\"parcel\"", json);
+            Assert.Contains("\"utilities\"", json);
+
+            var brief = new DesignBrief
+            {
+                Character = Character.AllAt(50),
+                Zones = new List<Zone> { new Zone { Id = "Z1", Outline = Square(0, 0, 10) } },
+                Background = new BackgroundRefs { Parcel = new List<string> { " " }, Utilities = new List<string> { "" } },
+            };
+            var issues = DesignBriefValidator.Validate(brief);
+            Assert.True(HasIssue(issues, "background.parcel[0]"));
+            Assert.True(HasIssue(issues, "background.utilities[0]"));
+        }
+
+        [Fact]
         public void Unknown_tag_or_field_is_rejected_with_a_path()
         {
             var badTag = SampleJson().Replace("\"flowBasin\"", "\"river\"");
@@ -103,8 +139,9 @@ namespace CivilAI.Core.Tests.Brief
             var issues = DesignBriefValidator.Validate(Minimal(global, zones));
             Assert.True(HasIssue(issues, "character.hardSoft"));
             Assert.True(HasIssue(issues, "character.curvedStraight"));
+            Assert.True(HasIssue(issues, "character.budget"));
             Assert.True(HasIssue(issues, "zones[0].character.shading"));
-            Assert.Equal(3, issues.Count);
+            Assert.Equal(4, issues.Count);
         }
 
         [Fact]
@@ -113,7 +150,7 @@ namespace CivilAI.Core.Tests.Brief
             var json = "{ \"schemaVersion\": \"1\", \"units\": \"m\", \"zones\": [ { \"id\": \"Z1\", \"outline\": [ {\"x\":0,\"y\":0}, {\"x\":5,\"y\":0}, {\"x\":5,\"y\":5} ] } ] }";
             Assert.True(DesignBriefJson.TryParse(json, out var brief, out var error), error);
             var issues = DesignBriefValidator.Validate(brief!);
-            Assert.Equal(8, issues.Count(i => i.Path.StartsWith("character.", StringComparison.Ordinal)));
+            Assert.Equal(9, issues.Count(i => i.Path.StartsWith("character.", StringComparison.Ordinal)));
         }
 
         [Fact]

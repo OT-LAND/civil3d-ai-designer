@@ -62,8 +62,8 @@ Free text → Design Intent (1.2)
 
 Design Brief v1 (B.1, concept v1)
 - `Core/Brief/DesignBrief`: the generation input captured from the palette: `background` refs (survey,
-  structures, roads, orthophoto; host refs like `layer:V-TOPO-*`), `style` (prompt + up to 6 images),
-  global `character` sliders (all 8 required, 0–100), `zones` (outline + per-zone slider overrides, D15),
+  parcel, structures, roads, utilities, orthophoto (D21); host refs like `layer:V-TOPO-*`), `style` (prompt + up to 6 images),
+  global `character` sliders (all 9 required, 0–100; `budget` = cost level 0 economical – 100 premium, D20), `zones` (outline + per-zone slider overrides, D15),
   tagged `curves` (walkingNetwork/contour/flowBasin/border) and `points` (entrance/interestPoint/elevation/tree).
   Every item may carry `hostId` (Civil 3D: entity handle) so the brief can be re-read from the drawing.
 - Metres only (`units: "m"`); capture converts drawing units. Points are `{x, y}` like the Design Intent;
@@ -103,7 +103,7 @@ Style profile (B.4, CONCEPT §3.3 stage 2)
 Plan stage (B.5a, CONCEPT §3.3 stage 3)
 - `Core/Plan/PlanStage.GenerateAsync(PlanRequest {Brief, Style?, Site?, Rules?})` → one Design Intent. User
   message: resolved sliders per zone in plain words, then brief, style profile and site as JSON; system prompt
-  `Plan/Prompts/plan.v1.md`; same forced output and answer reading as 1.2 (`TextToIntent.TryReadAnswer`, given
+  `Plan/Prompts/plan.v2.md` (v2: budget in words via `PlanStage.BudgetWords`, utilities keep-clear); same forced output and answer reading as 1.2 (`TextToIntent.TryReadAnswer`, given
   site swapped in). Default 3 calls, 16k output tokens per call.
 - `PlanStage.Review(intent, brief, rules)` → `PlanReview`: **problems** (space zoneId not a brief zone or missing,
   interestPointId unknown, interest point with no place or several) block the plan; **open issues** (rule

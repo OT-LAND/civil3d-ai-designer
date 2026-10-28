@@ -3,8 +3,10 @@
   "units": "m",
   "background": {
     "survey": ["layer:V-TOPO-*"],
+    "parcel": ["layer:C-PROP-LINE"],
     "structures": ["layer:A-BLDG"],
     "roads": ["layer:C-ROAD"],
+    "utilities": ["layer:C-UTIL-*", "xref:Utilities2025"],
     "orthophoto": ["image:ortho_2025.tif"]
   },
   "style": {
@@ -13,13 +15,14 @@
   },
   "character": {
     "accessibility": 70, "hardSoft": 55, "maxGrade": 30, "cutFill": 50,
-    "maxSlope": 40, "shading": 65, "treesElements": 30, "curvedStraight": 35
+    "maxSlope": 40, "shading": 65, "treesElements": 30, "curvedStraight": 35,
+    "budget": 40
   },
   "zones": [
     {
       "id": "Z1", "name": "Entry court",
       "outline": [ { "x": 0, "y": 0 }, { "x": 20, "y": 0 }, { "x": 20, "y": 25 }, { "x": 0, "y": 25 } ],
-      "character": { "hardSoft": 30 },
+      "character": { "hardSoft": 30, "budget": 70 },
       "hostId": "2F3A"
     },
     {

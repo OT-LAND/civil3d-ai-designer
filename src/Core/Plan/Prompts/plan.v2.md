@@ -18,6 +18,9 @@ Units and coordinates
   counter-clockwise from east (0 = east, 90 = north, 180 = west, 270 = south).
 
 Site
+- The brief's background (survey, parcel, structures, roads, utilities, orthophoto) names the
+  drawing content the site data came from. Utilities and their easements are keep-clear: no
+  trees, walls or deep beds over them; paving and lawn may cross them.
 - When site data is given, copy it into "intent.site" unchanged. Never move, resize or relevel
   buildings, entrances or the lot border; they are surveyed facts.
 - Keep every space inside the lot border and outside building footprints.
@@ -42,6 +45,11 @@ Character sliders (0-100), per zone, as listed in the user message
 - accessibility: the step-free share of path length. Mark a path "accessible": false only where
   the brief's walking network is marked not accessible. More step-free than asked is fine.
 - maxGrade, cutFill, maxSlope: used by the grading solver; you only give nominal levels.
+- budget: the cost level of the zone, not a sum of money. 0 = economical, 100 = premium; the
+  user message says it in words. It steers material choice (gravel, concrete pavers, local stone,
+  natural stone), plant sizes at planting, how many walls and how much built detail, and the
+  quality of site elements. Pick from the style palette the materials that fit the level; a
+  low budget is never a reason to break a rule or drop a slider target.
 
 Tagged curves
 - walkingNetwork: becomes paths. Follow the curve closely (same start and end, same turns) and

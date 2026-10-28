@@ -59,21 +59,30 @@ namespace CivilAI.Core.Brief
                 Pick(z.MaxSlope, g.MaxSlope),
                 Pick(z.Shading, g.Shading),
                 Pick(z.TreesElements, g.TreesElements),
-                Pick(z.CurvedStraight, g.CurvedStraight));
+                Pick(z.CurvedStraight, g.CurvedStraight),
+                Pick(z.Budget, g.Budget));
         }
     }
 
     /// <summary>
     /// Background panel: references to drawing content the generator reads as context, never edits.
     /// Each entry is a host reference such as "layer:V-TOPO-*", "xref:Survey2025" or "image:ortho.tif".
+    /// Slots in palette order (D21): survey · parcel · structures · roads · utilities · orthophoto.
     /// </summary>
     public sealed class BackgroundRefs
     {
         public List<string> Survey { get; init; } = new List<string>();
 
+        /// <summary>Lot borders and setbacks: Civil 3D parcels or closed polylines (D21).</summary>
+        public List<string> Parcel { get; init; } = new List<string>();
+
+        /// <summary>Architecture: buildings, FFLs, entrances (D21).</summary>
         public List<string> Structures { get; init; } = new List<string>();
 
         public List<string> Roads { get; init; } = new List<string>();
+
+        /// <summary>Pipe networks, utility lines, manholes and easements; the generator keeps them clear (D21).</summary>
+        public List<string> Utilities { get; init; } = new List<string>();
 
         public List<string> Orthophoto { get; init; } = new List<string>();
     }
@@ -91,7 +100,7 @@ namespace CivilAI.Core.Brief
 
     /// <summary>
     /// Polygon character sliders, each 0–100 between two ends (CONCEPT.md §2).
-    /// Globally all eight are set; on a zone, only the overridden ones (others null).
+    /// Globally all nine are set; on a zone, only the overridden ones (others null).
     /// </summary>
     public sealed class Character
     {
@@ -123,6 +132,12 @@ namespace CivilAI.Core.Brief
         /// <summary>0 organic/curvilinear … 100 orthogonal/rectilinear.</summary>
         public int? CurvedStraight { get; init; }
 
+        /// <summary>
+        /// 0 economical … 100 premium: a cost level, not a sum of money (D20). Steers materials,
+        /// plant sizes at planting, walls and site elements.
+        /// </summary>
+        public int? Budget { get; init; }
+
         public static Character AllAt(int value) => new Character
         {
             Accessibility = value,
@@ -133,6 +148,7 @@ namespace CivilAI.Core.Brief
             Shading = value,
             TreesElements = value,
             CurvedStraight = value,
+            Budget = value,
         };
 
         /// <summary>Slider values by JSON name, in palette order (null = not set).</summary>
@@ -146,10 +162,14 @@ namespace CivilAI.Core.Brief
             yield return ("shading", Shading);
             yield return ("treesElements", TreesElements);
             yield return ("curvedStraight", CurvedStraight);
+            yield return ("budget", Budget);
         }
     }
 
-    /// <summary>The eight slider values that apply to one zone after D15 overrides.</summary>
+    /// <summary>
+    /// The nine slider values that apply to one zone after D15 overrides. Budget is last and
+    /// defaults to the middle so older callers that pass eight values keep working.
+    /// </summary>
     public readonly record struct ResolvedCharacter(
         int Accessibility,
         int HardSoft,
@@ -158,7 +178,8 @@ namespace CivilAI.Core.Brief
         int MaxSlope,
         int Shading,
         int TreesElements,
-        int CurvedStraight);
+        int CurvedStraight,
+        int Budget = Character.DefaultValue);
 
     /// <summary>Polygon panel: a design zone (closed outline) with optional slider overrides.</summary>
     public sealed class Zone

@@ -36,8 +36,10 @@
       "additionalProperties": false,
       "properties": {
         "survey": { "$ref": "#/$defs/refList" },
-        "structures": { "$ref": "#/$defs/refList" },
+        "parcel": { "$ref": "#/$defs/refList", "description": "Lot borders and setbacks: parcels or closed polylines (D21)." },
+        "structures": { "$ref": "#/$defs/refList", "description": "Architecture: buildings, FFLs, entrances (D21)." },
         "roads": { "$ref": "#/$defs/refList" },
+        "utilities": { "$ref": "#/$defs/refList", "description": "Pipe networks, utility lines, manholes, easements; kept clear (D21)." },
         "orthophoto": { "$ref": "#/$defs/refList" }
       }
     },
@@ -62,13 +64,14 @@
         "maxSlope": { "$ref": "#/$defs/slider" },
         "shading": { "$ref": "#/$defs/slider" },
         "treesElements": { "$ref": "#/$defs/slider" },
-        "curvedStraight": { "$ref": "#/$defs/slider" }
+        "curvedStraight": { "$ref": "#/$defs/slider" },
+        "budget": { "$ref": "#/$defs/slider", "description": "Cost level: 0 economical, 100 premium; not a sum of money (D20)." }
       }
     },
     "characterGlobal": {
-      "description": "Global slider set: all eight required (D15).",
+      "description": "Global slider set: all nine required (D15).",
       "allOf": [ { "$ref": "#/$defs/characterOverride" } ],
-      "required": ["accessibility", "hardSoft", "maxGrade", "cutFill", "maxSlope", "shading", "treesElements", "curvedStraight"]
+      "required": ["accessibility", "hardSoft", "maxGrade", "cutFill", "maxSlope", "shading", "treesElements", "curvedStraight", "budget"]
     },
     "zone": {
       "type": "object",

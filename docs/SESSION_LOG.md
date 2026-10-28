@@ -1,5 +1,21 @@
 # Session log (newest first)
 
+## 2026-10-28 — Work: B.1a Brief: budget slider, parcel + utilities
+- Done: `Character.Budget` (9th slider, 0 economical – 100 premium, global required + zone override, D15/D20);
+  `BackgroundRefs.Parcel` and `.Utilities` (D21, palette order survey · parcel · structures · roads · utilities ·
+  orthophoto); schema, validator, sample (global budget 40, entry court 70, parcel + utilities layers).
+  Plan prompt `plan.v2`: budget per zone in words (`PlanStage.BudgetWords`, 5 bands), utilities/easements
+  keep-clear. Target-vs-achieved gets a `budget` row, "not measured" until B.1b. 9 new tests; `dotnet build`
+  (Release, 0 warnings) + `dotnet test` 175/175 pass.
+- Split B.1a: cost classes on materials/plants and the cost-level metric moved to new item B.1b.
+- Also: ROADMAP B.5a marked done (merged).
+- Blocked: nothing.
+- PR #17: Core-only, merged by the agent once CI is green (D13).
+- Next: B.1b cost level, or B.5b plan variants.
+- Questions: none new. (Choices made, easy to change: budget is required in the global set like the other
+  sliders, so older briefs without it are reported; budget words in 5 bands (≤20, ≤40, <60, <80, ≥80);
+  over utilities the plan avoids trees, walls and deep beds but allows paving and lawn.)
+
 ## 2026-10-28 — Meeting 12
 - Reported: B.4 style profile (PR #15) and B.5a plan stage (PR #16), both Core-only and merged (D13); next B.5b. PR #6 still waits on bug 0.3a fix, then the owner re-checks.
 - Asked: nothing (no open questions).
