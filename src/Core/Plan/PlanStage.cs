@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using CivilAI.Core.Brief;
@@ -62,6 +63,9 @@ namespace CivilAI.Core.Plan
     {
         public DesignIntent Intent { get; init; } = new DesignIntent();
 
+        /// <summary>The layout idea in one line ("Central lawn ringed by a shaded loop path"); null if Claude gave none.</summary>
+        public string? Concept { get; init; }
+
         public IReadOnlyList<string> Assumptions { get; init; } = Array.Empty<string>();
 
         /// <summary>Rule report and target-vs-achieved of the returned plan.</summary>
@@ -73,6 +77,38 @@ namespace CivilAI.Core.Plan
         /// <summary>Claude calls used.</summary>
         public int Attempts { get; init; }
 
+        public int InputTokens { get; init; }
+        public int OutputTokens { get; init; }
+    }
+
+    /// <summary>One layout option of a run (D18), numbered as the designer sees it.</summary>
+    public sealed class PlanOption
+    {
+        /// <summary>1-based position in the run.</summary>
+        public int Number { get; init; }
+
+        /// <summary>The plan's concept line, or "Option n" when Claude gave none.</summary>
+        public string Concept { get; init; } = "";
+
+        public PlanResult Plan { get; init; } = new PlanResult();
+    }
+
+    /// <summary>An option that did not become a usable plan; the run still returns the others.</summary>
+    public sealed class FailedOption
+    {
+        public int Number { get; init; }
+        public string Message { get; init; } = "";
+        public IReadOnlyList<string> Problems { get; init; } = Array.Empty<string>();
+    }
+
+    /// <summary>The layout options of one Generate (D18): the designer picks one to detail.</summary>
+    public sealed class PlanOptions
+    {
+        public IReadOnlyList<PlanOption> Options { get; init; } = Array.Empty<PlanOption>();
+
+        public IReadOnlyList<FailedOption> Failed { get; init; } = Array.Empty<FailedOption>();
+
+        /// <summary>Tokens of every call in the run, failed options included.</summary>
         public int InputTokens { get; init; }
         public int OutputTokens { get; init; }
     }
@@ -101,12 +137,13 @@ namespace CivilAI.Core.Plan
     /// failures and slider misses are open issues: if they remain after the last attempt the
     /// best usable plan (fewest open issues) is returned with them listed, so the designer
     /// sees them on the target-vs-achieved card instead of getting nothing.
-    /// Three variants per run (D18) are B.5b.
+    /// <see cref="GenerateOptionsAsync"/> (B.5b, D18) plans three layout options in a row, each
+    /// told the concepts of the earlier ones so it differs; only the chosen one is detailed later.
     /// </summary>
     public sealed class PlanStage
     {
         public const string ToolName = "plan";
-        public const string PromptVersion = "plan.v2";
+        public const string PromptVersion = "plan.v3";
 
         private readonly Func<ClaudeRequest, CancellationToken, Task<ClaudeResponse>> _send;
 
@@ -129,17 +166,81 @@ namespace CivilAI.Core.Plan
             _send = send ?? throw new ArgumentNullException(nameof(send));
         }
 
-        public async Task<PlanResult> GenerateAsync(PlanRequest request, CancellationToken ct = default)
+        public Task<PlanResult> GenerateAsync(PlanRequest request, CancellationToken ct = default)
+        {
+            Check(request);
+            return PlanAsync(request, BuildUserPrompt(request), request.Rules ?? RuleSetJson.LoadDefault(), new Usage(), ct);
+        }
+
+        /// <summary>
+        /// D18: plans <paramref name="count"/> layout options (default 3), one after another; each
+        /// prompt lists the concepts of the options already planned so the next one differs.
+        /// Every option is reviewed and repaired as in <see cref="GenerateAsync"/>. An option that
+        /// never becomes usable is reported in <see cref="PlanOptions.Failed"/> and the others are
+        /// still returned; only when none is usable does this throw.
+        /// </summary>
+        public async Task<PlanOptions> GenerateOptionsAsync(PlanRequest request, int count = 3, CancellationToken ct = default)
+        {
+            Check(request);
+            if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), "At least one option.");
+
+            var rules = request.Rules ?? RuleSetJson.LoadDefault();
+            var usage = new Usage();
+            var options = new List<PlanOption>();
+            var failed = new List<FailedOption>();
+            var concepts = new List<string>();
+            PlanStageException? last = null;
+
+            for (int n = 1; n <= count; n++)
+            {
+                try
+                {
+                    var plan = await PlanAsync(request, BuildOptionPrompt(request, n, count, concepts), rules, usage, ct)
+                        .ConfigureAwait(false);
+                    var concept = string.IsNullOrWhiteSpace(plan.Concept) ? $"Option {n}" : plan.Concept!;
+                    concepts.Add(concept);
+                    options.Add(new PlanOption { Number = n, Concept = concept, Plan = plan });
+                }
+                catch (PlanStageException ex)
+                {
+                    last = ex;
+                    failed.Add(new FailedOption { Number = n, Message = ex.Message, Problems = ex.Problems });
+                }
+            }
+
+            if (options.Count == 0)
+                throw new PlanStageException(
+                    $"None of the {count} layout options became a usable plan. Check the problems listed, or simplify the brief.",
+                    last?.Problems ?? Array.Empty<string>(), last?.LastJson);
+
+            return new PlanOptions
+            {
+                Options = options,
+                Failed = failed,
+                InputTokens = usage.Input,
+                OutputTokens = usage.Output,
+            };
+        }
+
+        private void Check(PlanRequest request)
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
             if (request.Brief is null) throw new ArgumentException("The plan needs a Design Brief.", nameof(request));
             if (MaxAttempts < 1) throw new InvalidOperationException("MaxAttempts must be at least 1.");
+        }
 
-            var rules = request.Rules ?? RuleSetJson.LoadDefault();
+        /// <summary>Token totals across all plans of one run (failed ones included).</summary>
+        private sealed class Usage
+        {
+            public int Input;
+            public int Output;
+        }
+
+        private async Task<PlanResult> PlanAsync(PlanRequest request, string prompt, RuleSet rules, Usage usage, CancellationToken ct)
+        {
             var system = ReadSystemPrompt();
             var output = new JsonOutputSpec(ToolName,
-                "Return the plan as a Design Intent, with the assumptions you made.", TextToIntent.BuildOutputSchema());
-            var prompt = BuildUserPrompt(request);
+                "Return the plan as a Design Intent, with its concept and the assumptions you made.", BuildOutputSchema());
 
             string? lastJson = null;
             IReadOnlyList<string> problems = Array.Empty<string>();
@@ -158,9 +259,12 @@ namespace CivilAI.Core.Plan
                 }, ct).ConfigureAwait(false);
                 inputTokens += response.InputTokens;
                 outputTokens += response.OutputTokens;
+                usage.Input += response.InputTokens;
+                usage.Output += response.OutputTokens;
 
                 if (!TextToIntent.TryReadAnswer(response, request.Site, out var intent, out var assumptions, out lastJson, out problems))
                     continue;
+                var concept = ReadConcept(response.Json);
 
                 var review = Review(intent!, request.Brief, rules, Tolerances);
                 if (review.Problems.Count > 0)
@@ -171,7 +275,7 @@ namespace CivilAI.Core.Plan
 
                 // Later answers win ties: they were asked to fix the earlier one.
                 if (best is null || review.OpenIssues.Count <= best.Review.OpenIssues.Count)
-                    best = new PlanResult { Intent = intent!, Assumptions = assumptions, Review = review, Attempts = attempt };
+                    best = new PlanResult { Intent = intent!, Concept = concept, Assumptions = assumptions, Review = review, Attempts = attempt };
 
                 if (review.OpenIssues.Count == 0) break;
                 problems = review.OpenIssues;
@@ -185,6 +289,7 @@ namespace CivilAI.Core.Plan
             return new PlanResult
             {
                 Intent = best.Intent,
+                Concept = best.Concept,
                 Assumptions = best.Assumptions,
                 Review = best.Review,
                 Attempts = best.Attempts,
@@ -281,12 +386,43 @@ namespace CivilAI.Core.Plan
         /// The first user message: the sliders per zone in plain words, the brief, the style
         /// profile and the site, each as JSON.
         /// </summary>
-        public static string BuildUserPrompt(PlanRequest request)
+        public static string BuildUserPrompt(PlanRequest request) =>
+            BuildPrompt(request, "Plan one design for this Design Brief.", null);
+
+        /// <summary>
+        /// The first user message for layout option <paramref name="number"/> of <paramref name="count"/>
+        /// (D18): as <see cref="BuildUserPrompt"/>, plus the concepts of the options already planned.
+        /// </summary>
+        public static string BuildOptionPrompt(PlanRequest request, int number, int count, IReadOnlyList<string> earlierConcepts)
+        {
+            var head = string.Format(CultureInfo.InvariantCulture,
+                "Plan layout option {0} of {1} for this Design Brief.", number, count);
+            var sb = new StringBuilder();
+            if (earlierConcepts.Count == 0)
+            {
+                sb.AppendLine("No options planned yet. Make this one a clear, strong layout idea; the next options will be different.");
+            }
+            else
+            {
+                sb.AppendLine("Options already planned. Make this one a clearly different layout (main open space, path routes,");
+                sb.AppendLine("grouping and shape of the spaces), still meeting the whole brief:");
+                for (int i = 0; i < earlierConcepts.Count; i++)
+                    sb.Append("- option ").Append(i + 1).Append(": ").AppendLine(earlierConcepts[i]);
+            }
+            return BuildPrompt(request, head, sb.ToString());
+        }
+
+        private static string BuildPrompt(PlanRequest request, string head, string? options)
         {
             var brief = request.Brief;
             var sb = new StringBuilder();
-            sb.AppendLine("Plan one design for this Design Brief.");
+            sb.AppendLine(head);
             sb.AppendLine();
+            if (options is not null)
+            {
+                sb.Append(options);
+                sb.AppendLine();
+            }
             sb.AppendLine("Character sliders that apply (0-100; zone overrides already applied):");
             if (brief.Zones.Count == 0)
                 sb.Append("- whole design: ").AppendLine(Sliders(brief.CharacterFor(new Zone())));
@@ -335,6 +471,38 @@ namespace CivilAI.Core.Plan
             < 80 => "generous: good natural materials, larger plants at planting, quality elements",
             _ => "premium: natural stone and fine finishes, semi-mature trees, custom walls and elements",
         };
+
+        /// <summary>
+        /// Tool input schema: the 1.2 shape ({ assumptions, intent }) plus a required "concept" line
+        /// that names the layout idea for the options card.
+        /// </summary>
+        public static string BuildOutputSchema()
+        {
+            var root = JsonNode.Parse(TextToIntent.BuildOutputSchema())!.AsObject();
+            root["properties"]!.AsObject().Add("concept", new JsonObject
+            {
+                ["description"] = "The layout idea in one short line, in the designer's words.",
+                ["type"] = "string",
+            });
+            root["required"] = new JsonArray("concept", "assumptions", "intent");
+            return root.ToJsonString();
+        }
+
+        /// <summary>The concept line of an answer; null when missing or blank (never a reason to repair).</summary>
+        internal static string? ReadConcept(string? json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return null;
+            try
+            {
+                if (JsonNode.Parse(json) is JsonObject root && root["concept"] is JsonValue v
+                    && v.TryGetValue<string>(out var s) && !string.IsNullOrWhiteSpace(s))
+                    return s.Trim();
+            }
+            catch (JsonException)
+            {
+            }
+            return null;
+        }
 
         /// <summary>The system prompt (embedded resource, versioned by <see cref="PromptVersion"/>).</summary>
         public static string ReadSystemPrompt()

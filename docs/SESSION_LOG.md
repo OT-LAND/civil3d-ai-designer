@@ -1,5 +1,21 @@
 # Session log (newest first)
 
+## 2026-10-28 — Work: B.5b Plan stage: three layout options
+- Done: `PlanStage.GenerateOptionsAsync(request, count = 3)` → `PlanOptions` (D18). Options are planned one after
+  another; each prompt lists the concepts of the usable options so far and asks for a clearly different layout
+  (main open space, path routes, grouping/shape). Each option is reviewed and repaired as in B.5a. Every plan
+  now carries a one-line `concept` (required in the tool schema, prompt `plan.v3`); without one it is named
+  "Option n". A failed option is listed in `Failed` and the others are returned; none usable throws.
+  6 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 181/181 pass.
+- Also: ROADMAP B.1a marked done (merged).
+- Blocked: nothing.
+- PR #18: Core-only, merged by the agent once CI is green (D13).
+- Not verified: real Claude options on the sample brief (needs the owner's key); first check when B.8 wires Generate.
+- Next: B.1b cost level, or B.6 grading solver v0.
+- Questions: none new. (Choices made, easy to change: options run one after another so each sees the earlier
+  concepts (slower than parallel, but more distinct); up to 3 calls per option, 9 per Generate at worst;
+  a missing concept is never repaired.)
+
 ## 2026-10-28 — Work: B.1a Brief: budget slider, parcel + utilities
 - Done: `Character.Budget` (9th slider, 0 economical – 100 premium, global required + zone override, D15/D20);
   `BackgroundRefs.Parcel` and `.Utilities` (D21, palette order survey · parcel · structures · roads · utilities ·
