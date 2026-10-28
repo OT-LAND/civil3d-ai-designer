@@ -155,10 +155,10 @@ namespace CivilAI.Core.Tests.Metrics
         {
             var m = IntentMetricsCalculator.Measure(Sample()); // soft 75.8 %, straight 100 %, accessible 100 %
             var c = Character.AllAt(50);
-            var brief = new DesignBrief { Character = new Character { Accessibility = 100, HardSoft = 75, MaxGrade = 50, CutFill = 50, MaxSlope = 50, Shading = 50, TreesElements = 50, CurvedStraight = 50 } };
+            var brief = new DesignBrief { Character = new Character { Accessibility = 100, HardSoft = 75, MaxGrade = 50, CutFill = 50, MaxSlope = 50, Shading = 50, TreesElements = 50, CurvedStraight = 50, Budget = 50 } };
             var rows = TargetComparison.Compare(m, brief.CharacterFor(new Zone()));
 
-            Assert.Equal(8, rows.Count);
+            Assert.Equal(9, rows.Count);
             Assert.Equal(c.Sliders().Select(s => s.Name), rows.Select(r => r.Slider));
             Assert.Equal(TargetStatus.Met, rows.Single(r => r.Slider == "accessibility").Status);
             Assert.Equal(TargetStatus.Met, rows.Single(r => r.Slider == "hardSoft").Status);
@@ -168,6 +168,7 @@ namespace CivilAI.Core.Tests.Metrics
             Assert.Equal(TargetStatus.Missed, rows.Single(r => r.Slider == "shading").Status); // 0 % canopy
             Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "treesElements").Status);
             Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "cutFill").Status);
+            Assert.Equal(TargetStatus.NotMeasured, rows.Single(r => r.Slider == "budget").Status); // cost classes come in B.1b
         }
 
         [Fact]

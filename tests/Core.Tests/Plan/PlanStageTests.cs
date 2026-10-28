@@ -118,6 +118,29 @@ namespace CivilAI.Core.Tests.Plan
         }
 
         [Fact]
+        public void Prompt_gives_the_budget_per_zone_in_words()
+        {
+            // D20: entry court overrides budget 70, the garden keeps the global 40.
+            var text = PlanStage.BuildUserPrompt(new PlanRequest { Brief = CourtyardBrief() });
+            Assert.Contains("budget 70 (generous:", text);
+            Assert.Contains("budget 40 (modest:", text);
+            Assert.Contains("budget:", PlanStage.ReadSystemPrompt());
+            Assert.Contains("Utilities and their easements are keep-clear", PlanStage.ReadSystemPrompt());
+        }
+
+        [Theory]
+        [InlineData(0, "economical")]
+        [InlineData(20, "economical")]
+        [InlineData(21, "modest")]
+        [InlineData(50, "mid-range")]
+        [InlineData(79, "generous")]
+        [InlineData(100, "premium")]
+        public void Budget_words_cover_the_whole_slider(int budget, string start)
+        {
+            Assert.StartsWith(start, PlanStage.BudgetWords(budget));
+        }
+
+        [Fact]
         public void Prompt_without_style_or_site_says_so()
         {
             var text = PlanStage.BuildUserPrompt(new PlanRequest { Brief = MetBrief() });

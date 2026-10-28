@@ -62,6 +62,7 @@ namespace CivilAI.Core.Metrics
                     "site elements share of new trees + site elements, by count", "no new trees or site elements"),
                 Within("curvedStraight", character.CurvedStraight, metrics.StraightSharePercent, tol.CurvedStraight,
                     "straight share of outline and path length", "no outlines or paths"),
+                NotMeasured("budget", character.Budget, "needs cost classes on materials and plants (B.1b)"),
             };
         }
 

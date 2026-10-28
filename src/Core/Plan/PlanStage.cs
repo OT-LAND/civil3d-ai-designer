@@ -106,7 +106,7 @@ namespace CivilAI.Core.Plan
     public sealed class PlanStage
     {
         public const string ToolName = "plan";
-        public const string PromptVersion = "plan.v1";
+        public const string PromptVersion = "plan.v2";
 
         private readonly Func<ClaudeRequest, CancellationToken, Task<ClaudeResponse>> _send;
 
@@ -322,8 +322,19 @@ namespace CivilAI.Core.Plan
         }
 
         private static string Sliders(ResolvedCharacter c) => string.Format(CultureInfo.InvariantCulture,
-            "accessibility {0}, hardSoft {1}, maxGrade {2}, cutFill {3}, maxSlope {4}, shading {5}, treesElements {6}, curvedStraight {7}",
-            c.Accessibility, c.HardSoft, c.MaxGrade, c.CutFill, c.MaxSlope, c.Shading, c.TreesElements, c.CurvedStraight);
+            "accessibility {0}, hardSoft {1}, maxGrade {2}, cutFill {3}, maxSlope {4}, shading {5}, treesElements {6}, curvedStraight {7}, budget {8} ({9})",
+            c.Accessibility, c.HardSoft, c.MaxGrade, c.CutFill, c.MaxSlope, c.Shading, c.TreesElements, c.CurvedStraight,
+            c.Budget, BudgetWords(c.Budget));
+
+        /// <summary>The budget slider in the designer's words (D20): a cost level, not an amount.</summary>
+        public static string BudgetWords(int budget) => budget switch
+        {
+            <= 20 => "economical: simple, low-cost materials, small plants at planting, few walls and elements",
+            <= 40 => "modest: mostly standard materials, a few better accents",
+            < 60 => "mid-range: standard materials with some natural stone or feature planting",
+            < 80 => "generous: good natural materials, larger plants at planting, quality elements",
+            _ => "premium: natural stone and fine finishes, semi-mature trees, custom walls and elements",
+        };
 
         /// <summary>The system prompt (embedded resource, versioned by <see cref="PromptVersion"/>).</summary>
         public static string ReadSystemPrompt()
