@@ -8,7 +8,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 ## Bugs (top priority)
 | # | Item | Status |
 |---|---|---|
-| 0.3a | **Palette text invisible** (owner test 2026-10-26): palette background is black in the dark theme and the WPF text is black, so only the "Check again" button shows. Fix on PR #6 branch: set the palette's background/foreground explicitly from the AutoCAD colour theme (COLORTHEME 0 = dark → light text, 1 = light → dark text), so the text is readable in both themes. Also set the Core assembly version (shows 1.0.0). Owner re-checks the palette, then merges #6. | done — owner re-test 2026-10-28: dark-theme palette readable, Plugin/Core 0.3.1 (light theme not reported); #6 ready to merge |
+| 0.3a | **Palette text invisible** (owner test 2026-10-26): palette background is black in the dark theme and the WPF text is black, so only the "Check again" button shows. Fix on PR #6 branch: set the palette's background/foreground explicitly from the AutoCAD colour theme (COLORTHEME 0 = dark → light text, 1 = light → dark text), so the text is readable in both themes. Also set the Core assembly version (shows 1.0.0). Owner re-checks the palette, then merges #6. | done — owner re-test 2026-10-28: dark-theme palette readable, Plugin/Core 0.3.1, light theme OK; #6 ready to merge |
 
 ## MB — Design Brief & semi-parametric palette (D14, concept v1)
 | # | Item | Status |

@@ -5,7 +5,7 @@
 - Asked: nothing (no open questions).
 - Owner asked for a budget slider and parcel/utilities in Background → decided D20, D21; new item B.1a.
 - Correction: 0.3a was already fixed on PR #6 (2026-10-26); ROADMAP said todo. Now `test`; owner given the re-test steps.
-- Owner re-tested 0.3a in Civil 3D: palette text readable (dark theme), versions 0.3.1. Recorded on PR #6; 0.3a done.
+- Owner re-tested 0.3a in Civil 3D: palette text readable in dark and light theme, versions 0.3.1. Recorded on PR #6; 0.3a done.
 
 ## 2026-10-27 — Work: B.5a Plan stage (one plan)
 - Done: `Core/Plan/PlanStage`: brief + style profile + site → one Design Intent (system prompt `plan.v1`, sliders
