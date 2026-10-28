@@ -9,7 +9,7 @@
   (Release, 0 warnings) + `dotnet test` 192/192 pass.
 - Also: ROADMAP B.5b marked done (merged).
 - Blocked: nothing.
-- PR: Core-only, merged by the agent once CI is green (D13).
+- PR #19: Core-only, merged by the agent once CI is green (D13).
 - Not verified: whether Claude picks sensible cost classes (needs the owner's key); first check when B.8 wires Generate.
 - Next: B.6 grading solver v0.
 - Questions: none new. (Choices made, easy to change: no material/plant library exists yet, so the cost class
