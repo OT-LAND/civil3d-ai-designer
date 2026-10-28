@@ -10,7 +10,7 @@
 - Split B.1a: cost classes on materials/plants and the cost-level metric moved to new item B.1b.
 - Also: ROADMAP B.5a marked done (merged).
 - Blocked: nothing.
-- PR: Core-only, merged by the agent once CI is green (D13).
+- PR #17: Core-only, merged by the agent once CI is green (D13).
 - Next: B.1b cost level, or B.5b plan variants.
 - Questions: none new. (Choices made, easy to change: budget is required in the global set like the other
   sliders, so older briefs without it are reported; budget words in 5 bands (≤20, ≤40, <60, <80, ≥80);
