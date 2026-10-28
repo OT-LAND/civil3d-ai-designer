@@ -4,6 +4,7 @@
 - Reported: B.4 style profile (PR #15) and B.5a plan stage (PR #16), both Core-only and merged (D13); next B.5b. PR #6 still waits on bug 0.3a fix, then the owner re-checks.
 - Asked: nothing (no open questions).
 - Owner asked for a budget slider and parcel/utilities in Background → decided D20, D21; new item B.1a.
+- Correction: 0.3a was already fixed on PR #6 (2026-10-26); ROADMAP said todo. Now `test`; owner given the re-test steps.
 
 ## 2026-10-27 — Work: B.5a Plan stage (one plan)
 - Done: `Core/Plan/PlanStage`: brief + style profile + site → one Design Intent (system prompt `plan.v1`, sliders
