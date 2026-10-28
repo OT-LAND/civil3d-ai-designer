@@ -248,5 +248,107 @@ namespace CivilAI.Core.Tests.Plan
             Assert.Null(whole.ZoneId);
             Assert.All(review.OpenIssues.Where(i => !i.StartsWith("rule ")), i => Assert.StartsWith("the design:", i));
         }
+
+        // ---- B.5b: layout options (D18) ----
+
+        private static string Conceived(string concept, JsonObject intent) =>
+            new JsonObject
+            {
+                ["concept"] = concept,
+                ["assumptions"] = new JsonArray(),
+                ["intent"] = intent.DeepClone(),
+            }.ToJsonString();
+
+        [Fact]
+        public async Task Three_options_each_see_the_earlier_concepts()
+        {
+            var fake = new FakeClaude(
+                Reply(Conceived("Central lawn ringed by a loop path", IntentNode())),
+                Reply(Conceived("Terraces stepping down to the garden", IntentNode())),
+                Reply(Conceived("  Long shaded walk with side rooms ", IntentNode())));
+
+            var run = await new PlanStage(fake.Send).GenerateOptionsAsync(new PlanRequest { Brief = MetBrief(), Style = Style() });
+
+            Assert.Equal(new[] { 1, 2, 3 }, run.Options.Select(o => o.Number));
+            Assert.Equal(new[] { "Central lawn ringed by a loop path", "Terraces stepping down to the garden", "Long shaded walk with side rooms" },
+                run.Options.Select(o => o.Concept));
+            Assert.All(run.Options, o => Assert.True(o.Plan.AllTargetsMet));
+            Assert.Empty(run.Failed);
+            Assert.Equal(3 * 2000, run.InputTokens);
+            Assert.Equal(3 * 800, run.OutputTokens);
+
+            Assert.StartsWith("Plan layout option 1 of 3", fake.Text(0));
+            Assert.Contains("No options planned yet", fake.Text(0));
+            Assert.StartsWith("Plan layout option 3 of 3", fake.Text(2));
+            Assert.Contains("- option 1: Central lawn ringed by a loop path", fake.Text(2));
+            Assert.Contains("- option 2: Terraces stepping down to the garden", fake.Text(2));
+            Assert.Contains("zone Z2 (Garden): accessibility 70", fake.Text(2));
+        }
+
+        [Fact]
+        public async Task Option_that_never_becomes_usable_is_reported_and_the_others_returned()
+        {
+            var bad = IntentNode();
+            Space(bad, "bed-garden")["zoneId"] = "Z9";
+            var fake = new FakeClaude(
+                Reply(Conceived("Loop", IntentNode())),
+                Reply(Conceived("Broken", bad)),
+                Reply(Conceived("Terraces", IntentNode())));
+
+            var run = await new PlanStage(fake.Send) { MaxAttempts = 1 }
+                .GenerateOptionsAsync(new PlanRequest { Brief = MetBrief() });
+
+            Assert.Equal(new[] { 1, 3 }, run.Options.Select(o => o.Number));
+            var failed = Assert.Single(run.Failed);
+            Assert.Equal(2, failed.Number);
+            Assert.Contains(failed.Problems, p => p.Contains("\"Z9\" is not a zone of the brief"));
+            // A failed option's concept is not passed on; the next option sees only usable ones.
+            Assert.DoesNotContain("Broken", fake.Text(2));
+            Assert.Equal(3 * 2000, run.InputTokens);
+        }
+
+        [Fact]
+        public async Task No_usable_option_throws()
+        {
+            var fake = new FakeClaude(Reply(null, "end_turn"), Reply(null, "end_turn"));
+            var ex = await Assert.ThrowsAsync<PlanStageException>(() =>
+                new PlanStage(fake.Send) { MaxAttempts = 1 }.GenerateOptionsAsync(new PlanRequest { Brief = MetBrief() }, count: 2));
+            Assert.Contains("None of the 2 layout options", ex.Message);
+            Assert.NotEmpty(ex.Problems);
+        }
+
+        [Fact]
+        public async Task Missing_concept_is_named_by_number_and_never_repaired()
+        {
+            var fake = new FakeClaude(Reply(Answer(IntentNode())), Reply(Answer(IntentNode())));
+            var run = await new PlanStage(fake.Send).GenerateOptionsAsync(new PlanRequest { Brief = MetBrief() }, count: 2);
+
+            Assert.Equal(new[] { "Option 1", "Option 2" }, run.Options.Select(o => o.Concept));
+            Assert.Null(run.Options[0].Plan.Concept);
+            Assert.Equal(2, fake.Requests.Count);
+            Assert.Contains("- option 1: Option 1", fake.Text(1));
+        }
+
+        [Fact]
+        public async Task Single_plan_keeps_its_concept_and_schema_asks_for_one()
+        {
+            var fake = new FakeClaude(Reply(Conceived("Gate court and garden room", IntentNode())));
+            var result = await new PlanStage(fake.Send).GenerateAsync(new PlanRequest { Brief = MetBrief() });
+            Assert.Equal("Gate court and garden room", result.Concept);
+            Assert.StartsWith("Plan one design", fake.Text(0));
+
+            var schema = JsonNode.Parse(fake.Requests[0].JsonOutput!.SchemaJson)!.AsObject();
+            Assert.Equal(new[] { "concept", "assumptions", "intent" }, schema["required"]!.AsArray().Select(n => (string)n!));
+            Assert.Equal("string", (string?)schema["properties"]!["concept"]!["type"]);
+            Assert.Contains("Layout options", fake.Requests[0].System);
+        }
+
+        [Fact]
+        public async Task Option_count_must_be_positive()
+        {
+            var fake = new FakeClaude();
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+                new PlanStage(fake.Send).GenerateOptionsAsync(new PlanRequest { Brief = MetBrief() }, count: 0));
+        }
     }
 }

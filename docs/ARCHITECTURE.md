@@ -100,16 +100,22 @@ Style profile (B.4, CONCEPT §3.3 stage 2)
 - Cache: `StyleProfileCache(folder)` keeps `<sha256>.json` per input set; key = prompt version + trimmed
   prompt + image types/bytes in order (file names ignored). Bad entries are misses. The plugin chooses the folder.
 
-Plan stage (B.5a, CONCEPT §3.3 stage 3)
+Plan stage (B.5a/B.5b, CONCEPT §3.3 stage 3)
 - `Core/Plan/PlanStage.GenerateAsync(PlanRequest {Brief, Style?, Site?, Rules?})` → one Design Intent. User
   message: resolved sliders per zone in plain words, then brief, style profile and site as JSON; system prompt
-  `Plan/Prompts/plan.v2.md` (v2: budget in words via `PlanStage.BudgetWords`, utilities keep-clear); same forced output and answer reading as 1.2 (`TextToIntent.TryReadAnswer`, given
-  site swapped in). Default 3 calls, 16k output tokens per call.
+  `Plan/Prompts/plan.v3.md` (v2: budget in words via `PlanStage.BudgetWords`, utilities keep-clear; v3: layout
+  options, `concept` line); forced output = 1.2 shape plus a required `concept` string (`PlanStage.BuildOutputSchema`),
+  answer read as 1.2 (`TextToIntent.TryReadAnswer`, given site swapped in); a missing concept never triggers a repair. Default 3 calls, 16k output tokens per call.
 - `PlanStage.Review(intent, brief, rules)` → `PlanReview`: **problems** (space zoneId not a brief zone or missing,
   interestPointId unknown, interest point with no place or several) block the plan; **open issues** (rule
   failures, slider misses per zone with "raise/lower it") are repaired but not blocking. After the last call
   the usable plan with the fewest open issues is returned with them (`AllTargetsMet` false); no usable plan ⇒
-  `PlanStageException`. Three variants per run (D18) come in B.5b.
+  `PlanStageException`.
+- `PlanStage.GenerateOptionsAsync(request, count = 3)` → `PlanOptions` (D18): options planned one after another,
+  each prompt (`BuildOptionPrompt`) lists the concepts of the usable options so far and asks for a clearly
+  different layout; each option is reviewed/repaired as above (up to `MaxAttempts` calls each, so ≤ 9 calls).
+  An option that never becomes usable goes to `Failed` and the others are returned; none usable ⇒
+  `PlanStageException`. Token totals cover the whole run. Only the chosen option is detailed later (B.6+).
 
 Existing-tree table import (2.1a)
 - `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
