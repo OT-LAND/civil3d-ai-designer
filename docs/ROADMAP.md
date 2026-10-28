@@ -19,9 +19,10 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | B.3a | Metrics: canopy cover (tree canopy + shade/pergola footprints, overlaps counted once) and trees vs elements share, now that v1 has trees and elements (small follow-up to B.2) | done — PR #14 (Core-only, D13) |
 | B.4 | Style profile: reference images + prompt → material palette, planting character, form language (Claude vision), cached | done — PR #15 (Core-only, D13) |
 | B.5a | Plan stage, one plan: brief + style profile + site → Design Intent spaces/paths/places; Core review (brief refs, rule report, target vs achieved per zone); repair loop on problems, rule failures and slider misses; best plan returned with open issues | review — PR #16 (Core-only, D13) |
+| B.1a | Brief v1 additions (D20, D21): **Budget** slider (0 economical – 100 premium, global + zone override) and Background slots **parcel** and **utilities**; schema, validator, sample, tests. Plan prompt gets the budget in plain words; materials and plant library get a cost class (low/mid/high) so a cost-level metric can be compared to the target | todo |
 | B.5b | Plan stage variants: 3 layout variants per run, only the chosen one is detailed (D18); each reviewed as in B.5a | todo |
 | B.6 | Grading solver v0 (Core): levels from entrances/FFL, elevation points, contours, survey; contours are soft unless given a level (D17); ground steeper than max grade becomes a retaining wall/terrace (D16); cut/fill target; max slope caps non-accessible paths (D19); reasons sent back to Plan | todo |
-| B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment → Design Brief | todo — after 0.3 |
+| B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment (survey, parcel, structures, roads, utilities, orthophoto; D21) → Design Brief | todo — after 0.3 |
 | B.8 | Generate → variants → target-vs-achieved card + rule report → Apply in one undo (replaces 1.4) | todo — after B.5, B.7 |
 
 ## M0 — Foundations

@@ -4,6 +4,19 @@
 
 ## Decided
 
+**D20 — Budget slider = cost level, global with zone override** (2026-10-28)
+New character slider **Budget**: 0 = economical, 100 = premium. A cost level, not a sum of money.
+It steers material choice (e.g. gravel vs natural stone), plant sizes at planting, walls and site
+elements. Like the other sliders it is a global default that any zone can override (D15). The
+result shows the estimated cost level against the target. A real budget amount (needs an office
+unit-price library) may come later.
+
+**D21 — Background panel adds parcel and utilities** (2026-10-28)
+The Background panel lets the designer pick drawing objects, layers or xrefs as: **survey · parcel ·
+structures · roads · utilities · orthophoto**. Structures = architecture (buildings, FFLs, entrances).
+Parcel = lot borders and setbacks (Civil 3D parcels or closed polylines). Utilities = pipe networks,
+lines, manholes and easements, with keep-clear zones that the generator respects.
+
 **D19 — "Max slope" = steepest walking surface on non-accessible paths** (2026-10-25)
 **(b)**: the max slope slider sets the steepest walking surface allowed on paths the designer marked
 "not accessible" (D11). Accessible routes always follow the rule set (D10). Max grade (D16) stays the

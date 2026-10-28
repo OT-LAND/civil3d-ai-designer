@@ -20,7 +20,7 @@ One palette, five panels, top to bottom:
 | **Polygon** | Picks closed polylines/regions = design zones. Sets character sliders (global defaults, any zone can override single sliders, D15) | `zones[]` + `character` |
 | **Curves** | Picks open polylines/arcs/splines and tags each: walking network · contour · flow basin · border | `curves[]` with `tag` |
 | **Points** | Picks points/blocks and tags each: entrance · interest point · elevation point · tree | `points[]` with `tag` |
-| **Background** | Assigns layers/objects/xrefs/images as: survey · structures · roads · orthophoto | `background` (read-only context) |
+| **Background** | Picks layers/objects/xrefs/images from the drawing as: survey · parcel (lot borders, setbacks) · structures (architecture: buildings, FFLs) · roads · utilities (pipes, lines, manholes, easements → keep-clear zones) · orthophoto (D21) | `background` (read-only context) |
 
 Bottom of the palette: **Generate** → 2–3 variants → per variant a *target vs achieved* card
 (e.g. hard/soft 40/60 target → 43/57 achieved) and the rule report → **Apply** (one undo).
@@ -36,6 +36,7 @@ Bottom of the palette: **Generate** → 2–3 variants → per variant a *target
 | Shading | open / sunny | full canopy | target canopy cover at maturity (trees + shade structures) |
 | Trees ↔ Elements | trees only | built elements only | how vertical elements and shade are made: trees vs pergolas, shade sails, furniture, play |
 | Curved ↔ Straight | organic / curvilinear | orthogonal / rectilinear | geometric language of edges, paths and beds |
+| Budget | economical | premium | cost level: materials, plant sizes at planting, walls, site elements; result reports estimated cost level vs target (D20) |
 
 Sliders are **targets** the generator must meet and the checker measures, not prompt adjectives.
 That is what makes the tool *semi-parametric*: the AI is free in layout, form and species, but
@@ -129,11 +130,12 @@ grading solver, the five-panel palette.
   "schemaVersion": "1",
   "units": "m",
   "background": { "survey": ["layer:V-TOPO-*"], "structures": ["layer:A-BLDG"],
-                  "roads": ["layer:C-ROAD"], "orthophoto": ["image:ortho_2025.tif"] },
+                  "roads": ["layer:C-ROAD"], "parcel": ["layer:C-PROP"],
+                  "utilities": ["layer:C-UTIL-*"], "orthophoto": ["image:ortho_2025.tif"] },
   "style": { "prompt": "shaded Mediterranean courtyard, local stone, dry planting",
              "images": ["ref1.jpg", "ref2.jpg"] },
   "character": { "accessibility": 70, "hardSoft": 55, "maxGrade": 30, "cutFill": 50,
-                 "maxSlope": 40, "shading": 65, "treesElements": 30, "curvedStraight": 35 },
+                 "maxSlope": 40, "shading": 65, "treesElements": 30, "curvedStraight": 35, "budget": 50 },
   "zones": [ { "id": "Z1", "outline": [[0,0],[40,0],[40,25],[0,25]],
                "character": { "hardSoft": 30 } } ],
   "curves": [ { "id": "C1", "tag": "walkingNetwork", "points": [[2,12],[20,14],[38,10]] },
