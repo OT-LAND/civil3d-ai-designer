@@ -120,6 +120,17 @@ Plan stage (B.5a/B.5b, CONCEPT §3.3 stage 3)
   An option that never becomes usable goes to `Failed` and the others are returned; none usable ⇒
   `PlanStageException`. Token totals cover the whole run. Only the chosen option is detailed later (B.6+).
 
+Grading solver (B.6a, CONCEPT §3.3 stage 4 "Level")
+- `Core/Grading/PathLevelSolver.Solve(intent, brief?, rules, ground?, options?)` → `PathLevelResult` {profiles, issues}.
+  Per path: hard anchors snapped to the centerline (within width/2 + 1 m): the path's spot levels, intent entrances
+  (threshold, else FFL), brief entrance/elevation points with a level, crossings of brief contours with a level
+  (D17; contours without one wait for B.6b). Same place (< 0.10 m) with levels > 0.01 m apart ⇒ `ConflictingLevels`,
+  first in that priority order wins. Ends without an anchor tie into `IGroundModel` (else hold the nearest level);
+  nothing at all ⇒ `NoLevel`. Even grade between anchors; each stretch checked against
+  `path.maxLongitudinalSlopePercent` (accessible, D11) or `MaxSlopePercent(slider)` = accessible limit →
+  `path.notAccessibleMaxSlopePercent` (D19/D22) ⇒ `NeedsRamp` / `NeedsSteps` with the route length that would work.
+- `SpotGround(points)`: existing ground from survey spot levels (IDW, 6 nearest); the plugin will give a TIN-backed one.
+
 Existing-tree table import (2.1a)
 - `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
 - `TreeFieldMapping.Suggest(headers)` proposes which column is id/species/X/Y/trunk/canopy/height/level
@@ -168,6 +179,7 @@ src/Core/Style/      Style profile (B.4): model, JSON, validator, StyleReader (C
 samples/style/       Sample style profile (courtyard.style.v1.json, matches the B.1 brief's style); used by tests
 src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
 samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
+src/Core/Grading/    Grading solver: path levels from hard constraints (B.6a), ground model
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Civil3DPlugin/   CivilAI.Civil3DPlugin  Civil 3D plugin; placeholder until 0.3 (TFM + Autodesk refs per D1)

@@ -20,7 +20,8 @@ namespace CivilAI.Core.Tests.Rules
                 var rule = set.Find(id);
                 Assert.NotNull(rule);
                 Assert.False(string.IsNullOrWhiteSpace(rule!.Source), $"{id} needs a source note");
-                Assert.True(rule.Verified, $"{id} was confirmed by the owner (D10)");
+                if (id != RuleIds.PathNotAccessibleMaxSlopePercent) // provisional until D22
+                    Assert.True(rule.Verified, $"{id} was confirmed by the owner (D10)");
             }
             Assert.Equal(5.0, set.Find(RuleIds.PathMaxLongitudinalSlopePercent)!.Value);
         }
