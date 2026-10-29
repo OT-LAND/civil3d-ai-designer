@@ -1,5 +1,22 @@
 # Session log (newest first)
 
+## 2026-10-29 — Work: B.6a Grading solver v0, path levels
+- Done: `Core/Grading/PathLevelSolver` + `SpotGround`/`IGroundModel`. Levels along every path from the hard
+  constraints on it (spot levels, entrances threshold/FFL, brief entrance/elevation points, contours with a level),
+  even grade between them, ends tie into existing ground or hold. Each stretch checked: accessible limit 5 % (D10/D11),
+  not-accessible paths by the max slope slider (D19) from 5 % to the new rule `path.notAccessibleMaxSlopePercent`.
+  Issues in plain words: needs a ramp / steps with the route length that works, conflicting levels, no level.
+  15 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 207/207 pass.
+- Split B.6 into B.6a (this), B.6b area spaces + walls from max grade + soft contours, B.6c cut/fill + target rows,
+  B.6d reasons into the plan repair loop.
+- Also: ROADMAP B.1b marked done (merged).
+- Blocked: nothing.
+- PR: Core-only, merged by the agent once CI is green (D13).
+- Next: B.6b.
+- Questions: D22 (steepest not-accessible path; provisional 12.5 % = 1:8, rule marked not verified).
+  (Choices made, easy to change: snap = half path width + 1 m; path ends with no fixed level meet existing ground,
+  since area-space levels come in B.6b; the path's nominal elevation is not used yet.)
+
 ## 2026-10-28 — Work: B.1b Cost level
 - Done: Design Intent `costClass` (low · mid · high, optional) on materials, new trees (size at planting) and
   site elements; schema + sample (courtyard v1). `IntentMetrics.CostLevelPercent` per zone: classes scored

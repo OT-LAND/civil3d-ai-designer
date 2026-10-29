@@ -52,6 +52,13 @@
       "label": "Planting bed: maximum slope before it needs erosion control (1:3)",
       "source": "Generic good practice (editable); confirmed by owner 2026-10-23 (D10)",
       "verified": true
+    },
+    {
+      "id": "path.notAccessibleMaxSlopePercent",
+      "value": 12.5,
+      "label": "Path not on the accessible route: steepest walking slope before steps (1:8), reached at max slope slider 100; slider 0 = the accessible-route limit",
+      "source": "Provisional value set by the agent in B.6a (common outdoor walkway practice: steeper than about 1:8 needs steps); to be confirmed by the owner (D22)",
+      "verified": false
     }
   ]
 }
