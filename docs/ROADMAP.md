@@ -8,7 +8,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 ## Bugs (top priority)
 | # | Item | Status |
 |---|---|---|
-| 0.3a | **Palette text invisible** (owner test 2026-10-26): palette background is black in the dark theme and the WPF text is black, so only the "Check again" button shows. Fix on PR #6 branch: set the palette's background/foreground explicitly from the AutoCAD colour theme (COLORTHEME 0 = dark → light text, 1 = light → dark text), so the text is readable in both themes. Also set the Core assembly version (shows 1.0.0). Owner re-checks the palette, then merges #6. | done — owner re-test 2026-10-28: dark-theme palette readable, Plugin/Core 0.3.1, light theme OK; #6 ready to merge |
+| 0.3a | **Palette text invisible** (owner test 2026-10-26): palette background is black in the dark theme and the WPF text is black, so only the "Check again" button shows. Fix on PR #6 branch: set the palette's background/foreground explicitly from the AutoCAD colour theme (COLORTHEME 0 = dark → light text, 1 = light → dark text), so the text is readable in both themes. Also set the Core assembly version (shows 1.0.0). Owner re-checks the palette, then merges #6. | done — owner re-test 2026-10-28: dark-theme palette readable, Plugin/Core 0.3.1, light theme OK; #6 merged 2026-10-30 |
 
 ## MB — Design Brief & semi-parametric palette (D14, concept v1)
 | # | Item | Status |
@@ -26,7 +26,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 | B.6b | Grading solver: area spaces (plaza/lawn/bed levels and falls), soft contours (D17), ground steeper than max grade becomes a retaining wall/terrace (D16) | todo |
 | B.6c | Grading solver: cut/fill against existing ground, balanced toward the cut↔fill target; target-vs-achieved rows maxGrade, cutFill, maxSlope measured | todo |
 | B.6d | Grading reasons sent back to Plan: B.6 issues join the plan review/repair loop | todo |
-| B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment (survey, parcel, structures, roads, utilities, orthophoto; D21) → Design Brief | todo — after 0.3 |
+| B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment (survey, parcel, structures, roads, utilities, orthophoto; D21) → Design Brief | todo (0.3 merged) |
 | B.8 | Generate → variants → target-vs-achieved card + rule report → Apply in one undo (replaces 1.4) | todo — after B.5, B.7 |
 
 ## M0 — Foundations
@@ -34,7 +34,7 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 |---|---|---|
 | 0.1 | Solution skeleton: `Core` (no Autodesk refs), `Civil3DPlugin`, `Tests`; Core builds and tests on Linux | done |
 | 0.2 | GitHub Actions: build + test on every PR | done |
-| 0.3 | Plugin load (bundle/PackageContents.xml), ribbon tab, empty palette, `AIHELLO` command (owner tests), Civil 3D 2027 | test — PR #6, owner tested 2026-10-26: loads, `AIHELLO` OK, Civil 3D ready, tab survives workspace switch; **palette text invisible (bug 0.3a)** |
+| 0.3 | Plugin load (bundle/PackageContents.xml), ribbon tab, empty palette, `AIHELLO` command (owner tests), Civil 3D 2027 | done — PR #6 merged 2026-10-30 by the owner's request (owner tests 2026-10-26/28 OK, 0.3a fixed) |
 | 0.4 | Claude API client in `Core` (key from settings, retries, image input, structured JSON output) | done |
 
 ## M1 — Design Intent pipeline (text → graded spaces)

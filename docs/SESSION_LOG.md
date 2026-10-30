@@ -3,7 +3,8 @@
 ## 2026-10-30 — Meeting 13
 - Reported: B.1b cost level (#19) and B.6a path levels (#20), both Core-only and merged (D13); next B.6b. PR #6 re-tested OK, waiting for the owner to merge.
 - Asked: D22 (steepest not-accessible path; recommended 1:8 = 12.5 %).
-- Answers: pending.
+- Owner: "Merge PR #6". Main merged into `agent/plugin-load` (docs conflicts only), `dotnet build` (0 warnings) + `dotnet test` 227/227 pass, PR #6 squash-merged. ROADMAP 0.3 done.
+- Answers: D22 pending.
 
 ## 2026-10-29 — Work: B.6a Grading solver v0, path levels
 - Done: `Core/Grading/PathLevelSolver` + `SpotGround`/`IGroundModel`. Levels along every path from the hard
