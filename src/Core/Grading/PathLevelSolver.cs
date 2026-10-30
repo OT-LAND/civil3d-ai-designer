@@ -102,6 +102,10 @@ namespace CivilAI.Core.Grading
         ConflictingLevels,
         /// <summary>Nothing fixes the path's levels and there is no existing ground.</summary>
         NoLevel,
+        /// <summary>Area space (plaza, lawn) falls less than the rule set's minimum drainage fall (B.6b).</summary>
+        FallTooFlat,
+        /// <summary>Area space falls more than the rule set allows for its kind (B.6b).</summary>
+        TooSteep,
     }
 
     /// <summary>A reason the levels do not work, for the designer and for the plan repair loop.</summary>

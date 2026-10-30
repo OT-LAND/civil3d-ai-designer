@@ -57,8 +57,8 @@
       "id": "path.notAccessibleMaxSlopePercent",
       "value": 12.5,
       "label": "Path not on the accessible route: steepest walking slope before steps (1:8), reached at max slope slider 100; slider 0 = the accessible-route limit",
-      "source": "Provisional value set by the agent in B.6a (common outdoor walkway practice: steeper than about 1:8 needs steps); to be confirmed by the owner (D22)",
-      "verified": false
+      "source": "Common outdoor walkway practice: steeper than about 1:8 needs steps (editable); confirmed by owner 2026-10-30 (D22)",
+      "verified": true
     }
   ]
 }

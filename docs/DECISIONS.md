@@ -2,6 +2,15 @@
 
 ## Open (for the next meeting)
 
+**D23 — Max grade slider: how gentle is "gentle"?** (asked 2026-10-30, blocks B.6e walls)
+Max grade (D16) is the steepest graded ground before the generator puts in a retaining wall or terrace; at slider
+100 it is the rule-set maximum (lawn 1:4 = 25 %, bed 1:3 = 33 %). What should slider **0** mean?
+- (a) **1:10 (10 %)** on lawn and beds: gentle, walkable ground; walls appear early. *(recommended: a clear,
+  designer-friendly "terraced" end of the dial)*
+- (b) **1:6 (≈17 %)**: ground stays fairly natural, walls only where it gets steep.
+- (c) Half the rule-set maximum for each kind (lawn 12.5 %, bed 16.5 %).
+Offices could change it in their rule set (new rule `ground.gentleMaxGradePercent`).
+
 ## Decided
 
 **D22 — Steepest not-accessible path = 1:8 (12.5 %)** (2026-10-30)
