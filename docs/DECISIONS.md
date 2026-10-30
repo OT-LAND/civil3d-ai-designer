@@ -2,16 +2,12 @@
 
 ## Open (for the next meeting)
 
-**D22 — How steep may a path that is not on the accessible route be?** (asked 2026-10-29, B.6a)
-The max slope slider (D19) runs from "gentle" to a maximum. The levels solver now uses: slider 0 =
-the accessible limit (5 %), slider 100 = **12.5 % (1:8)**; steeper than the slider's value the path
-gets steps. The 12.5 % is a provisional agent value in the rule set (`path.notAccessibleMaxSlopePercent`,
-marked not verified). Options: **(a)** keep 1:8 (12.5 %) as the steepest walkable slope; **(b)** 1:10
-(10 %), gentler, more steps; **(c)** 1:6 (16.7 %), steep garden paths allowed; **(d)** another value or a
-municipal source. Recommendation: **(a)** — a common outdoor walkway limit before steps, and the office
-can change it in its rule set.
-
 ## Decided
+
+**D22 — Steepest not-accessible path = 1:8 (12.5 %)** (2026-10-30)
+**(a)**: on paths marked "not accessible" (D11) the max slope slider runs from the accessible 5 % (slider 0) to
+**12.5 % (1:8)** (slider 100); steeper than that the path gets steps. Mark `path.notAccessibleMaxSlopePercent`
+`verified: true` in the default rule set (source note: confirmed by owner 2026-10-30). Offices can change it in their rule set.
 
 **D20 — Budget slider = cost level, global with zone override** (2026-10-28)
 New character slider **Budget**: 0 = economical, 100 = premium. A cost level, not a sum of money.
