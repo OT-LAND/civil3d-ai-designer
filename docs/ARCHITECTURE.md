@@ -134,7 +134,7 @@ Plan stage (B.5a/B.5b, CONCEPT §3.3 stage 3)
   An option that never becomes usable goes to `Failed` and the others are returned; none usable ⇒
   `PlanStageException`. Token totals cover the whole run. Only the chosen option is detailed later (B.6+).
 
-Grading solver (B.6a/B.6b, CONCEPT §3.3 stage 4 "Level")
+Grading solver (B.6a/B.6b/B.6c, CONCEPT §3.3 stage 4 "Level")
 - `Core/Grading/PathLevelSolver.Solve(intent, brief?, rules, ground?, options?)` → `PathLevelResult` {profiles, issues}.
   Per path: hard anchors snapped to the centerline (within width/2 + 1 m): the path's spot levels, intent entrances
   (threshold, else FFL), brief entrance/elevation points with a level, crossings of brief contours with a level
@@ -153,6 +153,17 @@ Grading solver (B.6a/B.6b, CONCEPT §3.3 stage 4 "Level")
   a hard level missed by > 0.01 m ⇒ `ConflictingLevels`; fall < plaza/lawn minimum ⇒ `FallTooFlat`; fall > plaza max /
   lawn mowing max / bed max ⇒ `TooSteep`; nothing to sit on ⇒ `NoLevel`. Paths and area spaces are solved separately
   for now (path ends do not yet take the level of the plaza they meet).
+- `Core/Grading/Earthworks.Measure(intent, areas?, paths?, ground, options?)` → `EarthworkResult` {per space cut, fill,
+  measured/unmeasured m²; totals, net, `FillSharePercent` = fill/(cut+fill)} (B.6c). Areas: plane sampled at grid-cell
+  centres inside the outline (0.5 m, grown to ≤ 4000 cells per space, cells scaled to the true area); paths: profile
+  sampled along the centerline × width. No ground at a sample ⇒ unmeasured. Overlapping path/area both counted (v0).
+- `Earthworks.Balance(intent, areas, paths?, ground, cutFillSlider, options?)` → `BalanceResult`. Slider = target fill
+  share (0 export … 50 balanced … 100 import). "Free" areas (no hard anchor, no nominal elevation) move up/down together
+  by the smallest shift (≤ 0.30 m) that reaches the target, falls unchanged; miss > 10 points ⇒ designer-facing `Issue`.
+- `GradingMetrics.Measure(intent, earthworks?, paths?, rules, zoneOutline?)`: cut/fill share and steepest
+  not-accessible path, also in max slope slider units (`SliderForSlope`, inverse of `MaxSlopePercent`).
+  `TargetComparison.Compare(..., grading)` measures the `cutFill` (±10) and `maxSlope` (at most, +5) rows;
+  `maxGrade` waits for B.6e/D23. Wiring into the plan review is B.6d.
 - `SpotGround(points)`: existing ground from survey spot levels (IDW, 6 nearest); the plugin will give a TIN-backed one.
 
 Existing-tree table import (2.1a)
@@ -203,7 +214,7 @@ src/Core/Style/      Style profile (B.4): model, JSON, validator, StyleReader (C
 samples/style/       Sample style profile (courtyard.style.v1.json, matches the B.1 brief's style); used by tests
 src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
 samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
-src/Core/Grading/    Grading solver: path levels (B.6a), area space planes (B.6b), ground model
+src/Core/Grading/    Grading solver: path levels (B.6a), area space planes (B.6b), cut/fill + balance (B.6c), ground model
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Core/Ui/          PaletteTheme: palette colours per AutoCAD colour theme

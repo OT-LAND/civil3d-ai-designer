@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CivilAI.Core.Brief;
+using CivilAI.Core.Grading;
 
 namespace CivilAI.Core.Metrics
 {
@@ -29,7 +30,8 @@ namespace CivilAI.Core.Metrics
     /// </summary>
     public sealed record MetricTolerances(
         double HardSoft = 5, double CurvedStraight = 10, double Accessibility = 5,
-        double Shading = 10, double TreesElements = 10, double Budget = 15)
+        double Shading = 10, double TreesElements = 10, double Budget = 15,
+        double CutFill = 10, double MaxSlope = 5)
     {
         public static MetricTolerances Default { get; } = new MetricTolerances();
     }
@@ -39,9 +41,11 @@ namespace CivilAI.Core.Metrics
         /// <summary>
         /// Compares measured <paramref name="metrics"/> with the sliders that apply to a zone
         /// (<see cref="DesignBrief.CharacterFor"/>). One row per slider, in palette order.
+        /// <paramref name="grading"/> (B.6c) measures the cut↔fill and max slope rows; without it they are "not measured".
         /// </summary>
         public static IReadOnlyList<TargetResult> Compare(
-            IntentMetrics metrics, ResolvedCharacter character, MetricTolerances? tolerances = null)
+            IntentMetrics metrics, ResolvedCharacter character, MetricTolerances? tolerances = null,
+            GradingMetrics? grading = null)
         {
             if (metrics == null) throw new ArgumentNullException(nameof(metrics));
             var tol = tolerances ?? MetricTolerances.Default;
@@ -53,9 +57,16 @@ namespace CivilAI.Core.Metrics
                     "no paths"),
                 Within("hardSoft", character.HardSoft, metrics.SoftSharePercent, tol.HardSoft,
                     "planted share of paved + planted area", "no paved or planted area"),
-                NotMeasured("maxGrade", character.MaxGrade, "needs the grading solver (B.6); steepest ground is listed in the metrics"),
-                NotMeasured("cutFill", character.CutFill, "needs the grading solver (B.6)"),
-                NotMeasured("maxSlope", character.MaxSlope, "needs the grading solver (B.6); steepest not-accessible path is listed in the metrics"),
+                NotMeasured("maxGrade", character.MaxGrade, "needs walls and terraces from the grading solver (B.6e, D23); steepest ground is listed in the metrics"),
+                grading == null
+                    ? NotMeasured("cutFill", character.CutFill, "needs the grading solver levels (B.6)")
+                    : Within("cutFill", character.CutFill, grading.FillSharePercent, tol.CutFill,
+                        "fill share of moved soil: 0 all cut (export), 50 balanced, 100 all fill (import)", "no earthworks measured"),
+                grading == null
+                    ? NotMeasured("maxSlope", character.MaxSlope, "needs the grading solver levels (B.6); steepest not-accessible path is listed in the metrics")
+                    : AtMost("maxSlope", character.MaxSlope, grading.MaxSlopeSlider, tol.MaxSlope,
+                        "steepest not-accessible path: 0 = accessible limit, 100 = rule-set maximum (D19/D22)",
+                        "no path marked not accessible has levels"),
                 Within("shading", character.Shading, metrics.CanopyCoverPercent, tol.Shading,
                     "canopy cover at maturity (trees + shade/pergola footprints) over open ground", "no zone or lot outline"),
                 Within("treesElements", character.TreesElements, metrics.ElementsSharePercent, tol.TreesElements,
@@ -80,6 +91,14 @@ namespace CivilAI.Core.Metrics
         {
             if (achieved is not double a) return new TargetResult(slider, target, null, tolerance, TargetStatus.NotMeasured, empty);
             var status = a >= target - tolerance - 1e-9 ? TargetStatus.Met : TargetStatus.Missed;
+            return new TargetResult(slider, target, a, tolerance, status, what);
+        }
+
+        /// <summary>A target where less is fine (gentler than the slider allows is never a miss).</summary>
+        private static TargetResult AtMost(string slider, int target, double? achieved, double tolerance, string what, string empty)
+        {
+            if (achieved is not double a) return new TargetResult(slider, target, null, tolerance, TargetStatus.NotMeasured, empty);
+            var status = a <= target + tolerance + 1e-9 ? TargetStatus.Met : TargetStatus.Missed;
             return new TargetResult(slider, target, a, tolerance, status, what);
         }
 

@@ -1,5 +1,21 @@
 # Session log (newest first)
 
+## 2026-10-30 — Work: B.6c Grading solver, cut/fill
+- Done: `Core/Grading/Earthworks`. Cut and fill of the solved levels against existing ground: plazas, lawns and beds
+  sampled on a 0.5 m grid inside the outline, paths along the centerline × width; ground without data counted as not
+  measured. `Balance` moves the spaces nothing fixes (no hard level, no nominal level) up or down together, as little as
+  needed (≤ 0.30 m), toward the cut↔fill slider read as fill share (0 export, 50 balanced, 100 import); falls stay, so
+  B.6b checks still hold; out of reach ⇒ a plain-words reason with the volumes. `GradingMetrics` + target card: cutFill
+  (±10) and maxSlope (at most, +5; steepest not-accessible path in slider units, D19/D22) rows now measured.
+  16 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 258/258 pass.
+- Also: ROADMAP B.6b marked done (merged #21).
+- Split: maxGrade row moved to B.6e (needs D23); plan review wiring stays in B.6d.
+- Blocked: B.6e still waits for D23.
+- PR: Core-only, merged by the agent once CI is green (D13).
+- Next: B.6d (wire solvers, balance and grading reasons into the plan review), then B.6e after D23.
+- Questions: none new. (Choices made, easy to change: slider = fill share of moved soil; free spaces all move by the
+  same amount, max 0.30 m; paths never move; where a path crosses an area both are counted; tolerance ±10.)
+
 ## 2026-10-30 — Work: B.6b Grading solver, area space levels
 - Done: `Core/Grading/AreaLevelSolver`. Every plaza, lawn and bed gets one even surface (level at its centre, fall,
   fall direction, corner levels) through its hard levels: own spot levels, entrances on its edge (threshold/FFL), brief
