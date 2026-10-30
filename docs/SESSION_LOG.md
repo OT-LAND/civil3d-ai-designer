@@ -1,5 +1,10 @@
 # Session log (newest first)
 
+## 2026-10-30 — Meeting 13
+- Reported: B.1b cost level (#19) and B.6a path levels (#20), both Core-only and merged (D13); next B.6b. PR #6 re-tested OK, waiting for the owner to merge.
+- Asked: D22 (steepest not-accessible path; recommended 1:8 = 12.5 %).
+- Answers: pending.
+
 ## 2026-10-29 — Work: B.6a Grading solver v0, path levels
 - Done: `Core/Grading/PathLevelSolver` + `SpotGround`/`IGroundModel`. Levels along every path from the hard
   constraints on it (spot levels, entrances threshold/FFL, brief entrance/elevation points, contours with a level),
