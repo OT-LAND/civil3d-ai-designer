@@ -175,6 +175,16 @@
 - Questions: none new. (Choices made, easy to change: brief points use `{x, y}` like the intent, not `[x, y]`
   as in the CONCEPT example; levels are a separate `level` field.)
 
+## 2026-10-26 — Work: bug 0.3a palette text invisible (on PR #6)
+- Done: main merged into `agent/plugin-load` (merge commit; docs conflicts resolved, main's ROADMAP/LOG kept, both ARCHITECTURE sections kept).
+  Core `Ui/PaletteTheme`: COLORTHEME 0/missing → dark (#3B4453 bg, light text), 1 → light (dark text); contrast checked in tests
+  (main text ≥ 7:1, hint ≥ 4.5:1). Palette sets Background/Foreground explicitly and re-applies on a COLORTHEME change.
+  Core assembly version set; Core + plugin + bundle now 0.3.1. 12 new tests; `dotnet build` (Release, 0 warnings, plugin
+  compiled against AutoCAD.NET 26.0.0) + `dotnet test` 121/121 pass.
+- Blocked: nothing. (.NET 8 + 10 SDKs installed with dotnet-install.sh.)
+- Next: owner re-checks the palette in both themes and merges #6; then B.1 Design Brief schema v1.
+- Questions: none new.
+
 ## 2026-10-26 — Meeting 9: PR #6 Civil 3D test
 - Owner built PR #6 (after installing the .NET 10 SDK; the zip SDK was shadowed on Path, the installer fixed it) and loaded it in Civil 3D 2027.
 - Result: plugin loads, `AIHELLO` prints all 4 lines: host 26.0.0.0, "Civil 3D: ready.", Claude "no API key yet" (expected; no key set). Palette opens but shows only the "Check again" button on a black background: text is black on black (bug 0.3a, top of backlog). AI Landscape tab stays after a workspace switch.

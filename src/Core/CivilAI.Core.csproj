@@ -12,6 +12,8 @@
     <Nullable>enable</Nullable>
     <RootNamespace>CivilAI.Core</RootNamespace>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Shown by AIHELLO ("Core x.y.z"); keep in step with the plugin version. -->
+    <Version>0.3.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

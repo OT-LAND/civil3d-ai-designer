@@ -1,23 +1,92 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    Civil 3D plugin shell. PLACEHOLDER until roadmap item 0.3:
-    - Target framework and Autodesk references (AcCoreMgd, AcDbMgd, AcMgd, AeccDbMgd,
-      AecBaseMgd, all with Private=false) depend on D1 (supported Civil 3D releases).
-    - EnableWindowsTargeting lets the empty shell build on Linux / CI; the real plugin
-      is built on Windows against the installed Civil 3D.
+    Civil 3D 2027 plugin (D1), roadmap 0.3.
+
+    Two build modes:
+    - On a Windows PC with Civil 3D 2027 installed: Autodesk references are found in
+      $(AutoCADDir) (default C:\Program Files\Autodesk\AutoCAD 2027), and the output folder
+      gets a ready-to-copy CivilAI.bundle.
+      Override the folder with -p:AutoCADDir="D:\...\AutoCAD 2027".
+      Add -p:InstallBundle=true to also copy the bundle to %APPDATA%\Autodesk\ApplicationPlugins.
+    - Anywhere else (Linux, CI): the AutoCAD code still compiles, against Autodesk's own
+      compile-only NuGet package AutoCAD.NET 26.0.0 ("AutoCAD 2027 .Net API"), so CI really
+      type-checks it. The Civil 3D API (AeccDbMgd) is not on NuGet; the one call that needs it
+      is behind CIVIL3D_API. No bundle is made in this mode.
+
+    Target framework: net10.0-windows. AutoCAD/Civil 3D 2027 run on .NET 10 (the AutoCAD.NET
+    26.0.0 package targets net10.0), so a .NET 8 plugin cannot reference the 2027 DLLs.
+    Core stays net8.0 and loads unchanged in the .NET 10 host.
   -->
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>CivilAI.Civil3DPlugin</RootNamespace>
+    <AssemblyName>CivilAI.Civil3DPlugin</AssemblyName>
+    <Version>0.3.1</Version>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AutoCADDir Condition="'$(AutoCADDir)' == ''">$(ProgramW6432)\Autodesk\AutoCAD 2027</AutoCADDir>
+    <AutoCADDir Condition="'$(AutoCADDir)' == '\Autodesk\AutoCAD 2027'">C:\Program Files\Autodesk\AutoCAD 2027</AutoCADDir>
+    <HasAutoCAD Condition="Exists('$(AutoCADDir)\acmgd.dll')">true</HasAutoCAD>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\CivilAI.Core.csproj" />
   </ItemGroup>
+
+  <!-- Without Civil 3D: AutoCAD 2027 API from NuGet, compile-only (never copied to the output). -->
+  <ItemGroup Condition="'$(HasAutoCAD)' != 'true'">
+    <PackageReference Include="AutoCAD.NET" Version="26.0.0" ExcludeAssets="runtime" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- With Civil 3D 2027 installed: the real plugin, including the Civil 3D API. -->
+  <PropertyGroup Condition="'$(HasAutoCAD)' == 'true'">
+    <DefineConstants>$(DefineConstants);CIVIL3D;CIVIL3D_API</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(HasAutoCAD)' == 'true'">
+    <Reference Include="accoremgd"><HintPath>$(AutoCADDir)\accoremgd.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="acdbmgd"><HintPath>$(AutoCADDir)\acdbmgd.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="acmgd"><HintPath>$(AutoCADDir)\acmgd.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="AdWindows"><HintPath>$(AutoCADDir)\AdWindows.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="AeccDbMgd"><HintPath>$(AutoCADDir)\C3D\AeccDbMgd.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="AecBaseMgd" Condition="Exists('$(AutoCADDir)\ACA\AecBaseMgd.dll')"><HintPath>$(AutoCADDir)\ACA\AecBaseMgd.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <!--
+    Autoloader bundle: <OutDir>\CivilAI.bundle\PackageContents.xml + Contents\*.dll.
+    Civil 3D loads it from %APPDATA%\Autodesk\ApplicationPlugins at startup.
+  -->
+  <Target Name="MakeBundle" AfterTargets="Build" Condition="'$(HasAutoCAD)' == 'true'">
+    <PropertyGroup>
+      <BundleDir>$(OutDir)CivilAI.bundle\</BundleDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <BundleDll Include="$(OutDir)*.dll" />
+      <BundleDll Include="$(OutDir)*.pdb" />
+      <BundleDll Include="$(OutDir)*.deps.json" />
+    </ItemGroup>
+    <Copy SourceFiles="Bundle\PackageContents.xml" DestinationFolder="$(BundleDir)" />
+    <Copy SourceFiles="@(BundleDll)" DestinationFolder="$(BundleDir)Contents\" />
+    <Message Importance="high" Text="CivilAI bundle: $(BundleDir)" />
+  </Target>
+
+  <Target Name="InstallBundle" AfterTargets="MakeBundle" Condition="'$(HasAutoCAD)' == 'true' And '$(InstallBundle)' == 'true'">
+    <PropertyGroup>
+      <InstallDir>$(APPDATA)\Autodesk\ApplicationPlugins\CivilAI.bundle\</InstallDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <BundleFile Include="$(OutDir)CivilAI.bundle\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(BundleFile)" DestinationFiles="@(BundleFile->'$(InstallDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="CivilAI bundle installed to $(InstallDir) (restart Civil 3D)" />
+  </Target>
 
 </Project>
