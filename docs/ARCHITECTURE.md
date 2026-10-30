@@ -24,11 +24,18 @@ Designer inputs (sketch, image, text)      Background (survey, lots, rules)
         +----------------------------------------------------------------------+
 ```
 
-Design Intent v0 (1.1)
+Design Intent v1 (1.1, extended by B.3)
 - Metres, drawing coordinates (CRS per D4b), absolute levels. Polygons implicitly closed.
 - site (lot border, buildings with FFL and entrances) · spaces (plaza/lawn/bed by outline,
   path by centerline + width; level = nominal elevation, spot levels, fall) · edges (flush,
   kerb, steps, wall between 1–2 spaces, with height) · materials (id, name, category).
+- v1 (B.3, all optional so v0 files still read; "0" files must not use them): spaces carry
+  `zoneId` / `interestPointId` (Design Brief refs, not checked inside the intent) · trees (new or
+  existing, canopy diameter, trunk, protection radius for existing, `sourceId` = survey id (required
+  for existing) or brief point) · drainage (swales high→low with `outletId` → basin or low point,
+  retention/infiltration basins, low points with `inlet`) · elements (seating, lighting, play, shade,
+  pergola, water, art, other; shade/pergola need a footprint for canopy cover). Schema
+  `design-intent.v1.schema.json`; new intents default to "1".
 - Two checks: `DesignIntentJson.TryParse` (shape: unknown fields/kinds rejected) and
   `DesignIntentValidator` (ids, references, usable geometry). Design rules are 2.2, not here.
 
@@ -67,6 +74,77 @@ Plugin shell (0.3)
 - Palette colours are never WPF defaults: Core `Ui/PaletteTheme.ForColorTheme(COLORTHEME)` picks dark (0) or light (1)
   colours (contrast unit-tested); the palette re-applies them on `SystemVariableChanged` for COLORTHEME (bug 0.3a).
 
+Design Brief v1 (B.1, concept v1)
+- `Core/Brief/DesignBrief`: the generation input captured from the palette: `background` refs (survey,
+  parcel, structures, roads, utilities, orthophoto (D21); host refs like `layer:V-TOPO-*`), `style` (prompt + up to 6 images),
+  global `character` sliders (all 9 required, 0–100; `budget` = cost level 0 economical – 100 premium, D20), `zones` (outline + per-zone slider overrides, D15),
+  tagged `curves` (walkingNetwork/contour/flowBasin/border) and `points` (entrance/interestPoint/elevation/tree).
+  Every item may carry `hostId` (Civil 3D: entity handle) so the brief can be re-read from the drawing.
+- Metres only (`units: "m"`); capture converts drawing units. Points are `{x, y}` like the Design Intent;
+  levels are a separate `level` field (contour → hard contour, D17; elevation point needs one; entrance optional).
+- `DesignBrief.CharacterFor(zone)` resolves the 8 sliders for a zone (own value, else global).
+- `DesignBriefJson` (same serializer options as the intent; unknown fields/tags rejected) + embedded schema
+  `Brief/Schema/design-brief.v1.schema.json`; `DesignBriefValidator` checks ids, geometry (shared helpers
+  from `DesignIntentValidator`), slider ranges, a complete global set, and tag-only fields.
+
+Metrics on a Design Intent (B.2)
+- `Core/Metrics/IntentMetricsCalculator.Measure(intent, zoneOutline?)` → `IntentMetrics`: hard/soft area and
+  soft share (kind lawn/bed = soft, unless the material category says paving/gravel or lawn/planting/mulch),
+  curved/straight length share of outlines + path centerlines (a segment is curved when both ends are smooth
+  bends, turn 0.5°–30°), accessible share of path length (D11), steepest slope per surface (accessible path,
+  not-accessible path, plaza, lawn/bed) from falls and spot-level pairs. With a zone outline only spaces whose
+  centre lies inside are measured. v0 limits: overlaps not subtracted; path area = length × width.
+  B.3a adds canopy cover (tree canopy circles + shade/pergola footprints, overlaps once, over the zone outline
+  or else the lot boundary, buildings left out; `CoverArea` grid sampling, ~250k cells) and the elements share
+  of new trees + site elements by count (location in the zone; kept trees not counted).
+  B.1b adds the cost level (D20): Design Intent `costClass` (low/mid/high) on materials, new trees (size at
+  planting) and site elements, scored 0/50/100; parts = surfaces by area (through the material), new trees by
+  count, elements by count; cost level = average of the parts present, not measured when none. Walls/steps not counted yet.
+- `TargetComparison.Compare(metrics, brief.CharacterFor(zone), tolerances?)` → one `TargetResult` per slider
+  (Met / Missed / NotMeasured + note). Tolerances: hard/soft ±5 (concept), curved/straight ±10, accessibility
+  is a minimum (−5), shading ±10, trees/elements ±10, budget ±15. Max grade, cut/fill, max slope wait for B.6.
+- `Core/Geometry/PolygonGeometry`: area, length, point-in-polygon, half-length point, curved/straight split.
+
+Style profile (B.4, CONCEPT §3.3 stage 2)
+- `Core/Style/StyleProfile`: summary, material palette (≤12, id/name/category/colour/finish/use; `ToIntentMaterials()`
+  gives Design Intent materials), planting character (water use, density, layers, palette, example genera —
+  suggestions only, D5), form language (orthogonal/angular/curvilinear/mixed, curved share 0–100 on the
+  curved↔straight scale, edges, level changes), one note per reference image. `StyleProfileJson` +
+  embedded `style-profile.v1.schema.json`; `StyleProfileValidator`.
+- `StyleReader.ReadAsync(StyleRequest)`: labelled images ("Reference image n: name") then the prompt, system
+  prompt `Style/Prompts/style-reader.v1.md`, forced JSON output, repair loop (default 2 calls).
+  `StyleRequest.FromInput(brief.Style, folder)` reads the brief's image files.
+- Cache: `StyleProfileCache(folder)` keeps `<sha256>.json` per input set; key = prompt version + trimmed
+  prompt + image types/bytes in order (file names ignored). Bad entries are misses. The plugin chooses the folder.
+
+Plan stage (B.5a/B.5b, CONCEPT §3.3 stage 3)
+- `Core/Plan/PlanStage.GenerateAsync(PlanRequest {Brief, Style?, Site?, Rules?})` → one Design Intent. User
+  message: resolved sliders per zone in plain words, then brief, style profile and site as JSON; system prompt
+  `Plan/Prompts/plan.v4.md` (v2: budget in words via `PlanStage.BudgetWords`, utilities keep-clear; v3: layout
+  options, `concept` line; v4: a `costClass` on every material, new tree and element); forced output = 1.2 shape plus a required `concept` string (`PlanStage.BuildOutputSchema`),
+  answer read as 1.2 (`TextToIntent.TryReadAnswer`, given site swapped in); a missing concept never triggers a repair. Default 3 calls, 16k output tokens per call.
+- `PlanStage.Review(intent, brief, rules)` → `PlanReview`: **problems** (space zoneId not a brief zone or missing,
+  interestPointId unknown, interest point with no place or several) block the plan; **open issues** (rule
+  failures, slider misses per zone with "raise/lower it") are repaired but not blocking. After the last call
+  the usable plan with the fewest open issues is returned with them (`AllTargetsMet` false); no usable plan ⇒
+  `PlanStageException`.
+- `PlanStage.GenerateOptionsAsync(request, count = 3)` → `PlanOptions` (D18): options planned one after another,
+  each prompt (`BuildOptionPrompt`) lists the concepts of the usable options so far and asks for a clearly
+  different layout; each option is reviewed/repaired as above (up to `MaxAttempts` calls each, so ≤ 9 calls).
+  An option that never becomes usable goes to `Failed` and the others are returned; none usable ⇒
+  `PlanStageException`. Token totals cover the whole run. Only the chosen option is detailed later (B.6+).
+
+Grading solver (B.6a, CONCEPT §3.3 stage 4 "Level")
+- `Core/Grading/PathLevelSolver.Solve(intent, brief?, rules, ground?, options?)` → `PathLevelResult` {profiles, issues}.
+  Per path: hard anchors snapped to the centerline (within width/2 + 1 m): the path's spot levels, intent entrances
+  (threshold, else FFL), brief entrance/elevation points with a level, crossings of brief contours with a level
+  (D17; contours without one wait for B.6b). Same place (< 0.10 m) with levels > 0.01 m apart ⇒ `ConflictingLevels`,
+  first in that priority order wins. Ends without an anchor tie into `IGroundModel` (else hold the nearest level);
+  nothing at all ⇒ `NoLevel`. Even grade between anchors; each stretch checked against
+  `path.maxLongitudinalSlopePercent` (accessible, D11) or `MaxSlopePercent(slider)` = accessible limit →
+  `path.notAccessibleMaxSlopePercent` (D19/D22) ⇒ `NeedsRamp` / `NeedsSteps` with the route length that would work.
+- `SpotGround(points)`: existing ground from survey spot levels (IDW, 6 nearest); the plugin will give a TIN-backed one.
+
 Existing-tree table import (2.1a)
 - `Core/Survey/CsvTable` reads CSV (separator detected from the header line, quoted cells, BOM).
 - `TreeFieldMapping.Suggest(headers)` proposes which column is id/species/X/Y/trunk/canopy/height/level
@@ -103,12 +181,19 @@ Repository layout
 ```
 CivilAI.sln
 src/Core/            CivilAI.Core         net8.0, no Autodesk refs (Geometry/, Intent/, later Rules/, Claude/)
-src/Core/Intent/     Design Intent v0 model, JSON read/write, content validator; Schema/ holds the
+src/Core/Intent/     Design Intent v1 model, JSON read/write, content validator; Schema/ holds the
                      JSON Schema (embedded resource, for Claude structured output in 0.4/1.2)
-samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard); used by tests
+samples/intent/      Sample Design Intents (courtyard.v0.json = D6 residential courtyard; courtyard.v1.json
+                     = the B.1 brief's courtyard with trees, drainage, elements); used by tests
 src/Core/Intent/Prompts/  System prompts (embedded), versioned by file name
+src/Core/Brief/      Design Brief v1 model, JSON read/write, validator; Schema/ holds the JSON Schema (B.1)
+samples/brief/       Sample Design Brief (courtyard.brief.v1.json); used by tests
+src/Core/Metrics/    Metrics on a Design Intent and target-vs-achieved against brief sliders (B.2)
+src/Core/Style/      Style profile (B.4): model, JSON, validator, StyleReader (Claude vision) + file cache; Schema/, Prompts/
+samples/style/       Sample style profile (courtyard.style.v1.json, matches the B.1 brief's style); used by tests
 src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
 samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
+src/Core/Grading/    Grading solver: path levels from hard constraints (B.6a), ground model
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Core/Ui/          PaletteTheme: palette colours per AutoCAD colour theme

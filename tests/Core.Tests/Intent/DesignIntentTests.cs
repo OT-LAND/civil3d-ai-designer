@@ -10,8 +10,8 @@ namespace CivilAI.Core.Tests.Intent
 {
     public class DesignIntentTests
     {
-        private static string SampleJson() =>
-            File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "samples", "courtyard.v0.json"));
+        private static string SampleJson(string file = "courtyard.v0.json") =>
+            File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "samples", file));
 
         private static DesignIntent Sample()
         {
@@ -217,12 +217,18 @@ namespace CivilAI.Core.Tests.Intent
             Assert.Equal(Camel<SpaceKind>(), EnumValues(defs.GetProperty("space"), "kind"));
             Assert.Equal(Camel<EdgeKind>(), EnumValues(defs.GetProperty("edge"), "kind"));
             Assert.Equal(Camel<MaterialCategory>(), EnumValues(defs.GetProperty("material"), "category"));
-            Assert.Equal(DesignIntent.CurrentSchemaVersion,
-                doc.RootElement.GetProperty("properties").GetProperty("schemaVersion").GetProperty("const").GetString());
+            Assert.Equal(Camel<TreeStatus>(), EnumValues(defs.GetProperty("tree"), "status"));
+            Assert.Equal(Camel<BasinKind>(), EnumValues(defs.GetProperty("basin"), "kind"));
+            Assert.Equal(Camel<ElementKind>(), EnumValues(defs.GetProperty("element"), "kind"));
+            Assert.Equal(DesignIntent.SupportedSchemaVersions.ToArray(),
+                EnumValues(doc.RootElement, "schemaVersion"));
+            Assert.Contains(DesignIntent.CurrentSchemaVersion, DesignIntent.SupportedSchemaVersions);
         }
 
-        [Fact]
-        public void Schema_property_names_match_what_the_serializer_writes()
+        [Theory]
+        [InlineData("courtyard.v0.json")]
+        [InlineData("courtyard.v1.json")]
+        public void Schema_property_names_match_what_the_serializer_writes(string sampleFile)
         {
             // Every property the serializer can write for the sample must be declared in the schema.
             using var schema = JsonDocument.Parse(DesignIntentJson.ReadSchema());
@@ -232,7 +238,8 @@ namespace CivilAI.Core.Tests.Intent
                     foreach (var p in props.EnumerateObject()) declared.Add(p.Name);
             foreach (var p in schema.RootElement.GetProperty("properties").EnumerateObject()) declared.Add(p.Name);
 
-            using var written = JsonDocument.Parse(DesignIntentJson.Serialize(Sample()));
+            Assert.True(DesignIntentJson.TryParse(SampleJson(sampleFile), out var sample, out var error), error);
+            using var written = JsonDocument.Parse(DesignIntentJson.Serialize(sample!));
             var used = new HashSet<string>(StringComparer.Ordinal);
             void Walk(JsonElement e)
             {

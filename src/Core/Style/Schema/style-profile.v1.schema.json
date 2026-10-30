@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/OT-LAND/civil3d-ai-designer/style-profile.v1.schema.json",
+  "title": "Style Profile v1",
+  "description": "What the designer's reference images and style prompt mean for a landscape design: a material palette, the planting character and the form language.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "summary", "materials", "planting", "form", "imageNotes"],
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One or two sentences in a landscape architect's words."
+    },
+    "materials": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "description": "Surface materials, most used first.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "category"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "description": "Short unique readable id, e.g. \"stone-paving\"." },
+          "name": { "type": "string", "minLength": 1, "description": "Material as a designer names it, e.g. \"local limestone, sawn\"." },
+          "category": { "enum": ["paving", "gravel", "lawn", "planting", "mulch", "other"] },
+          "colour": { "type": "string", "description": "Colour in words." },
+          "finish": { "type": "string", "description": "Surface finish." },
+          "use": { "type": "string", "description": "Where it goes in the design." }
+        }
+      }
+    },
+    "planting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["waterUse", "density", "layers", "palette", "examples"],
+      "properties": {
+        "waterUse": { "enum": ["low", "medium", "high"] },
+        "density": { "enum": ["sparse", "medium", "dense"] },
+        "layers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Planting layers used, main layer first.",
+          "items": { "enum": ["trees", "shrubs", "perennials", "grasses", "groundcover", "climbers"] }
+        },
+        "palette": {
+          "type": "array",
+          "description": "Colours and textures in words.",
+          "items": { "type": "string" }
+        },
+        "examples": {
+          "type": "array",
+          "description": "Example genera or species that fit the character (suggestions only).",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "form": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["geometry", "curvedShare"],
+      "properties": {
+        "geometry": { "enum": ["orthogonal", "angular", "curvilinear", "mixed"] },
+        "curvedShare": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "How curved the layout reads: 0 = all straight, 100 = all curved."
+        },
+        "edges": { "type": "string", "description": "Edge treatment in words." },
+        "levelChanges": { "type": "string", "description": "How level changes are made, in words." }
+      }
+    },
+    "imageNotes": {
+      "type": "array",
+      "description": "One short note per reference image, in the order given: what was taken from it.",
+      "items": { "type": "string" }
+    }
+  }
+}

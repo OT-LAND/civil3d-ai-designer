@@ -8,18 +8,25 @@ Status keys: `todo` · `doing` · `review` (PR open) · `test` (needs owner's Ci
 ## Bugs (top priority)
 | # | Item | Status |
 |---|---|---|
-| 0.3a | **Palette text invisible** (owner test 2026-10-26): palette background is black in the dark theme and the WPF text is black, so only the "Check again" button shows. Fix on PR #6 branch: set the palette's background/foreground explicitly from the AutoCAD colour theme (COLORTHEME 0 = dark → light text, 1 = light → dark text), so the text is readable in both themes. Also set the Core assembly version (shows 1.0.0). Owner re-checks the palette, then merges #6. | test — fixed on PR #6 (2026-10-26): colours from COLORTHEME, follows a theme switch; Core + plugin 0.3.1 |
+| 0.3a | **Palette text invisible** (owner test 2026-10-26): palette background is black in the dark theme and the WPF text is black, so only the "Check again" button shows. Fix on PR #6 branch: set the palette's background/foreground explicitly from the AutoCAD colour theme (COLORTHEME 0 = dark → light text, 1 = light → dark text), so the text is readable in both themes. Also set the Core assembly version (shows 1.0.0). Owner re-checks the palette, then merges #6. | done — owner re-test 2026-10-28: dark-theme palette readable, Plugin/Core 0.3.1, light theme OK; #6 ready to merge |
 
 ## MB — Design Brief & semi-parametric palette (D14, concept v1)
 | # | Item | Status |
 |---|---|---|
-| B.1 | Design Brief schema v1 in Core: background refs, zones + character sliders (global defaults, per-zone override per D15), tagged curves (walkingNetwork/contour/flowBasin/border), tagged points (entrance/interestPoint/elevation/tree), style (images + prompt); JSON read/write, validator, sample, tests | todo |
-| B.2 | Metrics on a Design Intent (Core): hard/soft share, canopy cover, curved/straight share, accessible share, steepest slopes; compare to slider targets with tolerance → "target vs achieved" | todo |
-| B.3 | Design Intent v1: zone refs, trees (new + kept), drainage (swale, basin, low points), site elements, interest-point places | todo |
-| B.4 | Style profile: reference images + prompt → material palette, planting character, form language (Claude vision), cached | todo |
-| B.5 | Plan stage: brief + style profile + site → Design Intent spaces/paths; repair loop on metric misses and rule failures (extends 1.2); 3 layout variants per run, only the chosen one is detailed (D18) | todo |
-| B.6 | Grading solver v0 (Core): levels from entrances/FFL, elevation points, contours, survey; contours are soft unless given a level (D17); ground steeper than max grade becomes a retaining wall/terrace (D16); cut/fill target; max slope caps non-accessible paths (D19); reasons sent back to Plan | todo |
-| B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment → Design Brief | todo — after 0.3 |
+| B.1 | Design Brief schema v1 in Core: background refs, zones + character sliders (global defaults, per-zone override per D15), tagged curves (walkingNetwork/contour/flowBasin/border), tagged points (entrance/interestPoint/elevation/tree), style (images + prompt); JSON read/write, validator, sample, tests | done — PR #11 (Core-only, merged per D13) |
+| B.2 | Metrics on a Design Intent (Core): hard/soft share, canopy cover, curved/straight share, accessible share, steepest slopes; compare to slider targets with tolerance → "target vs achieved" | done — PR #12 (Core-only, D13); canopy cover waits for trees (B.3) |
+| B.3 | Design Intent v1: zone refs, trees (new + kept), drainage (swale, basin, low points), site elements, interest-point places | done — PR #13 (Core-only, D13) |
+| B.3a | Metrics: canopy cover (tree canopy + shade/pergola footprints, overlaps counted once) and trees vs elements share, now that v1 has trees and elements (small follow-up to B.2) | done — PR #14 (Core-only, D13) |
+| B.4 | Style profile: reference images + prompt → material palette, planting character, form language (Claude vision), cached | done — PR #15 (Core-only, D13) |
+| B.5a | Plan stage, one plan: brief + style profile + site → Design Intent spaces/paths/places; Core review (brief refs, rule report, target vs achieved per zone); repair loop on problems, rule failures and slider misses; best plan returned with open issues | done — PR #16 (Core-only, D13) |
+| B.1a | Brief v1 additions (D20, D21): **Budget** slider (0 economical – 100 premium, global + zone override) and Background slots **parcel** and **utilities**; schema, validator, sample, tests. Plan prompt gets the budget in plain words (plan.v2) | done — PR #17 (Core-only, D13) |
+| B.1b | Cost level (D20): materials and plant library get a cost class (low/mid/high); cost-level metric per zone compared to the budget slider on the target-vs-achieved card (row is "not measured" until then) | done — PR #19 (Core-only, merged per D13); cost class lives on Design Intent materials/trees/elements until office libraries exist (5.1) |
+| B.5b | Plan stage variants: 3 layout variants per run, only the chosen one is detailed (D18); each reviewed as in B.5a | done — PR #18 (Core-only, D13) |
+| B.6a | Grading solver v0, path levels (Core): hard levels from entrances (threshold/FFL), elevation points, spot levels and contours with a level (D17) snapped to path centerlines; even grade between them; path ends tie into existing ground (or hold); each stretch checked against the accessible limit (D10/D11) or the max slope slider for not-accessible paths (D19) → reasons "needs a ramp / steps, or a route ≥ n m" | review — PR (Core-only, D13); not-accessible maximum 12.5 % is provisional (D22) |
+| B.6b | Grading solver: area spaces (plaza/lawn/bed levels and falls), soft contours (D17), ground steeper than max grade becomes a retaining wall/terrace (D16) | todo |
+| B.6c | Grading solver: cut/fill against existing ground, balanced toward the cut↔fill target; target-vs-achieved rows maxGrade, cutFill, maxSlope measured | todo |
+| B.6d | Grading reasons sent back to Plan: B.6 issues join the plan review/repair loop | todo |
+| B.7 | Civil 3D palette, five panels per sketch: pick & tag objects (tags stored on the objects), tag colours, sliders, style image slots, background assignment (survey, parcel, structures, roads, utilities, orthophoto; D21) → Design Brief | todo — after 0.3 |
 | B.8 | Generate → variants → target-vs-achieved card + rule report → Apply in one undo (replaces 1.4) | todo — after B.5, B.7 |
 
 ## M0 — Foundations

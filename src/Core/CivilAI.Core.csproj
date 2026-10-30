@@ -18,10 +18,17 @@
 
   <ItemGroup>
     <!-- Design Intent JSON Schema; read with DesignIntentJson.ReadSchema(). -->
-    <EmbeddedResource Include="Intent\Schema\design-intent.v0.schema.json" LogicalName="CivilAI.Core.Intent.Schema.design-intent.v0.schema.json" />
+    <EmbeddedResource Include="Intent\Schema\design-intent.v1.schema.json" LogicalName="CivilAI.Core.Intent.Schema.design-intent.v1.schema.json" />
     <!-- System prompt for free text → Design Intent (1.2); read with TextToIntent.ReadSystemPrompt(). -->
     <EmbeddedResource Include="Intent\Prompts\text-to-intent.v0.md" LogicalName="CivilAI.Core.Intent.Prompts.text-to-intent.v0.md" />
     <!-- Default starter design-rule set (2.2, D3); read with RuleSetJson.LoadDefault(). -->
+    <!-- Design Brief v1 JSON Schema (B.1); read with DesignBriefJson.ReadSchema(). -->
+    <EmbeddedResource Include="Brief\Schema\design-brief.v1.schema.json" LogicalName="CivilAI.Core.Brief.Schema.design-brief.v1.schema.json" />
+    <!-- Style Profile v1 schema + system prompt (B.4); read with StyleProfileJson.ReadSchema() / StyleReader.ReadSystemPrompt(). -->
+    <EmbeddedResource Include="Style\Schema\style-profile.v1.schema.json" LogicalName="CivilAI.Core.Style.Schema.style-profile.v1.schema.json" />
+    <EmbeddedResource Include="Style\Prompts\style-reader.v1.md" LogicalName="CivilAI.Core.Style.Prompts.style-reader.v1.md" />
+    <!-- Plan stage system prompt (B.5a); read with PlanStage.ReadSystemPrompt(). -->
+    <EmbeddedResource Include="Plan\Prompts\plan.v4.md" LogicalName="CivilAI.Core.Plan.Prompts.plan.v4.md" />
     <EmbeddedResource Include="Rules\RuleSets\default-il.v0.json" LogicalName="CivilAI.Core.Rules.RuleSets.default-il.v0.json" />
   </ItemGroup>
 

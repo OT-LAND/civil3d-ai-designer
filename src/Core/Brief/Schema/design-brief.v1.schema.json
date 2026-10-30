@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/OT-LAND/civil3d-ai-designer/design-brief.v1.schema.json",
+  "title": "Design Brief v1",
+  "description": "What the designer wants: tagged zones, curves and points, character sliders, style and background references (docs/CONCEPT.md). Units: metres, drawing coordinates (X east, Y north), levels absolute. Polygons are closed implicitly: do not repeat the first point.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "units", "character", "zones"],
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "units": { "const": "m" },
+    "background": { "$ref": "#/$defs/background" },
+    "style": { "$ref": "#/$defs/style" },
+    "character": { "$ref": "#/$defs/characterGlobal" },
+    "zones": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/zone" } },
+    "curves": { "type": "array", "items": { "$ref": "#/$defs/curve" } },
+    "points": { "type": "array", "items": { "$ref": "#/$defs/taggedPoint" } }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "refList": {
+      "description": "Host references, e.g. \"layer:V-TOPO-*\", \"xref:Survey2025\", \"image:ortho.tif\".",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "background": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "survey": { "$ref": "#/$defs/refList" },
+        "parcel": { "$ref": "#/$defs/refList", "description": "Lot borders and setbacks: parcels or closed polylines (D21)." },
+        "structures": { "$ref": "#/$defs/refList", "description": "Architecture: buildings, FFLs, entrances (D21)." },
+        "roads": { "$ref": "#/$defs/refList" },
+        "utilities": { "$ref": "#/$defs/refList", "description": "Pipe networks, utility lines, manholes, easements; kept clear (D21)." },
+        "orthophoto": { "$ref": "#/$defs/refList" }
+      }
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prompt": { "type": "string" },
+        "images": { "type": "array", "maxItems": 6, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "slider": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "characterOverride": {
+      "description": "Per-zone overrides: only the sliders this zone changes (D15).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "accessibility": { "$ref": "#/$defs/slider" },
+        "hardSoft": { "$ref": "#/$defs/slider" },
+        "maxGrade": { "$ref": "#/$defs/slider" },
+        "cutFill": { "$ref": "#/$defs/slider" },
+        "maxSlope": { "$ref": "#/$defs/slider" },
+        "shading": { "$ref": "#/$defs/slider" },
+        "treesElements": { "$ref": "#/$defs/slider" },
+        "curvedStraight": { "$ref": "#/$defs/slider" },
+        "budget": { "$ref": "#/$defs/slider", "description": "Cost level: 0 economical, 100 premium; not a sum of money (D20)." }
+      }
+    },
+    "characterGlobal": {
+      "description": "Global slider set: all nine required (D15).",
+      "allOf": [ { "$ref": "#/$defs/characterOverride" } ],
+      "required": ["accessibility", "hardSoft", "maxGrade", "cutFill", "maxSlope", "shading", "treesElements", "curvedStraight", "budget"]
+    },
+    "zone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "outline"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "outline": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/point" } },
+        "character": { "$ref": "#/$defs/characterOverride" },
+        "hostId": { "type": "string" }
+      }
+    },
+    "curve": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "tag", "points"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "tag": { "enum": ["walkingNetwork", "contour", "flowBasin", "border"] },
+        "name": { "type": "string" },
+        "points": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/point" } },
+        "level": { "type": "number", "description": "Contour only: makes it a hard contour (D17)." },
+        "accessible": { "type": "boolean", "description": "Walking network only: false = not accessible (D11)." },
+        "hostId": { "type": "string" }
+      }
+    },
+    "taggedPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "tag", "at"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "tag": { "enum": ["entrance", "interestPoint", "elevation", "tree"] },
+        "name": { "type": "string" },
+        "at": { "$ref": "#/$defs/point" },
+        "level": { "type": "number", "description": "Required for elevation; optional threshold level for an entrance." },
+        "species": { "type": "string", "description": "Tree only; otherwise the AI picks from the plant list (D5)." },
+        "hostId": { "type": "string" }
+      }
+    }
+  }
+}

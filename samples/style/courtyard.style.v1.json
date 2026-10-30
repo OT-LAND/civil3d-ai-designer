@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1",
+  "summary": "A shaded Mediterranean courtyard of warm local stone and dry, silvery planting, with low stone seat walls stepping the levels.",
+  "materials": [
+    { "id": "stone-paving", "name": "local limestone, sawn, 60×40", "category": "paving", "colour": "warm buff", "finish": "sawn", "use": "main plaza" },
+    { "id": "dg-path", "name": "stabilised decomposed granite", "category": "gravel", "colour": "golden", "use": "secondary paths and tree surrounds" },
+    { "id": "dry-planting", "name": "dry Mediterranean bed planting", "category": "planting", "use": "beds along the walls" },
+    { "id": "gravel-mulch", "name": "crushed limestone mulch, 10–20 mm", "category": "mulch", "colour": "pale buff", "use": "bed surface" }
+  ],
+  "planting": {
+    "waterUse": "low",
+    "density": "medium",
+    "layers": ["shrubs", "trees", "grasses"],
+    "palette": ["silver and grey-green foliage", "fine grasses", "purple and white flowers"],
+    "examples": ["Olea europaea", "Pistacia lentiscus", "Salvia", "Lavandula", "Stipa tenuissima"]
+  },
+  "form": {
+    "geometry": "orthogonal",
+    "curvedShare": 20,
+    "edges": "flush stone edges, no kerbs",
+    "levelChanges": "low terraces held by 45 cm stone seat walls"
+  },
+  "imageNotes": [
+    "1: paving colour, sawn finish and stone seat walls",
+    "2: dry planting structure and silver foliage; the pool is not used"
+  ]
+}

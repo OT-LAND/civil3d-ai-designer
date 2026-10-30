@@ -24,6 +24,8 @@ namespace CivilAI.Core.Rules
         public const string LawnMinFallPercent = "lawn.minFallPercent";
         public const string LawnMaxSlopePercent = "lawn.maxSlopePercent";
         public const string BedMaxSlopePercent = "bed.maxSlopePercent";
+        /// <summary>Steepest walking slope on a path marked not accessible, at max slope slider 100 (D19, B.6a).</summary>
+        public const string PathNotAccessibleMaxSlopePercent = "path.notAccessibleMaxSlopePercent";
 
         public static readonly IReadOnlyList<string> All = new[]
         {
@@ -31,6 +33,7 @@ namespace CivilAI.Core.Rules
             PlazaMinFallPercent, PlazaMaxFallPercent,
             LawnMinFallPercent, LawnMaxSlopePercent,
             BedMaxSlopePercent,
+            PathNotAccessibleMaxSlopePercent,
         };
     }
 
