@@ -134,7 +134,7 @@ Plan stage (B.5a/B.5b, CONCEPT §3.3 stage 3)
   An option that never becomes usable goes to `Failed` and the others are returned; none usable ⇒
   `PlanStageException`. Token totals cover the whole run. Only the chosen option is detailed later (B.6+).
 
-Grading solver (B.6a, CONCEPT §3.3 stage 4 "Level")
+Grading solver (B.6a/B.6b, CONCEPT §3.3 stage 4 "Level")
 - `Core/Grading/PathLevelSolver.Solve(intent, brief?, rules, ground?, options?)` → `PathLevelResult` {profiles, issues}.
   Per path: hard anchors snapped to the centerline (within width/2 + 1 m): the path's spot levels, intent entrances
   (threshold, else FFL), brief entrance/elevation points with a level, crossings of brief contours with a level
@@ -143,6 +143,16 @@ Grading solver (B.6a, CONCEPT §3.3 stage 4 "Level")
   nothing at all ⇒ `NoLevel`. Even grade between anchors; each stretch checked against
   `path.maxLongitudinalSlopePercent` (accessible, D11) or `MaxSlopePercent(slider)` = accessible limit →
   `path.notAccessibleMaxSlopePercent` (D19/D22) ⇒ `NeedsRamp` / `NeedsSteps` with the route length that would work.
+- `Core/Grading/AreaLevelSolver.Solve(intent, brief?, rules, ground?, options?)` → `AreaLevelResult` {areas, issues} (B.6b).
+  Each plaza/lawn/bed gets one plane (`AreaLevel`: centre level, fall %, fall direction, corner levels, `LevelAt`).
+  Hard levels inside or within 1 m of the outline: own spot levels, intent entrances, brief entrance/elevation points
+  with a level, brief contours with a level (vertices inside + outline crossings). Weighted least squares
+  z = z0 + g·(p − centre): hard levels weight 1e8; the preferred fall (designer's `Fall`, else plaza = middle of the
+  plaza fall range, lawn/bed = existing-ground plane clamped to the rule range; direction downhill on ground, else away
+  from the nearest building) and base level (nominal `Elevation`, else ground) fill what they leave free. Checks:
+  a hard level missed by > 0.01 m ⇒ `ConflictingLevels`; fall < plaza/lawn minimum ⇒ `FallTooFlat`; fall > plaza max /
+  lawn mowing max / bed max ⇒ `TooSteep`; nothing to sit on ⇒ `NoLevel`. Paths and area spaces are solved separately
+  for now (path ends do not yet take the level of the plaza they meet).
 - `SpotGround(points)`: existing ground from survey spot levels (IDW, 6 nearest); the plugin will give a TIN-backed one.
 
 Existing-tree table import (2.1a)
@@ -193,7 +203,7 @@ src/Core/Style/      Style profile (B.4): model, JSON, validator, StyleReader (C
 samples/style/       Sample style profile (courtyard.style.v1.json, matches the B.1 brief's style); used by tests
 src/Core/Survey/     Survey import: CSV and .xlsx table readers, existing-tree table import (2.1a, 2.1c)
 samples/survey/      Sample survey data (trees-courtyard.csv/.xlsx, trees-hebrew.xlsx)
-src/Core/Grading/    Grading solver: path levels from hard constraints (B.6a), ground model
+src/Core/Grading/    Grading solver: path levels (B.6a), area space planes (B.6b), ground model
 src/Core/Rules/      Rule sets (RuleSets/*.json embedded, default-il.v0 = starter set) and RuleEngine
 src/Core/Claude/     Claude Messages API client, settings (key from settings/env), image input, JSON output
 src/Core/Ui/          PaletteTheme: palette colours per AutoCAD colour theme

@@ -1,5 +1,21 @@
 # Session log (newest first)
 
+## 2026-10-30 — Work: B.6b Grading solver, area space levels
+- Done: `Core/Grading/AreaLevelSolver`. Every plaza, lawn and bed gets one even surface (level at its centre, fall,
+  fall direction, corner levels) through its hard levels: own spot levels, entrances on its edge (threshold/FFL), brief
+  entrance and elevation points, contours with a level. Where they leave the fall free: the designer's fall, else plaza
+  1.5 % (middle of 1–2 %), lawn and bed follow existing ground within their limits; direction downhill, else away from
+  the nearest building. Checked against plaza min/max fall, lawn min fall and 1:4 mowing max, bed 1:3; reasons in plain
+  words (too flat to drain, needs steps/terraces, needs a wall or terraces, levels not on one surface, no level).
+  15 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 242/242 pass.
+- Also: D22 rule `path.notAccessibleMaxSlopePercent` marked verified; ROADMAP B.6a marked done (merged).
+- Split: soft contours, walls from max grade and path–plaza level hand-over moved to new item B.6e.
+- Blocked: B.6e walls need D23 (what max grade slider 0 means).
+- PR: Core-only, merged by the agent once CI is green (D13).
+- Next: B.6c cut/fill (not blocked), then B.6e after D23.
+- Questions: D23. (Choices made, easy to change: plaza design fall = middle of the rule range; one plane per space,
+  terraces come with B.6e; points count for a space within 1 m of its outline; paths and areas solved separately.)
+
 ## 2026-10-30 — Meeting 13
 - Reported: B.1b cost level (#19) and B.6a path levels (#20), both Core-only and merged (D13); next B.6b. PR #6 re-tested OK, waiting for the owner to merge.
 - Asked: D22 (steepest not-accessible path; recommended 1:8 = 12.5 %).
