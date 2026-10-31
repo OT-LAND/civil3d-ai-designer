@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CivilAI.Core.Brief;
 using CivilAI.Core.Claude;
+using CivilAI.Core.Grading;
 using CivilAI.Core.Intent;
 using CivilAI.Core.Metrics;
 using CivilAI.Core.Rules;
@@ -31,6 +32,13 @@ namespace CivilAI.Core.Plan
 
         /// <summary>Rule set for the rule report; the default starter set when null.</summary>
         public RuleSet? Rules { get; init; }
+
+        /// <summary>
+        /// Existing ground (survey / Civil 3D surface). When given, every plan is levelled by the
+        /// grading solver (B.6d): level problems and earthworks join the review, and the cut↔fill
+        /// and max slope rows are measured. Without it those rows stay "not measured".
+        /// </summary>
+        public IGroundModel? Ground { get; init; }
     }
 
     /// <summary>"Target vs achieved" rows for one zone (or the whole design when the brief has no zones).</summary>
@@ -56,6 +64,9 @@ namespace CivilAI.Core.Plan
         public RuleReport RuleReport { get; init; } = new RuleReport();
 
         public IReadOnlyList<ZoneTargets> Zones { get; init; } = Array.Empty<ZoneTargets>();
+
+        /// <summary>Levels and earthworks of the plan (B.6d); null when the review had no existing ground.</summary>
+        public PlanGrading? Grading { get; init; }
     }
 
     /// <summary>One usable plan, with its check results.</summary>
@@ -266,7 +277,7 @@ namespace CivilAI.Core.Plan
                     continue;
                 var concept = ReadConcept(response.Json);
 
-                var review = Review(intent!, request.Brief, rules, Tolerances);
+                var review = Review(intent!, request.Brief, rules, Tolerances, request.Ground);
                 if (review.Problems.Count > 0)
                 {
                     problems = review.Problems;
@@ -300,9 +311,13 @@ namespace CivilAI.Core.Plan
 
         /// <summary>
         /// Core's check of one valid plan against the brief: references, rule report, and
-        /// target vs achieved per zone. Pure; also used by B.8 to show the card.
+        /// target vs achieved per zone. With <paramref name="ground"/> (B.6d) the plan is also levelled
+        /// (<see cref="PlanGrading"/>): path and area level problems and earthworks that miss the
+        /// cut↔fill slider become open issues, and the cut↔fill and max slope rows are measured.
+        /// Pure; also used by B.8 to show the card.
         /// </summary>
-        public static PlanReview Review(DesignIntent intent, DesignBrief brief, RuleSet rules, MetricTolerances? tolerances = null)
+        public static PlanReview Review(DesignIntent intent, DesignBrief brief, RuleSet rules, MetricTolerances? tolerances = null,
+            IGroundModel? ground = null)
         {
             if (intent is null) throw new ArgumentNullException(nameof(intent));
             if (brief is null) throw new ArgumentNullException(nameof(brief));
@@ -315,11 +330,23 @@ namespace CivilAI.Core.Plan
             foreach (var f in report.Failures)
                 open.Add($"rule {f.RuleId} fails on {f.SpaceId}: {f.Message}");
 
+            // Level problems only once the plan's references are right: the solvers need the zones.
+            PlanGrading? grading = null;
+            if (ground != null && problems.Count == 0)
+            {
+                grading = PlanGrading.Solve(intent, brief, rules, ground);
+                foreach (var g in grading.Issues)
+                    open.Add($"levels on {g.SpaceId}: {g.Message}");
+                open.AddRange(grading.BalanceIssues);
+            }
+            GradingMetrics? Graded(IReadOnlyList<Point2>? outline) => grading == null ? null
+                : GradingMetrics.Measure(intent, grading.Earthworks, grading.Paths, rules, outline);
+
             var zones = new List<ZoneTargets>();
             if (brief.Zones.Count == 0)
             {
                 var targets = TargetComparison.Compare(IntentMetricsCalculator.Measure(intent),
-                    brief.CharacterFor(new Zone()), tolerances);
+                    brief.CharacterFor(new Zone()), tolerances, Graded(null));
                 zones.Add(new ZoneTargets { Targets = targets });
                 open.AddRange(Misses("the design", targets));
             }
@@ -328,13 +355,13 @@ namespace CivilAI.Core.Plan
                 foreach (var zone in brief.Zones)
                 {
                     var targets = TargetComparison.Compare(IntentMetricsCalculator.Measure(intent, zone.Outline),
-                        brief.CharacterFor(zone), tolerances);
+                        brief.CharacterFor(zone), tolerances, Graded(zone.Outline));
                     zones.Add(new ZoneTargets { ZoneId = zone.Id, ZoneName = zone.Name, Targets = targets });
                     open.AddRange(Misses(ZoneLabel(zone), targets));
                 }
             }
 
-            return new PlanReview { Problems = problems, OpenIssues = open, RuleReport = report, Zones = zones };
+            return new PlanReview { Problems = problems, OpenIssues = open, RuleReport = report, Zones = zones, Grading = grading };
         }
 
         private static List<string> CheckReferences(DesignIntent intent, DesignBrief brief)
@@ -379,8 +406,7 @@ namespace CivilAI.Core.Plan
             }
         }
 
-        private static string ZoneLabel(Zone zone) =>
-            string.IsNullOrWhiteSpace(zone.Name) ? $"zone {zone.Id}" : $"zone {zone.Id} ({zone.Name})";
+        private static string ZoneLabel(Zone zone) => PlanGrading.Label(zone);
 
         /// <summary>
         /// The first user message: the sliders per zone in plain words, the brief, the style

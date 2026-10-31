@@ -1,5 +1,20 @@
 # Session log (newest first)
 
+## 2026-10-31 — Work: B.6d Grading reasons into the plan review
+- Done: `Core/Plan/PlanGrading`. With existing ground on the request (`PlanRequest.Ground`), every plan is levelled
+  in the review: path levels, area planes, then cut/fill balanced per zone on that zone's cut↔fill slider. Level
+  problems ("levels on P1: needs a ramp …") and earthworks misses ("zone A (Upper): Earthworks: …") become open
+  issues, so Claude is asked to fix them in the repair loop; cut↔fill and max slope rows on the target card are
+  measured per zone; levels kept on `PlanReview.Grading` for the detail stage. No ground ⇒ unchanged behaviour.
+  8 new tests; `dotnet build` (Release, 0 warnings) + `dotnet test` 266/266 pass.
+- Also: ROADMAP B.6c marked done (merged #22).
+- Blocked: B.6e still waits for D23.
+- PR: Core-only, merged by the agent once CI is green (D13).
+- Next: B.6e after D23; otherwise B.7 (palette, needs Civil 3D testing) or B.8.
+- Questions: none new. (Choices made, easy to change: levels only run once brief references are right; balance per
+  zone by the space's zoneId while the card rows measure by zone outline; plan prompt not changed — the solver's
+  plain-words reasons go back as they are.)
+
 ## 2026-10-30 — Work: B.6c Grading solver, cut/fill
 - Done: `Core/Grading/Earthworks`. Cut and fill of the solved levels against existing ground: plazas, lawns and beds
   sampled on a 0.5 m grid inside the outline, paths along the centerline × width; ground without data counted as not
