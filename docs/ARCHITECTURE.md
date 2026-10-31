@@ -163,7 +163,14 @@ Grading solver (B.6a/B.6b/B.6c, CONCEPT §3.3 stage 4 "Level")
 - `GradingMetrics.Measure(intent, earthworks?, paths?, rules, zoneOutline?)`: cut/fill share and steepest
   not-accessible path, also in max slope slider units (`SliderForSlope`, inverse of `MaxSlopePercent`).
   `TargetComparison.Compare(..., grading)` measures the `cutFill` (±10) and `maxSlope` (at most, +5) rows;
-  `maxGrade` waits for B.6e/D23. Wiring into the plan review is B.6d.
+  `maxGrade` waits for B.6e/D23.
+- `Core/Plan/PlanGrading.Solve(intent, brief, rules, ground)` (B.6d): path + area solvers, then `Earthworks.Balance`
+  per zone on that zone's cut↔fill slider (zone override, else global; spaces grouped by `zoneId`, spaces with no zone
+  on the global slider) → balanced `Areas`, `Earthworks`, `Shifts` per zone, solver `Issues`, `BalanceIssues`.
+  `PlanRequest.Ground` / `PlanStage.Review(..., ground)`: when given and the references are right, the review runs it;
+  each solver issue becomes an open issue "levels on <space>: …", each balance miss "<zone>: Earthworks: …", so they
+  join the repair loop; `GradingMetrics` per zone (by outline) go to `TargetComparison` (cutFill, maxSlope rows);
+  the result is kept on `PlanReview.Grading`. No ground ⇒ no levels, rows "not measured" (as before).
 - `SpotGround(points)`: existing ground from survey spot levels (IDW, 6 nearest); the plugin will give a TIN-backed one.
 
 Existing-tree table import (2.1a)
