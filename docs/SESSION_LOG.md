@@ -1,5 +1,10 @@
 # Session log (newest first)
 
+## 2026-11-01 — Meeting 14
+- Reported: B.6b area levels (#21), B.6c cut/fill (#22) and B.6d grading in the plan review (#23), all Core-only and merged (D13). No open PRs, nothing waiting for testing in Civil 3D. Next: B.7.
+- Asked: D23 (max grade slider 0; recommended 1:10 = 10 %).
+- Answers: pending.
+
 ## 2026-10-31 — Work: B.6d Grading reasons into the plan review
 - Done: `Core/Plan/PlanGrading`. With existing ground on the request (`PlanRequest.Ground`), every plan is levelled
   in the review: path levels, area planes, then cut/fill balanced per zone on that zone's cut↔fill slider. Level
